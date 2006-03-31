@@ -1,0 +1,203 @@
+#!/bin/sh
+
+# xconfig:          Auto configure X.
+
+# (c) 2003-2005 Vajna Miklos <vmiklos@frugalware.org>
+# (c)           Tomas Matejicek <http://slax.linux-live.org>
+# (c)           Patrick J. Volkerding, <volkerdi@slackware.com>
+# xconfig for Frugalware
+
+# (c) 2005	Krisztian VASAS <iron@frugalware.org>
+# xconfig for FwLive
+# distributed under GPL License
+
+#. /var/lib/frugalware/messages/rc.messages
+. /etc/sysconfig/gpm
+
+### constants
+
+PATH=$PATH:/usr/X11/bin
+REFRESH="60-75"
+HORIZSYNC="31.5 - 64.3"
+USEBIOS="No"
+XorgConfig="/etc/X11/xorg.conf"
+COREPOINTER="\"CorePointer\""
+resol="1024x768"
+depth="24"
+MOUSELNK="$dev"
+#debug=":1" # if you want to test the script while an x server is running
+debug="" # if you want to test the script while an x server is running
+
+### strings
+
+xbacktitle="$instx - FwLive `cat /etc/frugalware-release |cut -d ' ' -f 2` $setup"
+
+### functions
+
+mouse_options()
+{
+	echo "Option      \"ZAxisMapping\" \"4 5\""
+	echo "Option      \"Buttons\" \"3\""
+	echo "Option      \"AlwaysCore\" \"true\""
+}
+
+kbd_options()
+{
+	if [[ "$LANG" =~ "^en_" ]]; then
+		echo "Option      \"XkbLayout\" \"us\""
+	else
+		echo "Option      \"XkbLayout\" \"`echo $LANG|sed 's/^\(.*\)_.*$/\1/'`\""
+	fi
+}
+
+# $1=number
+# $2=device
+# $3=protocol, optional, defaults to auto
+mouse_identifier()
+{
+	if [ "$3" = "" ]; then PROTO="auto"; else PROTO="$3"; fi
+	echo "Identifier  \"Mouse$1\""
+	echo "Driver      \"mouse\""
+	echo "`mouse_options`"
+	echo "Option      \"Protocol\" \"$PROTO\""
+	echo "Option      \"Device\" \"$2\""
+	echo "EndSection"
+	echo ""
+	echo "Section \"InputDevice\""
+}
+
+# Have the X server create a default config file:
+
+doprobe()
+{
+	X -configure $debug 2>/dev/null
+	foo=$?
+	if [ "$foo" != "0" ]; then
+		dialog --backtitle "$xbacktitle" --title "Error" \
+			--aspect 20 --msgbox "Some errors occured. Please contact with the creator!" 0 0
+		exit 0
+	fi
+	return $foo
+}
+
+# $1 resolution, $2 depth
+doconfig()
+{
+	rm -f $XorgConfig
+
+	cat $HOME/xorg.conf.new | while read LINE ;
+	do
+		# force X to configure mouse
+		if echo $LINE | grep -i Protocol | grep -i auto 1> /dev/null ; then
+			if [ "$MOUSELNK" = "input/mice" -o "$MOUSELNK" = "/dev/input/mouse0" -o "$MOUSELNK" = "/dev/usbmouse" -o "`cat /proc/cmdline | egrep -i wheelmouse`" != "" ]; then
+				PROTOCOL="imps/2"
+			elif [ "$MOUSELNK" = "/dev/psaux" -o "$MOUSELNK" = "/dev/psaux" ]; then
+				PROTOCOL="ps/2"
+			else
+				PROTOCOL="auto"
+			fi
+
+			FORCEPROTOCOL="`cat /proc/cmdline | egrep -io \"(^|[[:space:]]+)mouseproto=([^[:space:]]+)\" | egrep -o \"[^=]+\\\$\" | tail -n 1`"
+			if [ ! "$FORCEPROTOCOL" = "" ]; then PROTOCOL="$FORCEPROTOCOL"; fi
+			echo "`mouse_options`" >> $XorgConfig
+			echo -n "Option      \"Protocol\" \"$PROTOCOL\"" >> $XorgConfig
+			LINE=""
+		fi
+		if echo $LINE | grep -i Identifier | grep -i Mouse 1> /dev/null ; then
+			echo "`mouse_identifier 0 /dev/psaux ps/2`" >>$XorgConfig
+			echo "`mouse_identifier 1 /dev/input/mouse0 imps/2`" >>$XorgConfig
+			echo "`mouse_identifier 2 /dev/tts/0`" >>$XorgConfig
+			echo -n "Identifier  \"Mouse3\"" >>$XorgConfig
+			LINE=""
+		fi
+		if echo $LINE | grep -i CorePointer 1> /dev/null ; then
+			if [ -r "/dev/psaux" ]; then CORE0=$COREPOINTER; fi
+			if [ -r "/dev/input/mouse0" ]; then CORE1=$COREPOINTER; fi
+			if [ -r "/dev/tts/0" ]; then CORE2=$COREPOINTER; fi
+			echo "InputDevice    \"Mouse0\" $CORE0" >> $XorgConfig
+			echo "InputDevice    \"Mouse1\" $CORE1" >> $XorgConfig
+			echo "InputDevice    \"Mouse2\" $CORE2" >> $XorgConfig
+			LINE=""
+		fi
+		echo "$LINE" >> $XorgConfig
+		if echo $LINE | grep -i usebios 1> /dev/null ; then
+			# To disable blinking on some savage cards
+			echo "Option     \"UseBIOS\" \"$USEBIOS\"" >> $XorgConfig
+		fi
+
+
+ 		if echo $LINE | grep -i boardname 1> /dev/null ; then
+			# some card-specific treatment, when needed
+			boardname=`echo $LINE | awk '{ print $2}'`;
+			case $boardname in
+				# S3 Virge/GX2, 2x AGP, TVOut :: workaround for broken DDC
+				("\"ViRGE/GX2\"")
+					echo "Option          \"NoDDC\"" >> $XorgConfig
+				;;
+				("\"i81x\"")
+				;;
+			esac
+		fi
+
+
+		if echo $LINE | grep -i Section | grep -i Monitor 1> /dev/null ; then
+			# X -configure leaves out the refresh frequency
+			# We'll work around this.
+			echo "HorizSync    $HORIZSYNC" >> $XorgConfig
+			echo "VertRefresh  $REFRESH" >> $XorgConfig
+			echo "Option       \"DPMS\"" >> $XorgConfig
+		fi
+		if echo $LINE | grep -i Driver | grep -i kbd 1> /dev/null ; then
+			kbd_options >>$XorgConfig
+		fi
+		if echo $LINE | grep -i Depth | egrep "(16)|(24)" 1> /dev/null ; then
+			# Screen resolution
+			echo "Modes \"$1\" \"800x600\" \"640x480\"" >> $XorgConfig
+		fi
+		if echo $LINE | grep Load | grep type1 1> /dev/null ; then
+			# X -configure leaves out the freetype module.
+			# We'll work around this.
+			echo "Load  \"freetype\"" >> $XorgConfig
+		fi
+		if echo $LINE | grep -i Section | grep -i Screen 1> /dev/null ; then
+			START_LOOKING=true
+		fi
+		if [ "$START_LOOKING" = "true" ]; then
+			if echo $LINE | grep -i Monitor 1> /dev/null ; then
+				echo "DefaultDepth $2" >> $XorgConfig
+				START_LOOKING=false
+			fi
+		fi
+	done
+	echo "Section \"DRI\"" >> $XorgConfig
+	echo "        Group        0" >> $XorgConfig
+	echo "        Mode         0666" >> $XorgConfig
+	echo "EndSection" >> $XorgConfig
+			
+}
+
+### main
+
+if [ -e $XorgConfig ]; then cp $XorgConfig $XorgConfig.old.$$; fi
+
+[ "$1" != "" ] && resol=$1
+[ "$2" != "" ] && depth=$2
+
+doprobe
+if [ $? -eq 0 ]; then 
+	doconfig $resol $depth
+	rm -f $HOME/xorg.conf.new
+fi
+
+x_start_wm=`cat /tmp/x_start_wm`
+case $x_start_wm in
+	gnome-session|startkde|icewm-session|blackbox)
+		echo "$x_start_wm" > /home/fwlive/.xinitrc
+		cat /etc/sysconfig/desktop.wm | sed "s|<:x_start_wm:>|su - fwlive /usr/local/bin/x_start_wm startx|" > /etc/sysconfig/desktop
+	;;
+	*)
+		cat /etc/sysconfig/desktop.wm | sed "s|<:x_start_wm:>|su - fwlive /usr/local/bin/x_start_wm $x_start_wm|" > /etc/sysconfig/desktop
+	;;
+esac
+
+rm -f $XorgConfig.old.$$

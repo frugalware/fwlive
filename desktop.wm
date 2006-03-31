@@ -1,0 +1,5 @@
+# /etc/sysconfig/desktop
+
+# Which window manager try to use.
+
+desktop="<:x_start_wm:>"

@@ -1,0 +1,255 @@
+--- linux-2.6.16/fs/unionfs/file.c.orig	2006-03-03 18:51:58.000000000 +0100
++++ linux-2.6.16/fs/unionfs/file.c	2006-03-03 18:52:13.000000000 +0100
+@@ -264,10 +264,10 @@
+ 	if (!hidden_file->f_op || !hidden_file->f_op->fsync)
+ 		goto out;
+ 
+-	down(&hidden_file->f_dentry->d_inode->i_sem);
++	mutex_lock(&hidden_file->f_dentry->d_inode->i_mutex);
+ 	err = hidden_file->f_op->fsync(hidden_file, hidden_file->f_dentry,
+ 				       datasync);
+-	up(&hidden_file->f_dentry->d_inode->i_sem);
++	mutex_unlock(&hidden_file->f_dentry->d_inode->i_mutex);
+ 
+       out:
+ 	print_exit_status(err);
+--- linux-2.6.16/fs/unionfs/unionfs.h.orig	2006-03-03 18:43:34.000000000 +0100
++++ linux-2.6.16/fs/unionfs/unionfs.h	2006-03-03 18:44:12.000000000 +0100
+@@ -776,13 +776,13 @@
+ {
+ 	struct dentry *dir = DGET(dentry->d_parent);
+ 
+-	down(&dir->d_inode->i_sem);
++	mutex_lock(&dir->d_inode->i_mutex);
+ 	return dir;
+ }
+ 
+ static inline void unlock_dir(struct dentry *dir)
+ {
+-	up(&dir->d_inode->i_sem);
++	mutex_unlock(&dir->d_inode->i_mutex);
+ 	DPUT(dir);
+ }
+ 
+--- linux-2.6.16/fs/unionfs/dentry.c.orig	2006-03-03 18:46:27.000000000 +0100
++++ linux-2.6.16/fs/unionfs/dentry.c	2006-03-03 18:46:57.000000000 +0100
+@@ -108,7 +108,7 @@
+ 		interpose_flag = INTERPOSE_REVAL_NEG;
+ 		if (positive) {
+ 			interpose_flag = INTERPOSE_REVAL;
+-			down(&dentry->d_inode->i_sem);
++			mutex_lock(&dentry->d_inode->i_mutex);
+ 			bstart = ibstart(dentry->d_inode);
+ 			bend = ibend(dentry->d_inode);
+ 			if (bstart >= 0) {
+@@ -126,7 +126,7 @@
+ 			itohi_ptr(dentry->d_inode) = NULL;
+ 			ibstart(dentry->d_inode) = -1;
+ 			ibend(dentry->d_inode) = -1;
+-			up(&dentry->d_inode->i_sem);
++			mutex_unlock(&dentry->d_inode->i_mutex);
+ 		}
+ 
+ 		result = unionfs_lookup_backend(dentry, interpose_flag);
+--- linux-2.6.16/fs/unionfs/inode.c.orig	2006-03-03 19:01:27.000000000 +0100
++++ linux-2.6.16/fs/unionfs/inode.c	2006-03-03 19:02:04.000000000 +0100
+@@ -81,7 +81,7 @@
+ 		struct dentry *hidden_dir_dentry;
+ 		struct iattr newattrs;
+ 
+-		down(&whiteout_dentry->d_inode->i_sem);
++		mutex_lock(&whiteout_dentry->d_inode->i_mutex);
+ 		newattrs.ia_valid = ATTR_CTIME | ATTR_MODE | ATTR_ATIME
+ 		    | ATTR_MTIME | ATTR_UID | ATTR_GID | ATTR_FORCE
+ 		    | ATTR_KILL_SUID | ATTR_KILL_SGID;
+@@ -97,7 +97,7 @@
+ 
+ 		err = notify_change(whiteout_dentry, &newattrs);
+ 
+-		up(&whiteout_dentry->d_inode->i_sem);
++		mutex_unlock(&whiteout_dentry->d_inode->i_mutex);
+ 
+ 		if (err)
+ 			printk(KERN_WARNING
+@@ -594,10 +594,10 @@
+ 				err = PTR_ERR(whiteout_dentry);
+ 				goto out;
+ 			}
+-			down(&hidden_dentry->d_inode->i_sem);
++			mutex_lock(&hidden_dentry->d_inode->i_mutex);
+ 			err = vfs_create(hidden_dentry->d_inode,
+ 					 whiteout_dentry, 0600, NULL);
+-			up(&hidden_dentry->d_inode->i_sem);
++			mutex_unlock(&hidden_dentry->d_inode->i_mutex);
+ 			DPUT(whiteout_dentry);
+ 
+ 			if (err) {
+--- linux-2.6.16/fs/unionfs/main.c.orig	2006-03-03 19:03:37.000000000 +0100
++++ linux-2.6.16/fs/unionfs/main.c	2006-03-03 19:03:50.000000000 +0100
+@@ -103,7 +103,7 @@
+ 		}
+ 	}
+ 
+-	down(&inode->i_sem);
++	mutex_lock(&inode->i_mutex);
+ 	if (atomic_read(&inode->i_count) > 1)
+ 		goto skip;
+ 
+@@ -172,7 +172,7 @@
+ 
+ 	fist_print_dentry("Leaving unionfs_interpose", dentry);
+ 	fist_print_inode("Leaving unionfs_interpose", inode);
+-	up(&inode->i_sem);
++	mutex_unlock(&inode->i_mutex);
+ 
+       out:
+ 	print_exit_status(err);
+@@ -874,11 +874,11 @@
+ 	return err;
+ }
+ 
+-static struct super_block *unionfs_get_sb(struct file_system_type *fs_type,
++int unionfs_get_sb(struct file_system_type *fs_type,
+ 					  int flags, const char *dev_name,
+-					  void *raw_data)
++					  void *raw_data, struct vfsmount *mnt)
+ {
+-	return get_sb_nodev(fs_type, flags, raw_data, unionfs_read_super);
++	return get_sb_nodev(fs_type, flags, raw_data, unionfs_read_super, mnt);
+ }
+ 
+ void unionfs_kill_block_super(struct super_block *sb)
+--- linux-2.6.16/fs/unionfs/xattr.c.orig	2006-03-03 19:04:49.000000000 +0100
++++ linux-2.6.16/fs/unionfs/xattr.c	2006-03-03 19:05:54.000000000 +0100
+@@ -77,14 +77,14 @@
+ 
+ 		encoded_value = (char *)value;
+ 
+-		down(&hidden_dentry->d_inode->i_sem);
++		mutex_lock(&hidden_dentry->d_inode->i_mutex);
+ 		/* lock_kernel() already done by caller. */
+ 		err =
+ 		    hidden_dentry->d_inode->i_op->getxattr(hidden_dentry,
+ 							   encoded_name,
+ 							   encoded_value, size);
+ 		/* unlock_kernel() will be done by caller. */
+-		up(&hidden_dentry->d_inode->i_sem);
++		mutex_unlock(&hidden_dentry->d_inode->i_mutex);
+ 
+ 	}
+ 
+@@ -112,12 +112,12 @@
+ 		    name, (unsigned long)size, flags);
+ 
+ 	if (hidden_dentry->d_inode->i_op->setxattr) {
+-		down(&hidden_dentry->d_inode->i_sem);
++		mutex_lock(&hidden_dentry->d_inode->i_mutex);
+ 		/* lock_kernel() already done by caller. */
+ 		err = hidden_dentry->d_inode->i_op->
+ 		    setxattr(hidden_dentry, name, value, size, flags);
+ 		/* unlock_kernel() will be done by caller. */
+-		up(&hidden_dentry->d_inode->i_sem);
++		mutex_unlock(&hidden_dentry->d_inode->i_mutex);
+ 	}
+ 
+ 	unlock_dentry(dentry);
+@@ -143,13 +143,13 @@
+ 	if (hidden_dentry->d_inode->i_op->removexattr) {
+ 		encoded_name = (char *)name;
+ 
+-		down(&hidden_dentry->d_inode->i_sem);
++		mutex_lock(&hidden_dentry->d_inode->i_mutex);
+ 		/* lock_kernel() already done by caller. */
+ 		err =
+ 		    hidden_dentry->d_inode->i_op->removexattr(hidden_dentry,
+ 							      encoded_name);
+ 		/* unlock_kernel() will be done by caller. */
+-		up(&hidden_dentry->d_inode->i_sem);
++		mutex_unlock(&hidden_dentry->d_inode->i_mutex);
+ 	}
+ 
+ 	unlock_dentry(dentry);
+@@ -173,13 +173,13 @@
+ 
+ 	if (hidden_dentry->d_inode->i_op->listxattr) {
+ 		encoded_list = list;
+-		down(&hidden_dentry->d_inode->i_sem);
++		mutex_lock(&hidden_dentry->d_inode->i_mutex);
+ 		/* lock_kernel() already done by caller. */
+ 		err =
+ 		    hidden_dentry->d_inode->i_op->listxattr(hidden_dentry,
+ 							    encoded_list, size);
+ 		/* unlock_kernel() will be done by caller. */
+-		up(&hidden_dentry->d_inode->i_sem);
++		mutex_unlock(&hidden_dentry->d_inode->i_mutex);
+ 	}
+ 
+ 	unlock_dentry(dentry);
+--- linux-2.6.16/fs/unionfs/copyup.c.orig	2006-03-03 19:19:43.000000000 +0100
++++ linux-2.6.16/fs/unionfs/copyup.c	2006-03-03 19:20:15.000000000 +0100
+@@ -64,7 +64,7 @@
+ 	name_list_orig = name_list;
+ 	while (*name_list) {
+ 		ssize_t size;
+-		down(&old_hidden_dentry->d_inode->i_sem);
++		mutex_lock(&old_hidden_dentry->d_inode->i_mutex);
+ 		err = security_inode_getxattr(old_hidden_dentry, name_list);
+ 		if (err)
+ 			size = err;
+@@ -73,7 +73,7 @@
+ 			    old_hidden_dentry->d_inode->i_op->
+ 			    getxattr(old_hidden_dentry, name_list, attr_value,
+ 				     XATTR_SIZE_MAX);
+-		up(&old_hidden_dentry->d_inode->i_sem);
++		mutex_unlock(&old_hidden_dentry->d_inode->i_mutex);
+ 		if (size < 0) {
+ 			err = size;
+ 			goto out;
+@@ -84,7 +84,7 @@
+ 			goto out;
+ 		}
+ 
+-		down(&new_hidden_dentry->d_inode->i_sem);
++		mutex_lock(&new_hidden_dentry->d_inode->i_mutex);
+ 
+ 		err =
+ 		    security_inode_setxattr(old_hidden_dentry, name_list,
+@@ -101,7 +101,7 @@
+ 							     attr_value, size,
+ 							     0);
+ 		}
+-		up(&new_hidden_dentry->d_inode->i_sem);
++		mutex_unlock(&new_hidden_dentry->d_inode->i_mutex);
+ 
+ 		if (err < 0)
+ 			goto out;
+--- linux-2.6.16/fs/unionfs/dirhelper.c.orig	2006-03-03 19:23:37.000000000 +0100
++++ linux-2.6.16/fs/unionfs/dirhelper.c	2006-03-03 19:23:51.000000000 +0100
+@@ -78,11 +78,11 @@
+ 				continue;
+ 			}
+ 
+-			down(&hidden_dir_dentry->d_inode->i_sem);
++			mutex_lock(&hidden_dir_dentry->d_inode->i_mutex);
+ 			err =
+ 			    vfs_unlink(hidden_dir_dentry->d_inode,
+ 				       hidden_dentry);
+-			up(&hidden_dir_dentry->d_inode->i_sem);
++			mutex_unlock(&hidden_dir_dentry->d_inode->i_mutex);
+ 			DPUT(hidden_dentry);
+ 
+ 			if (err && !IS_COPYUP_ERR(err))
+--- linux-2.6.16/fs/unionfs/main.c.orig	2006-03-23 00:47:39.000000000 +0100
++++ linux-2.6.16/fs/unionfs/main.c	2006-03-23 00:47:47.000000000 +0100
+@@ -710,9 +710,9 @@
+ 
+ int unionfs_get_sb(struct file_system_type *fs_type,
+ 					  int flags, const char *dev_name,
+-					  void *raw_data, struct vfsmount *mnt)
++					  void *raw_data)
+ {
+-	return get_sb_nodev(fs_type, flags, raw_data, unionfs_read_super, mnt);
++	return get_sb_nodev(fs_type, flags, raw_data, unionfs_read_super);
+ }
+ 
+ void unionfs_kill_block_super(struct super_block *sb)

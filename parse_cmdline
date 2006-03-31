@@ -1,0 +1,113 @@
+#!/bin/sh
+
+# /proc/cmdline parser v0.1 for FwLive
+# created by Krisztian VASAS <iron@frugalware.org>
+
+## get the paths dinamically
+_tr=`which tr`
+_cat=`which cat`
+_cut=`which cut`
+
+## default settings
+cmdline=`$_cat /proc/cmdline`
+mode="normal"
+lang="en_US"
+depth=24
+xstart=1
+resolution="1024x768"
+dhcp=0
+netcfg=0
+echo "gnome-session" > /tmp/x_start_wm
+
+## parsing cmdline
+for i in $cmdline; do
+	case $i in
+		nox|noX)
+			xstart=0
+			shift
+		;;
+		desktop=*)
+			desktop=`echo $i | $_cut -b 9-`
+			shift
+		;;
+		res=*)
+			resolution=`echo $i | $_cut -b 5-`
+			shift
+		;;
+		depth=*)
+			depth=`echo $i | $_cut -b 7-`
+		;;
+		lang=*)
+			lang=`echo $i | $_cut -b 6-`
+			shift
+		;;
+		rescue)
+			mode=rescue
+			shift
+		;;
+		mouse=*)
+			mdev=ttyS`echo $i | $_cut -b 13-`
+			mtype=ps2
+			$_sed -i /etc/sysconfig/gpm "s/dev=.*/dev=$mdev/; s/type=.*/type=$mtype/"
+			shift
+		;;
+		netconfig)
+			if [ "$dhcp" -eq "0" ]; then
+				netcfg=1
+			fi
+		;;
+		usedhcp)
+			if [ "$netcfg" -eq "0" ]; then
+				dhcp=1
+			fi
+		;;
+	esac
+done
+
+case $desktop in
+	xfce4)
+		echo "startxfce4" > /tmp/x_start_wm
+	;;
+	kde)
+		echo "startkde" > /tmp/x_start_wm
+	;;
+	blackbox)
+		echo "blackbox" > /tmp/x_start_wm
+	;;
+	icewm)
+		echo "icewm-session" > /tmp/x_start_wm
+	;;
+	*)
+		echo "gnome-session" > /tmp/x_start_wm
+	;;
+esac
+
+if [ "$mode" == "normal" ]; then
+	case $lang in
+		en_*)
+			keymap=us
+		;;
+		*)
+			keymap=`echo $lang | $_cut -b 1-2`
+		;;
+	esac
+	cat << EOF > /etc/sysconfig/keymap 
+# /etc/sysconfig/keymap
+
+keymap=$keymap
+EOF
+	echo "export LANG=$lang" > /etc/profile.d/lang.sh
+	echo "export LC_ALL=\$LANG" >> /etc/profile.d/lang.sh
+	echo "export CHARSET=iso-8859-2" >> /etc/profile.d/lang.sh
+			
+	if [ $xstart -ne 0 ]; then
+		export LC_ALL=$lang
+		echo "$resolution $depth" > /tmp/xconfig.fwl
+	else
+		touch /tmp/noX
+	fi
+else
+	echo ""
+	/bin/bash
+#	This is the rescue mode, now just for support for latter versions...
+fi

@@ -1,0 +1,153 @@
+#! /bin/bash
+
+libmklivecd=0.3
+
+# Functions for mklivecd
+# (c) 2006 Krisztian VASAS <iron@frugalware.org>
+# (c) 2005 BMH1980 <bmh1980de@yahoo.de>
+# Released under the terms of the GNU General Public License, Version2
+
+# Chroot directory
+CHROOTDIR=/tmp/livecd
+
+# Fontname for FwLive
+FLFONT="lat2-16.psfu.gz"
+
+# Hostname for FwLive
+FLHOST="fwlive"
+
+# FwLive release
+FLSREL="0.1rc6"
+FLREL="${FLSREL} (Rhea)"
+
+# FwLive default shell
+FLSHELL="bash"
+
+# Default FwLive user
+FLUSER="fwlive"
+
+# Frugalware release (on this release base $FLRELEASE)
+FWREL="0.4 (Wanda)"
+
+# Version of our LiveCD kernel
+KVER="2.6.16-fwlive1"
+
+# Version of the linux-live scripts
+LLVER="5.4.0"
+
+# Whole groups to install
+GRPS=(core base apps multimedia) #apps devel-core multimedia network)
+
+#X11
+XSRV=(xorg-core)
+
+# WMs to install
+WMS=(gnome-core kde-core xfce4 icewm blackbox)
+
+# Terminals to install
+TERMS=(mrxvt rxvt-unicode)
+
+# File managers to install
+FMS=(emelfm2 rox-filer xfe)
+
+# Extra applications to install
+APPS=(bmp frugalpkg gaim gftp gimp gkrellm gtk-chtheme xsane \
+      gtkpacman gvim mplayer sylpheed thunderbird usbview xchat)
+#APPS=(amsn bluefish bmp dillo emacs fbdesk fbpager fetchmailconf firefox \
+#      fluxconf fluxter frugalpkg frugalrledit fwflux gaim  gftp gimp gtkrellm \
+#      gtk-chtheme gtkpacman gvim idesk imagemagick jacman menumaker mplayer \
+#      sylpheed thunderbird usbview openoffice.org xarchive xchat xdialog \
+#      xine-ui xmms xpdf xsane xscreensaver)
+
+# Package to remove (e. g. packages that are in $GRPS but they we are not want)
+RPKGS=(xdm kdeedu gnome-games postgresql dosemu kernel-docs dvd+rw-tools dvdrtools \
+       memtest86+ gnome-doc-utils xfce4-weather-plugin cdrdao bashburn streamdvd \
+       alien chkrootkit clamav cvs2cl docbook-xsl openjade opensp pwgen quota-tools \
+       rpm sablotron snapscreenshot mono deskbar-applet gnome-netstatus \
+       gnome-system-monitor gtk-sharp x264 kdeartwork kdebindings kdegames \
+       gtkmm kdetoys kdeaddons gstreamer08 kdeadmin gnome2-user-docs mjpegtools\
+       glibmm vcdimager gcalctool qscintilla bug-buddy kdegraphics gst-plugins)
+
+# Files that are needed by mklivecd
+#NFILES=(dhcpcd-eth0.info gpm interfaces keymap linux-live-${LLVER}.tar.gz \
+#        rc.hotplug slim.conf)
+NFILES=(desktop.wm linux-live-${LLVER}-fwlive_version.diff linux-live-${LLVER}.tar.gz \
+        parse_cmdline create_fstab x_start_wm xconfig.fwlive \
+	parse_cmdline.en parse_cmdline.hu xconfig_fwlive.en xconfig_fwlive.hu \
+	rc.parse_cmdline rc.xconfig_fwlive rc.mount-fwlive_version.diff \
+	kernel-fwlive-2.6.16-1-i686.fpm rc.fwlive)
+
+# Message
+msg()
+{
+	echo -e "\e[01;36m>\e[0m \e[01m$@\e[0m"
+}
+
+# Unmount from chroot
+chroot_umount()
+{
+	msg "Unmounting chroot ..."
+	umount ${CHROOTDIR}/proc &&
+	umount ${CHROOTDIR}/sys &&
+	umount ${CHROOTDIR}/dev &&
+	if mount | grep -q 'var/cache/pacman' ; then
+		umount ${CHROOTDIR}/var/cache/pacman
+	fi
+	if (( $? > 0 )) ; then
+		exit 1
+	fi
+}
+
+# Unmount chroot on a bad exit status
+bad_exit()
+{
+	msg "Something wrong happened ..."
+	chroot_umount && exit 1
+}
+
+# Shorter alias for bad_exit
+be()
+{
+	bad_exit
+}
+
+# Create directories
+mk_dir()
+{
+	local i
+	for i in $@ ; do
+		msg "Creating directory $i ..."
+		mkdir -p ${CHROOTDIR}/$i || bad_exit
+	done
+}
+
+# Mount to chroot
+chroot_mount()
+{
+	msg "Mounting chroot ..."
+	mk_dir /{dev,proc,sys,tmp,var/cache/pacman} &&
+	mount -t proc none ${CHROOTDIR}/proc &&
+	mount -t sysfs none ${CHROOTDIR}/sys &&
+	mount -o bind /dev ${CHROOTDIR}/dev &&
+	mount -o bind /var/cache/pacman ${CHROOTDIR}/var/cache/pacman
+	if (( $? > 0 )) ; then
+		exit 1
+	fi
+}
+
+# Install files
+inst_file()
+{
+	msg "Installing $(basename $2) to $(dirname $2) ..."
+	install -m $1 -g root -o root -D $(basename $2) ${CHROOTDIR}/$2
+	if (( $? > 0 )) ; then
+		bad_exit
+	fi
+}
+
+# Install packages
+inst_pkg()
+{
+	msg "Installing $@ ..."
+	pacman -Sf --noconfirm -r ${CHROOTDIR} $@
+}

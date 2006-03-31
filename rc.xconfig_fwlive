@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# (c) 2006 Krisztian VASAS <iron@frugalware.org>
+# rc.parse_cmdline for FwLive
+# distributed under GPL License
+
+. /etc/rc.d/rc.functions
+
+# description: Parses the parameters given in boot loader's command line
+
+case $1 in
+	start)
+		if [ -f /tmp/xconfig.fwl ]; then
+			start "$startxcfg_fwl"
+			params=`/usr/bin/cat /tmp/xconfig.fwl`
+			/usr/local/bin/xconfig.fwlive $params
+			ok $?
+		fi
+	;;
+	stop)
+		/bin/true
+	;;
+esac

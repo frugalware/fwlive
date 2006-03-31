@@ -1,0 +1,274 @@
+#!/bin/bash
+
+mklivecd=0.5
+
+# (c) 2006 Krisztian VASAS <iron@frugalware.org>
+# (c) 2005 BMH1980 <bmh1980de@yahoo.de>
+# Released under the terms of the GNU General Public License, Version 2
+
+# Creating a LiveCD from Frugalware Linux, using the scripts from
+# http://www.linux-live.org/.
+
+# Exit codes: 1 error on regular work
+#             2 a file that we need is missing in working directory
+#             3 you aren't execute this script as root
+
+# Warnings if there are not defined variables
+set -u
+
+# Source the functions file
+source libmklivecd
+
+create_source()
+{
+	# Check if we have all needed files in our working directory
+	for i in ${NFILES[@]} ; do
+		if [ ! -f ${i} ] ; then
+			echo "Missing file: ${i}"
+			exit 2
+		fi
+	done
+
+	# Only root can execute this script (because chroot)
+	if (( $(id -u) > 0 )) ; then
+		echo "Only root can execute this script!"
+		exit 3
+	fi
+
+	# Update package database
+	pacman -Sy --noconfirm -r "${CHROOTDIR}"
+
+	# Install whole groups of packages
+	if [ ! -z "${GRPS}" ] ; then inst_pkg ${GRPS[@]} ; fi
+
+	# Install basic X11 packages
+	if [ ! -z "${XSRV}" ] ; then inst_pkg ${XSRV[@]} ; fi
+
+	# Install different window managers
+	if [ ! -z "${WMS}" ] ; then inst_pkg ${WMS[@]} ; fi
+
+	# Install different terminal emulators
+	if [ ! -z "${TERMS}" ] ; then inst_pkg ${TERMS[@]} ; fi
+
+	# Install different file managers
+	if [ ! -z "${FMS}" ] ; then inst_pkg ${FMS[@]} ; fi
+
+	# Install extra applications
+	if [ ! -z "${APPS}" ] ; then inst_pkg ${APPS[@]} ; fi
+
+	# Remove packages that we not want (eg. from the whole groups)
+	if [ ! -z "${RPKGS}" ] ; then pacman -R -n -r "${CHROOTDIR}" ${RPKGS[@]} ; fi
+
+	# Above we remove scponly (you should do this!), no we must delete the user
+	# (the install script isn't currect at this time)
+	if grep -q scponly "${CHROOTDIR}"/etc/passwd ; then
+		msg "Removing user scponly ..."
+		chroot "${CHROOTDIR}" /usr/sbin/userdel -r scponly || be
+	fi
+
+	# I don't not why userdel doesn't remove scponly's $HOME, so we must do this
+	if [ -d "${CHROOTDIR}"/home/scponly ] ; then
+		msg "Removing scponly's \$HOME ..."
+		rm -rf "${CHROOTDIR}"/home/scponly || be
+	fi
+
+	# Install the LiveCD kernel
+	pacman -Rd -r "${CHROOTDIR}" --noconfirm kernel
+	pacman -A -f -r "${CHROOTDIR}" --noconfirm kernel-fwlive-2.6.16-1-i686.fpm #inst_pkg kernel-fwlive
+
+	# Install modified config files
+	inst_file 755 /usr/local/bin/parse_cmdline
+	inst_file 755 /usr/local/bin/create_fstab
+	inst_file 755 /usr/local/bin/x_start_wm
+	inst_file 755 /usr/local/bin/xconfig.fwlive
+	inst_file 755 /etc/rc.d/rc.parse_cmdline
+	inst_file 755 /etc/rc.d/rc.xconfig_fwlive
+	inst_file 644 /etc/sysconfig/desktop.wm
+	inst_file 644 /etc/rc.d/rc.messages/parse_cmdline.en
+	inst_file 644 /etc/rc.d/rc.messages/parse_cmdline.hu
+	inst_file 644 /etc/rc.d/rc.messages/xconfig_fwlive.en
+	inst_file 644 /etc/rc.d/rc.messages/xconfig_fwlive.hu
+
+	# Creatiing needed start links
+	ln -s ../rc.parse_cmdline "${CHROOTDIR}"/etc/rc.d/rcS.d/S35rc.parse_cmdline
+	ln -s ../rc.xconfig_fwlive "${CHROOTDIR}"/etc/rc.d/rcS.d/S36rc.xconfig_fwlive
+
+	# Patching 
+	msg "Patching rc.mount ..."
+	now=`pwd`
+	cd "${CHROOTDIR}"/etc/rc.d
+	patch -p0 -i $now/rc.mount-fwlive_version.diff
+	cd $now
+
+	# Remove not needed start links in /etc/rc.d/rc[S34].d
+	msg "Removing unwanted start/stop links ..."
+	rm -f "${CHROOTDIR}"/etc/rc.d/rcS.d/S{12rc.fsck,17rc.swap,19rc.bootclean,07rc.frugalware} || be
+	inst_file 755 /etc/rc.d/rc.fwlive
+	ln -s ../rc.fwlive "${CHROOTDIR}"/etc/rc.d/rcS.d/S07rc.fwlive
+	rm -f "${CHROOTDIR}"/etc/rc.d/rc3.d/S{07rc.interfaces,21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,99cups,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} || be
+	rm -f "${CHROOTDIR}"/etc/rc.d/rc4.d/S{07rc.interfaces,21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} || be
+	rm -f "${CHROOTDIR}"/etc/rc.d/rc0.d/K{00cups,01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces}
+	rm -f "${CHROOTDIR}"/etc/rc.d/rc6.d/K{01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces}
+
+	
+	# Create some special files
+	msg "Creating /etc/hardwareclock with UTC ..."
+	echo "UTC" > "${CHROOTDIR}"/etc/hardwareclock || be
+	msg "Creating /etc/HOSTNAME with ${FLHOST} ..."
+	echo "${FLHOST}" > "${CHROOTDIR}"/etc/HOSTNAME || be
+	msg "Creating /etc/fwlive-release with ${FLREL} ..."
+	echo "FwLive ${FLREL}, based on Frugalware Linux ${FWREL}" > "${CHROOTDIR}"/etc/fwlive-release || be
+	msg "Creating /etc/profile.d/lang.sh ..."
+	echo "export LANG=C" > "${CHROOTDIR}"/etc/profile.d/lang.sh
+	echo "export LC_ALL=\$LANG" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
+	echo "export CHARSET=iso-8859-1" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
+	msg "Creating temporary /etc/sysconfig/desktop ..."
+	echo 'desktop=""' > "${CHROOTDIR}"/etc/sysconfig/desktop || be
+	msg "Creating /etc/sysconfig/font with ${FLFONT} ..."
+	echo "font=${FLFONT}" > "${CHROOTDIR}"/etc/sysconfig/font || be
+
+	sed "s|Frugalware\ ${FWREL}|FwLive ${FLREL}|" -i "${CHROOTDIR}"/etc/issue
+	sed 's|Frugalware|FwLive|' -i "${CHROOTDIR}"/etc/issue.net
+
+	# Install the default shell, if it isn't bash
+	if [[ "${FLSHELL}" != "bash" ]] ; then
+		inst_pkg ${FLSHELL}
+		msg "Updating default shell (bash > ${FLSHELL}) ..."
+		sed -i "s|\/root:\/bin\/bash|\/root:\/bin\/${FLSHELL}|" "${CHROOTDIR}"/etc/passwd || be
+		sed -i "s|\/bin\/bash|\/bin\/${FLSHELL}|" "${CHROOTDIR}"/etc/adduser.conf || be
+	fi
+
+	# Fixing some files
+	if [ -f "${CHROOTDIR}"/etc/esd.conf ]; then
+		sed -i 's|terminate|no&|' "${CHROOTDIR}"/etc/esd.conf || be
+	fi
+
+	# Create the default user
+	msg "Creating user ${FLUSER} ..."
+	chroot "${CHROOTDIR}" /usr/sbin/useradd -g users -G floppy,cdrom,scanner,audio,camera,video -m -s /bin/${FLSHELL} -u 1000 ${FLUSER} || be
+	cc -lcrypt crypt.c -o crypt_fwlive
+	fwpass=`./crypt_fwlive fwlive`
+	rootpass=`./crypt_fwlive fwroot`
+	rof=`cat "${CHROOTDIR}"/etc/shadow|grep ^root|awk -F ':' '{print $3}'`
+	fwf=`cat "${CHROOTDIR}"/etc/shadow|grep ^fwlive|awk -F ':' '{print $3}'`
+	sed "s|fwlive:\!:$fwf|fwlive:$fwpass:$fwf|" -i "${CHROOTDIR}"/etc/shadow
+	sed "s|root::$rof|root:$rootpass:$rof|" -i "${CHROOTDIR}"/etc/shadow
+
+	# Extract the linux-live scripts
+	msg "Extracting linux-live-${LLVER}.tar.gz ..."
+	tar -xzf linux-live-${LLVER}.tar.gz -C "${CHROOTDIR}"/tmp || be
+	cp linux-live-${LLVER}-fwlive_version.diff "${CHROOTDIR}"/tmp
+	cd "${CHROOTDIR}"/tmp
+	patch -p0 -i linux-live-${LLVER}-fwlive_version.diff
+
+	#######################################################################
+	# Commented out by IroNiQ:
+	# Help needed to use fwlive properly, but Frugalware gfxboot doesn't 
+	# handle F1 properly After handling this i'll remove isolinux with grub
+	#######################################################################
+	
+	## Removing syslinux with Grub
+	#rm -rf "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/boot/* || be
+	#mk_dir /tmp/linux-live-${LLVER}/cd-root/boot/grub
+	#cp "${CHROOTDIR}"/usr/lib/grub/i386-pc/stage2_eltorito "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/boot/grub/ || be
+	#cp "${CHROOTDIR}"/boot/grub/message "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/boot/grub/ || be
+	#rm -f "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/isolinux.cfg || be
+	#cat << EOF > "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/boot/grub/menu.lst
+	#default=0
+	#timeout=10
+	#gfxmenu /boot/grub/message
+	#
+	#title Frugalware Live ${FLREL} - ${KVER}
+	#	kernel /boot/vmlinuz max_loop=255 initrd=/boot/initrd.gz init=linuxrc load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=4444 root=/dev/ram0 rw quit vga=788 splash=silent
+	#	initrd /boot/initrd.gz
+	#EOF
+	#sed -i 's|isolinux.bin|grub/stage2_eltorito|' "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/make_iso.sh || be
+	#sed -i 's|^cp|#&|' "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/make_iso.sh || be
+	#sed -i 's|isolinux.boot|grub/boot.catalog|' "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/make_iso.sh || be
+
+	sed -i "s|SLAX|FwLive ${FLREL}|" "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/make_iso.sh || be
+	sed -i "s|slax|fwlive-${FLREL}|" "${CHROOTDIR}"/tmp/linux-live-${LLVER}/cd-root/make_iso.sh || be
+
+	# Create the modules directory for our kernel
+	mk_dir /tmp/linux-live-${LLVER}/initrd/kernel-modules/${KVER}
+	for i in $(find "${CHROOTDIR}"/lib/modules/${KVER} -name "*.ko") ; do
+		cp ${i} "${CHROOTDIR}"/tmp/linux-live-${LLVER}/initrd/kernel-modules/${KVER}/ || be
+	done
+
+	# Cleaning unwanted modules from initrd
+	rm -rf "${CHROOTDIR}"/tmp/linux-live-${LLVER}/initrd/kernel-modules/2.6.16 || be
+
+	# Fix linux-live scripts
+	sed -i "s|KERNEL=.*|KERNEL=\"${KVER}\"|" "${CHROOTDIR}"/tmp/linux-live-${LLVER}/config || be
+
+	# Unmount /var/cache/pacman
+	umount "${CHROOTDIR}"/var/cache/pacman
+
+}
+
+run_linuxlive()
+{
+	# Unmounting /var/cache/pacman
+	msg Unmounting /var/cache/pacman
+	umount "${CHROOTDIR}"/var/cache/pacman
+	
+	# Execute the linux-live scripts
+	echo "" | chroot "${CHROOTDIR}" /tmp/linux-live-${LLVER}/runme.sh || be
+
+	# Moving the created iso file back
+	mv "${CHROOTDIR}"/tmp/livecd.iso ./fwlive-${FLSREL}.iso
+}
+
+usage()
+{
+	echo ""
+	echo "`basename $0` - Frugalware LiveCD Creator v$mklivecd based on libmklivecd v$libmklivecd"
+	echo "
+Usage:
+      -s|--create-source    Creating a clean system
+      -l|--create-live      Creating the LiveCD from the pre-installed source
+      -a|--all              Creating a clean system and the LiveCD
+"
+}
+
+
+if [[ "$#" -eq "0" ]]; then
+	usage
+	exit -1
+fi
+
+# Mount to chroot
+chroot_mount || be
+
+while true; do
+	case $1 in
+		-s|--create-source)
+			msg "Creating LiveCD source..."
+			shift
+			create_source
+			break
+		;;
+		-l|--create-live)
+			msg "Creating LiveCD from source..."
+			shift
+			run_linuxlive
+			break
+		;;
+		-a|--all)
+			msg "Creating LiveCD..."
+			shift
+			create_source
+			sleep 1
+			run_linuxlive
+			break
+		;;
+		*)
+			usage
+			shift
+			break
+		;;
+	esac
+done
+
+# Unmount from chroot
+chroot_umount

@@ -1,0 +1,10 @@
+# (c) 2006 Krisztian VASAS <iron@frugalware.org>
+# parse_cmdline.en for FwLive
+# distributed under GPL License
+# Copyright 1993-2003 Patrick J. Volkerding, All rights reserved
+# Patrick J. Volkerding's scripts were distributed under an OSI approved
+# BSD License, which can be found in the COPYRIGHT file.
+
+startparse="Parsing /proc/cmdline"
+
+# vim: ft=sh
