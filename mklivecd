@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mklivecd=0.5
+mklivecd=0.6
 
 # (c) 2006 Krisztian VASAS <iron@frugalware.org>
 # (c) 2005 BMH1980 <bmh1980de@yahoo.de>
@@ -25,14 +25,14 @@ create_source()
 	for i in ${NFILES[@]} ; do
 		if [ ! -f ${i} ] ; then
 			echo "Missing file: ${i}"
-			exit 2
+			be 2
 		fi
 	done
 
 	# Only root can execute this script (because chroot)
 	if (( $(id -u) > 0 )) ; then
 		echo "Only root can execute this script!"
-		exit 3
+		be 3
 	fi
 
 	# Update package database
@@ -98,6 +98,8 @@ create_source()
 	now=`pwd`
 	cd "${CHROOTDIR}"/etc/rc.d
 	patch -p0 -i $now/rc.mount-fwlive_version.diff
+	cd "${CHROOTDIR}"
+	patch -p0 -i $now/init_scripts-silent.diff
 	cd $now
 
 	# Remove not needed start links in /etc/rc.d/rc[S34].d
@@ -105,8 +107,8 @@ create_source()
 	rm -f "${CHROOTDIR}"/etc/rc.d/rcS.d/S{12rc.fsck,17rc.swap,19rc.bootclean,07rc.frugalware} || be
 	inst_file 755 /etc/rc.d/rc.fwlive
 	ln -s ../rc.fwlive "${CHROOTDIR}"/etc/rc.d/rcS.d/S07rc.fwlive
-	rm -f "${CHROOTDIR}"/etc/rc.d/rc3.d/S{07rc.interfaces,21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,99cups,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} || be
-	rm -f "${CHROOTDIR}"/etc/rc.d/rc4.d/S{07rc.interfaces,21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} || be
+	rm -f "${CHROOTDIR}"/etc/rc.d/rc3.d/S{21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,99cups,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} || be
+	rm -f "${CHROOTDIR}"/etc/rc.d/rc4.d/S{21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} || be
 	rm -f "${CHROOTDIR}"/etc/rc.d/rc0.d/K{00cups,01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces}
 	rm -f "${CHROOTDIR}"/etc/rc.d/rc6.d/K{01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces}
 
@@ -121,7 +123,8 @@ create_source()
 	msg "Creating /etc/profile.d/lang.sh ..."
 	echo "export LANG=C" > "${CHROOTDIR}"/etc/profile.d/lang.sh
 	echo "export LC_ALL=\$LANG" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
-	echo "export CHARSET=iso-8859-1" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
+	echo "export CHARSET=iso-8859-2" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
+	chmod +x "${CHROOTDIR}"/etc/profile.d/lang.sh
 	msg "Creating temporary /etc/sysconfig/desktop ..."
 	echo 'desktop=""' > "${CHROOTDIR}"/etc/sysconfig/desktop || be
 	msg "Creating /etc/sysconfig/font with ${FLFONT} ..."
@@ -153,6 +156,7 @@ create_source()
 	fwf=`cat "${CHROOTDIR}"/etc/shadow|grep ^fwlive|awk -F ':' '{print $3}'`
 	sed "s|fwlive:\!:$fwf|fwlive:$fwpass:$fwf|" -i "${CHROOTDIR}"/etc/shadow
 	sed "s|root::$rof|root:$rootpass:$rof|" -i "${CHROOTDIR}"/etc/shadow
+	echo "fwlive	ALL=(ALL) NOPASSWD:ALL" > "${CHROOTDIR}"/etc/sudoers
 
 	# Extract the linux-live scripts
 	msg "Extracting linux-live-${LLVER}.tar.gz ..."

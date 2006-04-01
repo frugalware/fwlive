@@ -1,6 +1,6 @@
 #! /bin/bash
 
-libmklivecd=0.3
+libmklivecd=0.4
 
 # Functions for mklivecd
 # (c) 2006 Krisztian VASAS <iron@frugalware.org>
@@ -17,7 +17,7 @@ FLFONT="lat2-16.psfu.gz"
 FLHOST="fwlive"
 
 # FwLive release
-FLSREL="0.1rc6"
+FLSREL="0.1rc7"
 FLREL="${FLSREL} (Rhea)"
 
 # FwLive default shell
@@ -51,7 +51,7 @@ TERMS=(mrxvt rxvt-unicode)
 FMS=(emelfm2 rox-filer xfe)
 
 # Extra applications to install
-APPS=(bmp frugalpkg gaim gftp gimp gkrellm gtk-chtheme xsane \
+APPS=(ssh bmp frugalpkg gaim gftp gimp gkrellm gtk-chtheme xsane \
       gtkpacman gvim mplayer sylpheed thunderbird usbview xchat)
 #APPS=(amsn bluefish bmp dillo emacs fbdesk fbpager fetchmailconf firefox \
 #      fluxconf fluxter frugalpkg frugalrledit fwflux gaim  gftp gimp gtkrellm \
@@ -71,7 +71,7 @@ RPKGS=(xdm kdeedu gnome-games postgresql dosemu kernel-docs dvd+rw-tools dvdrtoo
 # Files that are needed by mklivecd
 #NFILES=(dhcpcd-eth0.info gpm interfaces keymap linux-live-${LLVER}.tar.gz \
 #        rc.hotplug slim.conf)
-NFILES=(desktop.wm linux-live-${LLVER}-fwlive_version.diff linux-live-${LLVER}.tar.gz \
+NFILES=(init_scripts-silent.diff desktop.wm linux-live-${LLVER}-fwlive_version.diff linux-live-${LLVER}.tar.gz \
         parse_cmdline create_fstab x_start_wm xconfig.fwlive \
 	parse_cmdline.en parse_cmdline.hu xconfig_fwlive.en xconfig_fwlive.hu \
 	rc.parse_cmdline rc.xconfig_fwlive rc.mount-fwlive_version.diff \
@@ -102,13 +102,17 @@ chroot_umount()
 bad_exit()
 {
 	msg "Something wrong happened ..."
-	chroot_umount && exit 1
+	chroot_umount && exit $1
 }
 
 # Shorter alias for bad_exit
 be()
 {
-	bad_exit
+	if [ "$#" -gt "0" ]; then
+		bad_exit $1
+	else
+		bad_exit 1
+	fi
 }
 
 # Create directories

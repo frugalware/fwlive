@@ -30,7 +30,7 @@ debug="" # if you want to test the script while an x server is running
 
 ### strings
 
-xbacktitle="$instx - FwLive `cat /etc/frugalware-release |cut -d ' ' -f 2` $setup"
+xbacktitle="$instx - FwLive `cat /etc/fwlive-release |cut -d ' ' -f 2` $setup"
 
 ### functions
 
@@ -43,7 +43,7 @@ mouse_options()
 
 kbd_options()
 {
-	if [[ "$LANG" =~ "^en_" ]]; then
+	if [[ "$LANG" =~ "^en_" -o "$LANG" == "C" ]]; then
 		echo "Option      \"XkbLayout\" \"us\""
 	else
 		echo "Option      \"XkbLayout\" \"`echo $LANG|sed 's/^\(.*\)_.*$/\1/'`\""
