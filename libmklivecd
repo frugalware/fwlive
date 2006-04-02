@@ -17,7 +17,7 @@ FLFONT="lat2-16.psfu.gz"
 FLHOST="fwlive"
 
 # FwLive release
-FLSREL="0.1rc7"
+FLSREL="0.1rc8"
 FLREL="${FLSREL} (Rhea)"
 
 # FwLive default shell

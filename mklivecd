@@ -131,6 +131,7 @@ create_source()
 	echo 'desktop=""' > "${CHROOTDIR}"/etc/sysconfig/desktop || be
 	msg "Creating /etc/sysconfig/font with ${FLFONT} ..."
 	echo "font=${FLFONT}" > "${CHROOTDIR}"/etc/sysconfig/font || be
+	touch ${CHROOTDIR}/etc/sysconfig/network/default
 
 	sed "s|Frugalware\ ${FWREL}|FwLive ${FLREL}|" -i "${CHROOTDIR}"/etc/issue
 	sed 's|Frugalware|FwLive|' -i "${CHROOTDIR}"/etc/issue.net
