@@ -43,7 +43,7 @@ mouse_options()
 
 kbd_options()
 {
-	if [[ "$LANG" =~ "^en_" -o "$LANG" == "C" ]]; then
+	if [[ "$LANG" =~ "^en_" || "$LANG" == "C" ]]; then
 		echo "Option      \"XkbLayout\" \"us\""
 	else
 		echo "Option      \"XkbLayout\" \"`echo $LANG|sed 's/^\(.*\)_.*$/\1/'`\""
