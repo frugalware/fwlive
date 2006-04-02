@@ -51,7 +51,7 @@ TERMS=(mrxvt rxvt-unicode)
 FMS=(emelfm2 rox-filer xfe)
 
 # Extra applications to install
-APPS=(ssh bmp frugalpkg gaim gftp gimp gkrellm gtk-chtheme xsane \
+APPS=(openssh bmp frugalpkg gaim gftp gimp gkrellm gtk-chtheme xsane \
       gtkpacman gvim mplayer sylpheed thunderbird usbview xchat)
 #APPS=(amsn bluefish bmp dillo emacs fbdesk fbpager fetchmailconf firefox \
 #      fluxconf fluxter frugalpkg frugalrledit fwflux gaim  gftp gimp gtkrellm \
