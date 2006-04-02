@@ -120,6 +120,8 @@ create_source()
 	echo "${FLHOST}" > "${CHROOTDIR}"/etc/HOSTNAME || be
 	msg "Creating /etc/fwlive-release with ${FLREL} ..."
 	echo "FwLive ${FLREL}, based on Frugalware Linux ${FWREL}" > "${CHROOTDIR}"/etc/fwlive-release || be
+	rm ${CHROOTDIR}/etc/frugalware-release
+	ln -s fwlive-release ${CHROOTDIR}/etc/frugalware-release
 	msg "Creating /etc/profile.d/lang.sh ..."
 	echo "export LANG=C" > "${CHROOTDIR}"/etc/profile.d/lang.sh
 	echo "export LC_ALL=\$LANG" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
