@@ -97,7 +97,7 @@ if [ "$mode" == "normal" ]; then
 keymap=$keymap
 EOF
 	echo "export LANG=$lang" > /etc/profile.d/lang.sh
-	echo "export LC_ALL=\$LANG" >> /etc/profile.d/lang.sh
+	echo "export LC_ALL=$lang" >> /etc/profile.d/lang.sh
 	echo "export CHARSET=iso-8859-2" >> /etc/profile.d/lang.sh
 			
 	if [ $xstart -ne 0 ]; then
@@ -109,5 +109,6 @@ EOF
 else
 	echo ""
 	/bin/bash
+	reboot
 #	This is the rescue mode, now just for support for latter versions...
 fi

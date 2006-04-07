@@ -94,12 +94,13 @@ create_source()
 	ln -s ../rc.xconfig_fwlive "${CHROOTDIR}"/etc/rc.d/rcS.d/S36rc.xconfig_fwlive
 
 	# Patching 
-	msg "Patching rc.mount ..."
+	msg "Patching in /etc/rc.d ..."
 	now=`pwd`
 	cd "${CHROOTDIR}"/etc/rc.d
 	patch -p0 -i $now/rc.mount-fwlive_version.diff
 	cd "${CHROOTDIR}"
 	patch -p0 -i $now/init_scripts-silent.diff
+	patch -p0 -i $now/rc.4-desktop_start_fix.diff
 	cd $now
 
 	# Remove not needed start links in /etc/rc.d/rc[S34].d
@@ -124,7 +125,7 @@ create_source()
 	ln -s fwlive-release ${CHROOTDIR}/etc/frugalware-release
 	msg "Creating /etc/profile.d/lang.sh ..."
 	echo "export LANG=C" > "${CHROOTDIR}"/etc/profile.d/lang.sh
-	echo "export LC_ALL=\$LANG" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
+	echo "export LC_ALL=$LANG" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
 	echo "export CHARSET=iso-8859-2" >> "${CHROOTDIR}"/etc/profile.d/lang.sh
 	chmod +x "${CHROOTDIR}"/etc/profile.d/lang.sh
 	msg "Creating temporary /etc/sysconfig/desktop ..."
@@ -132,6 +133,10 @@ create_source()
 	msg "Creating /etc/sysconfig/font with ${FLFONT} ..."
 	echo "font=${FLFONT}" > "${CHROOTDIR}"/etc/sysconfig/font || be
 	touch ${CHROOTDIR}/etc/sysconfig/network/default
+	msg "Creating /etc/hosts ..."
+	cp hosts ${CHROOTDIR}/etc
+	msg "Creatingg /var/tmp ..."
+	ln -s /tmp ${CHROOTDIR}/var/tmp
 
 	sed "s|Frugalware\ ${FWREL}|FwLive ${FLREL}|" -i "${CHROOTDIR}"/etc/issue
 	sed 's|Frugalware|FwLive|' -i "${CHROOTDIR}"/etc/issue.net

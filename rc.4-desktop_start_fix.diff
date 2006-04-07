@@ -1,0 +1,12 @@
+diff -Naur etc.old/rc.d/rc.4 etc/rc.d/rc.4
+--- etc.old/rc.d/rc.4	2006-04-07 13:18:00.000000000 +0200
++++ etc/rc.d/rc.4	2006-04-07 13:18:43.000000000 +0200
+@@ -12,7 +12,7 @@
+ 
+ if [ ! -f /tmp/noX -a -e /etc/sysconfig/desktop ]; then
+ 	. /etc/sysconfig/desktop
+-	$desktop
++	eval $desktop
+ 	logger $"Failed to use '$desktop' session manager."
+ fi
+ logger $"No /etc/sysconfig/desktop, can't use runlevel 4 without it."

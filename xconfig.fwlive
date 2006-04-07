@@ -13,6 +13,7 @@
 
 #. /var/lib/frugalware/messages/rc.messages
 . /etc/sysconfig/gpm
+. /etc/profile.d/lang.sh
 
 ### constants
 
@@ -193,10 +194,10 @@ x_start_wm=`cat /tmp/x_start_wm`
 case $x_start_wm in
 	gnome-session|startkde|icewm-session|blackbox)
 		echo "$x_start_wm" > /home/fwlive/.xinitrc
-		cat /etc/sysconfig/desktop.wm | sed "s|<:x_start_wm:>|su - fwlive /usr/local/bin/x_start_wm startx|" > /etc/sysconfig/desktop
+		cat /etc/sysconfig/desktop.wm | sed "s|<:x_start_wm:>|su -l fwlive -c 'LANG=$LANG LC_ALL=$LANG /usr/local/bin/x_start_wm startx'|" > /etc/sysconfig/desktop
 	;;
 	*)
-		cat /etc/sysconfig/desktop.wm | sed "s|<:x_start_wm:>|su - fwlive /usr/local/bin/x_start_wm $x_start_wm|" > /etc/sysconfig/desktop
+		cat /etc/sysconfig/desktop.wm | sed "s|<:x_start_wm:>|su -l fwlive -c 'LANG=$LANG LC_ALL=$LC_ALL /usr/local/bin/x_start_wm $x_start_wm'|" > /etc/sysconfig/desktop
 	;;
 esac
 

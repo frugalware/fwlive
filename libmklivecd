@@ -17,7 +17,7 @@ FLFONT="lat2-16.psfu.gz"
 FLHOST="fwlive"
 
 # FwLive release
-FLSREL="0.1rc8"
+FLSREL="0.1rc12"
 FLREL="${FLSREL} (Rhea)"
 
 # FwLive default shell
@@ -52,7 +52,7 @@ FMS=(emelfm2 rox-filer xfe)
 
 # Extra applications to install
 APPS=(openssh bmp frugalpkg gaim gftp gimp gkrellm gtk-chtheme xsane \
-      gtkpacman gvim mplayer sylpheed thunderbird usbview xchat)
+      gvim mplayer sylpheed thunderbird usbview xchat)
 #APPS=(amsn bluefish bmp dillo emacs fbdesk fbpager fetchmailconf firefox \
 #      fluxconf fluxter frugalpkg frugalrledit fwflux gaim  gftp gimp gtkrellm \
 #      gtk-chtheme gtkpacman gvim idesk imagemagick jacman menumaker mplayer \
@@ -71,7 +71,8 @@ RPKGS=(xdm kdeedu gnome-games postgresql dosemu kernel-docs dvd+rw-tools dvdrtoo
 # Files that are needed by mklivecd
 #NFILES=(dhcpcd-eth0.info gpm interfaces keymap linux-live-${LLVER}.tar.gz \
 #        rc.hotplug slim.conf)
-NFILES=(init_scripts-silent.diff desktop.wm linux-live-${LLVER}-fwlive_version.diff linux-live-${LLVER}.tar.gz \
+NFILES=(rc.4-desktop_start_fix.diff hosts init_scripts-silent.diff desktop.wm \
+        linux-live-${LLVER}-fwlive_version.diff linux-live-${LLVER}.tar.gz \
         parse_cmdline create_fstab x_start_wm xconfig.fwlive \
 	parse_cmdline.en parse_cmdline.hu xconfig_fwlive.en xconfig_fwlive.hu \
 	rc.parse_cmdline rc.xconfig_fwlive rc.mount-fwlive_version.diff \
