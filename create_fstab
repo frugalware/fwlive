@@ -30,17 +30,18 @@ echo "none  /sys   sysfs defaults  0  0" >> /tmp/fstab
 
 echo -n "Creating /etc/fstab"
 for dev in `$_ls -1 /sys/block | $_grep -v ^md | $_grep -v ^ram | $_grep -v ^loop`; do
-#	Found device let's see what is this..."
+#	Found device let's see what is this...
+	dev=`echo $dev | $_sed 's|/||'`
 	if [ `$_cat /sys/block/$dev/removable` -eq 0 ]; then
 		if [ -f /sys/block/$dev/device/model ]; then
 			mntpoint=disk${dn}-`$_cat /sys/block/$dev/device/model | $_sed 's/ *$//;s/^ *//; s/\W/-/g; s/\ /-/g'`
 		else
 			mntpoint=disk${dn}_`$_cat /proc/ide/$dev/model | $_tr ' ' '_'`
 		fi
-		p=0
 #		This is a disk, looking for partitions...
 		for j in `$_ls /sys/block/$dev/ | $_grep $dev`; do
-			p=`$_expr $p + 1`
+			j=`echo $j | $_sed 's|/||'`
+			p=`echo $j | $_sed "s|$dev||"`
 			part=part$p
 			partid=`$_fdisk -l /dev/$dev| $_grep ^/dev/$j | $_cut -b53-54`
 			fs=`$_parted /dev/$dev print | $_grep ^$p | $_awk '{print $6}'`
@@ -52,7 +53,7 @@ for dev in `$_ls -1 /sys/block | $_grep -v ^md | $_grep -v ^ram | $_grep -v ^loo
 				;;
 				linux-swap)
 # don't put anything here, we don't need currently swap
-# also don't uncomment
+# or maybe yes?
 					fstype='swap'
 					echo "/dev/$j  swap  $fstype  defaults  0  0" >> /tmp/fstab
 				;;
