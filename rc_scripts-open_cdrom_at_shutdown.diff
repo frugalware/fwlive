@@ -13,13 +13,13 @@ diff -Naur etc.old/rc.d/rc.reboot etc/rc.d/rc.reboot
 +
  	if (( ${rl} == 0 )) ; then
 -		poweroff
-+		echo -n "Now you can switch your computer off..."
++		echo -n "Now you can safely switch your computer off..."
 +		read x
  	else
 -		msg $"Rebooting the system"
 -		reboot
 -		ok $?
-+		echo -n "Now you can reboot your system..."
++		echo -n "Now you can safely reboot your system..."
 +		read x
  	fi
  }
