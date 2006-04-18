@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mklivecd=0.6
+mklivecd=0.7
 
 # (c) 2006 Krisztian VASAS <iron@frugalware.org>
 # (c) 2005 BMH1980 <bmh1980de@yahoo.de>
@@ -96,11 +96,15 @@ create_source()
 	# Patching 
 	msg "Patching in /etc/rc.d ..."
 	now=`pwd`
-	cd "${CHROOTDIR}"/etc/rc.d
-	patch -p0 -i $now/rc.mount-fwlive_version.diff
 	cd "${CHROOTDIR}"
-	patch -p0 -i $now/init_scripts-silent.diff
 	patch -p0 -i $now/rc.4-desktop_start_fix.diff
+	patch -p0 -i $now/sysctl-added_cdrom_locking.diff
+	patch -p0 -i $now/rc_scripts-silent.diff
+	patch -p0 -i $now/rc_scripts-added_fstab_creator.diff
+#	patch -p0 -i $now/rc_scripts-added_cdrom_locking.diff
+	patch -p0 -i $now/rc_scripts-no_remount_ro.diff
+	patch -p0 -i $now/rc_scripts-no_depmod.diff
+	patch -p0 -i $now/rc_scripts-open_cdrom_at_shutdown.diff
 	cd $now
 
 	# Remove not needed start links in /etc/rc.d/rc[S34].d
@@ -157,6 +161,7 @@ create_source()
 	# Create the default user
 	msg "Creating user ${FLUSER} ..."
 	chroot "${CHROOTDIR}" /usr/sbin/useradd -g users -G floppy,cdrom,scanner,audio,camera,video -m -s /bin/${FLSHELL} -u 1000 ${FLUSER} || be
+	chroot ${CHROOTDIR} /usr/sbin/useradd -g adm -m -s /sbin/reboot -u 1001 reboot
 	cc -lcrypt crypt.c -o crypt_fwlive
 	fwpass=`./crypt_fwlive fwlive`
 	rootpass=`./crypt_fwlive fwroot`
@@ -165,6 +170,7 @@ create_source()
 	sed "s|fwlive:\!:$fwf|fwlive:$fwpass:$fwf|" -i "${CHROOTDIR}"/etc/shadow
 	sed "s|root::$rof|root:$rootpass:$rof|" -i "${CHROOTDIR}"/etc/shadow
 	echo "fwlive	ALL=(ALL) NOPASSWD:ALL" > "${CHROOTDIR}"/etc/sudoers
+	echo "reboot	ALL=(ALL) NOPASSWD:/sbin/reboot" >> "${CHROOTDIR}"/etc/sudoers
 
 	# Extract the linux-live scripts
 	msg "Extracting linux-live-${LLVER}.tar.gz ..."
@@ -229,6 +235,8 @@ run_linuxlive()
 
 	# Moving the created iso file back
 	mv "${CHROOTDIR}"/tmp/livecd.iso ./fwlive-${FLSREL}.iso
+	[ -f SHA1SUM ] && cat SHA1SUM >> SHA1SUM.old
+	sha1sum ./fwlive-${FLSREL}.iso | sed 's|\./||' > SHA1SUM
 }
 
 usage()

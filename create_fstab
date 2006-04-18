@@ -7,6 +7,7 @@ dn=0
 rn=0
 
 _cp=`which cp`
+_ln=`which ln`
 _ls=`which ls`
 _mv=`which mv`
 _tr=`which tr`
@@ -85,9 +86,16 @@ for dev in `$_ls -1 /sys/block | $_grep -v ^md | $_grep -v ^ram | $_grep -v ^loo
 			;;
 			*)
 				# This is a CD/DVD drive...
+				bootdev=`cat /tmp/bootcd | sed 's|/dev/||'`
 				mntpoint=cdrom${rn}_`$_cat /proc/ide/$dev/model | $_sed 's/ *$//; s/^ *//; s/\W/-/g; s/\ /-/g'`
 				rn=`$_expr $rn + 1`
-				$_mkdir -p /media/$mntpoint
+				if [ "$bootdev" == "$dev" ]; then
+					$_ln -s /mnt/live/mnt/$dev /media/$mntpoint
+					$_ln -s /media/$mntpoint /cdrom
+					$_ln -s /dev/$dev /dev/cdrom
+				else
+					$_mkdir -p /media/$mntpoint
+				fi
 				echo "/dev/$dev   /media/$mntpoint  auto  ro,noauto,user  0  0" >> /tmp/fstab
 			;;
 		esac

@@ -1,5 +1,6 @@
---- /home/iron/rc.mount	2006-03-24 19:58:18.000000000 +0100
-+++ rc.mount	2006-03-15 11:06:35.000000000 +0100
+diff -Naur etc.old/rc.d/rc.mount etc/rc.d/rc.mount
+--- etc.old/rc.d/rc.mount	2006-03-25 00:17:49.000000000 +0100
++++ etc/rc.d/rc.mount	2006-04-14 20:27:07.000000000 +0200
 @@ -1,5 +1,6 @@
  #!/bin/bash
  
