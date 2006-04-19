@@ -161,7 +161,7 @@ create_source()
 	# Create the default user
 	msg "Creating user ${FLUSER} ..."
 	chroot "${CHROOTDIR}" /usr/sbin/useradd -g users -G floppy,cdrom,scanner,audio,camera,video -m -s /bin/${FLSHELL} -u 1000 ${FLUSER} || be
-	chroot ${CHROOTDIR} /usr/sbin/useradd -g adm -m -s /sbin/reboot -u 1001 reboot
+#	chroot ${CHROOTDIR} /usr/sbin/useradd -g adm -m -s /sbin/reboot -u 1001 reboot
 	cc -lcrypt crypt.c -o crypt_fwlive
 	fwpass=`./crypt_fwlive fwlive`
 	rootpass=`./crypt_fwlive fwroot`
@@ -170,7 +170,7 @@ create_source()
 	sed "s|fwlive:\!:$fwf|fwlive:$fwpass:$fwf|" -i "${CHROOTDIR}"/etc/shadow
 	sed "s|root::$rof|root:$rootpass:$rof|" -i "${CHROOTDIR}"/etc/shadow
 	echo "fwlive	ALL=(ALL) NOPASSWD:ALL" > "${CHROOTDIR}"/etc/sudoers
-	echo "reboot	ALL=(ALL) NOPASSWD:/sbin/reboot" >> "${CHROOTDIR}"/etc/sudoers
+#	echo "reboot	ALL=(ALL) NOPASSWD:/sbin/reboot" >> "${CHROOTDIR}"/etc/sudoers
 
 	# Extract the linux-live scripts
 	msg "Extracting linux-live-${LLVER}.tar.gz ..."
