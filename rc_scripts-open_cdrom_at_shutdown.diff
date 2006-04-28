@@ -1,7 +1,7 @@
 diff -Naur etc.old/rc.d/rc.reboot etc/rc.d/rc.reboot
 --- etc.old/rc.d/rc.reboot	2005-11-27 22:37:21.000000000 +0100
 +++ etc/rc.d/rc.reboot	2006-04-18 23:30:24.000000000 +0200
-@@ -22,13 +22,17 @@
+@@ -22,13 +22,16 @@
  
  rc_start()
  {
@@ -19,7 +19,6 @@ diff -Naur etc.old/rc.d/rc.reboot etc/rc.d/rc.reboot
 +		echo -n "Now you can reboot your system..."
  	fi
 +	eject -p -m cdrom
-+	read x
  }
  
  rc_exec $1

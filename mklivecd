@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mklivecd=0.7
+mklivecd=0.8
 
 # (c) 2006 Krisztian VASAS <iron@frugalware.org>
 # (c) 2005 BMH1980 <bmh1980de@yahoo.de>
@@ -73,8 +73,14 @@ create_source()
 	fi
 
 	# Install the LiveCD kernel
+	msg "Installing FwLive kernel ..."
 	pacman -Rd -r "${CHROOTDIR}" --noconfirm kernel
 	pacman -A -f -r "${CHROOTDIR}" --noconfirm kernel-fwlive-2.6.16-1-i686.fpm #inst_pkg kernel-fwlive
+
+	# Install the LiveCD sysvinit
+	msg "Installing FwLive sysvinit ..."
+	pacman -Rd -r "${CHROOTDIR}" --noconfirm sysvinit
+	pacman -A -f -r "${CHROOTDIR}" --noconfirm sysvinit-fwlive-2.86-1-i686.fpm #inst_pkg sysvinit-fwlive
 
 	# Install modified config files
 	inst_file 755 /usr/local/bin/parse_cmdline
@@ -94,7 +100,7 @@ create_source()
 	ln -s ../rc.xconfig_fwlive "${CHROOTDIR}"/etc/rc.d/rcS.d/S36rc.xconfig_fwlive
 
 	# Patching 
-	msg "Patching in /etc/rc.d ..."
+	msg "Patching init scripts in /etc/rc.d ..."
 	now=`pwd`
 	cd "${CHROOTDIR}"
 	patch -p0 -i $now/rc.4-desktop_start_fix.diff
@@ -234,9 +240,12 @@ run_linuxlive()
 	echo "" | chroot "${CHROOTDIR}" /tmp/linux-live-${LLVER}/runme.sh || be
 
 	# Moving the created iso file back
+	msg "Counting MD5 and SHA1 summaries ..."
 	mv "${CHROOTDIR}"/tmp/livecd.iso ./fwlive-${FLSREL}.iso
 	[ -f SHA1SUM ] && cat SHA1SUM >> SHA1SUM.old
 	sha1sum ./fwlive-${FLSREL}.iso | sed 's|\./||' > SHA1SUM
+	[ -f MD5SUM ] && cat MD5SUM >> MD5SUM.old
+	md5sum ./fwlive-${FLSREL}.iso | sed 's|\./||' > MD5SUM
 }
 
 usage()

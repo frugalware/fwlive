@@ -17,7 +17,7 @@ FLFONT="lat2-16.psfu.gz"
 FLHOST="fwlive"
 
 # FwLive release
-FLSREL="0.1-i686"
+FLSREL="0.1.1-i686"
 FLREL="${FLSREL} (Rhea)"
 
 # FwLive default shell
@@ -78,7 +78,7 @@ NFILES=(rc_scripts-no_remount_ro.diff rc_scripts-no_depmod.diff sysctl-added_cdr
 	parse_cmdline create_fstab x_start_wm xconfig.fwlive \
 	parse_cmdline.en parse_cmdline.hu xconfig_fwlive.en xconfig_fwlive.hu \
 	rc.parse_cmdline rc.xconfig_fwlive rc_scripts-added_fstab_creator.diff \
-	kernel-fwlive-2.6.16-1-i686.fpm rc.fwlive)
+	kernel-fwlive-2.6.16-1-i686.fpm rc.fwlive sysvinit-fwlive-2.86-1-i686.fpm)
 
 # Message
 msg()
