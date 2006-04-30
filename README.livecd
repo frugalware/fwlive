@@ -1,0 +1,25 @@
+Creating FwLive livecd           by Krisztian VASAS  http://fwlive.frugalware.hu
+                                                     E-mail: iron@frugalware.org
+
+You can read here some basic things about creating FwLive!
+
+The livecd is created by mklivecd shell script. This file has 2 parameters:
+   -s|--create-source	With this parameter you can create the source of the 
+			live system in chroot
+   -l|--create-live	With this parameter you can create the livecd from the
+			created source
+
+To create the source, you have to create the special kernel and the special 
+sysvinit package and copy the fpms to the directory that contains mklivecd.
+The source of these packages in their directory, you can create the packages
+with makepkg.
+The file libmklivecd contains the basis of mklivecd. In this file are the 
+installable and removeable packages, some important variables and functions
+defined.
+You will need the file linux-live-5.4.0.tar.gz, which is downloadable from
+http://www.linux-live.org/dl/linux-live-5.4.0.tar.gz or from the FwLive
+homepage: http://fwlive.frugalware.hu (don't care if you can't find the file
+on www.linux-live.org page, not this file is the newest).
+
+If you have problem creating livecd, please contact me.
+
