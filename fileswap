@@ -1,0 +1,40 @@
+#!/bin/bash
+# Create an empty file in /mnt and activate it as a swap
+# Author: Tomas M <http://slax.linux-live.org>
+#
+
+# only root can run this
+if [ "0$UID" -ne 0 ]; then
+   echo "Only root can run `basename $0`"; exit 1
+fi
+
+SWAPFILE=$1
+SWAPSIZE=$2
+
+if [ $(($SWAPSIZE)) -lt 1 ]; then
+   echo "File Swap - create swap as a file in writable filesystem" >&2
+   echo "usage: $0 [/mnt/partition/new_name.swap] [size MB]" >&2
+   exit 1
+fi
+
+if [ -d "$SWAPFILE" ]; then
+   echo "$SWAPFILE is a directory, use $SWAPFILE/fwswap.swp instead" >&2
+   exit 1
+fi
+
+if [ "`echo \"$SWAPFILE\" | egrep \"^/mnt\"`" = "" ]; then
+   echo "you must use path in /mnt" >&2
+   exit 1
+fi
+
+echo "creating empty $SWAPFILE"
+dd if=/dev/zero of=$SWAPFILE count=$SWAPSIZE bs=1M
+if [ "$?" -ne 0 ]; then exit 1; fi
+
+echo "setting up Linux swap area on $SWAPFILE"
+mkswap $SWAPFILE >/dev/null
+if [ "$?" -ne 0 ]; then exit 1; fi
+
+echo "activating swap on $SWAPFILE"
+swapon $SWAPFILE
+if [ "$?" -ne 0 ]; then exit 1; fi

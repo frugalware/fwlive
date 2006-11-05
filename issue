@@ -1,0 +1,21 @@
+[H[J
+[1;32m =================================================================================================[0;39m
+[1;32m  Welcome to FWLive by bigname v0.0                       \l    [0;39m
+[1;32m =================================================================================================[0;39m
+
+ [1;29m The system is up and running now.[0;29m
+
+  Login as "username", with password "userpass" or
+    login as "root", with password "rootpass", both without quotes, lowercase.
+
+ [1;29m After you login, try the following commands:[0;29m
+
+  mc ....... to start Midnight Commander (edit/copy/move/create/delete files)
+  configsave/configrestore  - or use - service config save/restore ... 
+				to save and restore all filesystem changes     
+  fileswap .... to create special file for swapping RAM to your harddisk
+  make_disk ... to install FWLive, use make_disk script on FWLive CD
+
+[1;32m  When finished, use "poweroff" or "reboot" command and wait until it completes [0;39m
+[1;32m =================================================================================================[0;39m
+
