@@ -1,17 +1,18 @@
 diff -Naur etc.old/rc.d/rc.dbus etc/rc.d/rc.dbus
---- etc.old/rc.d/rc.dbus	2006-02-25 15:49:47.000000000 +0100
-+++ etc/rc.d/rc.dbus	2006-04-02 11:08:14.000000000 +0200
-@@ -21,6 +21,6 @@
- 	"$0" start
- else # start
- 	start "$startdbus"
--	/usr/bin/dbus-daemon --system
-+	/usr/bin/dbus-daemon --system >/dev/null 2>&1
+--- etc.old/rc.d/rc.dbus	2006-06-26 00:40:35.000000000 +0200
++++ etc/rc.d/rc.dbus	2006-07-30 19:30:48.000000000 +0200
+@@ -34,7 +34,7 @@
+ 	[ -d /usr/share/dbus-1/services ] || mkdir -p /usr/share/dbus-1/services
+ 	## lets kill this weird error if you try to start twice
+ 	if [ ! -e $DPID ]; then
+-	   /usr/bin/dbus-daemon --system
++	   /usr/bin/dbus-daemon --system >/dev/null 2>&1
+ 	fi
+ 
  	ok $?
- fi
 diff -Naur etc.old/rc.d/rc.hald etc/rc.d/rc.hald
 --- etc.old/rc.d/rc.hald	2006-02-25 19:34:28.000000000 +0100
-+++ etc/rc.d/rc.hald	2006-04-02 11:08:14.000000000 +0200
++++ etc/rc.d/rc.hald	2006-07-30 19:31:06.000000000 +0200
 @@ -23,7 +23,7 @@
  else # start
  	start "$starthald"
@@ -22,8 +23,8 @@ diff -Naur etc.old/rc.d/rc.hald etc/rc.d/rc.hald
  	ok $?
  fi
 diff -Naur etc.old/rc.d/rc.modules etc/rc.d/rc.modules
---- etc.old/rc.d/rc.modules	2006-02-23 18:31:27.000000000 +0100
-+++ etc/rc.d/rc.modules	2006-04-02 11:08:14.000000000 +0200
+--- etc.old/rc.d/rc.modules	2006-07-30 19:05:15.000000000 +0200
++++ etc/rc.d/rc.modules	2006-07-30 19:32:11.000000000 +0200
 @@ -40,7 +40,7 @@
  		# only rebuild dependencies if new module(s) are found:
  		if ! [ "" = "$news" ]; then
@@ -51,7 +52,7 @@ diff -Naur etc.old/rc.d/rc.modules etc/rc.d/rc.modules
  	fi
  
  	## Starting reading conf file and loading modules
-@@ -81,10 +81,10 @@
+@@ -81,7 +81,7 @@
    				## If yes:  			
    				arg=$(echo $module | cut -f2 -d '"')
    				module=$(echo $module | cut -f1 -d '"')
@@ -59,24 +60,20 @@ diff -Naur etc.old/rc.d/rc.modules etc/rc.d/rc.modules
 +  				$MODPROBEBIN $module $arg >/dev/null 2>&1
    			else
    				## If not simply modprobe it
--  				$MODPROBEBIN $module
-+  				$MODPROBEBIN $module >/dev/null 2>&1
-   			fi
-   			fi
- 
+   				$MODPROBEBIN $module
 diff -Naur etc.old/rc.d/rc.mount etc/rc.d/rc.mount
---- etc.old/rc.d/rc.mount	2006-04-01 10:27:32.000000000 +0200
-+++ etc/rc.d/rc.mount	2006-04-02 11:08:14.000000000 +0200
-@@ -42,7 +42,7 @@
+--- etc.old/rc.d/rc.mount	2006-06-28 18:00:16.000000000 +0200
++++ etc/rc.d/rc.mount	2006-07-30 19:32:47.000000000 +0200
+@@ -38,7 +38,7 @@
  	# Mount non-root file systems in fstab (but not NFS or SMB 
  	# because TCP/IP is not yet configured).
  	msg $"Mounting local filesystems"
 -	mount -a -t nonfs,nosmbfs,noproc,nosysfs
-+	mount -a -t nonfs,nosmbfs,noproc,nosysfs 2>&1 >/dev/null
++	mount -a -t nonfs,nosmbfs,noproc,nosysfs >/dev/null 2>&1
  	ok $?
  
  	# Clean up some temporary files.
-@@ -59,7 +59,7 @@
+@@ -55,7 +55,7 @@
  	if [ "$rfstype" = "umsdos" ]; then
  		# We need to update any files added in DOS.
  		mgs $"Synchronizing UMSDOS directory structure"
@@ -86,20 +83,20 @@ diff -Naur etc.old/rc.d/rc.mount etc/rc.d/rc.mount
  	fi
  }
 diff -Naur etc.old/rc.d/rc.random etc/rc.d/rc.random
---- etc.old/rc.d/rc.random	2005-12-29 22:32:35.000000000 +0100
-+++ etc/rc.d/rc.random	2006-04-02 11:08:33.000000000 +0200
+--- etc.old/rc.d/rc.random	2006-05-30 14:00:14.000000000 +0200
++++ etc/rc.d/rc.random	2006-07-30 19:33:22.000000000 +0200
 @@ -46,7 +46,7 @@
  		rm -f /tmp/hunt*
  	fi
  	chmod 755 / 2> /dev/null
 -	chmod 1777 /tmp /var/tmp
-+	chmod 1777 /tmp /var/tmp 2>/dev/null
++	chmod 1777 /tmp /var/tmp >/dev/null 2>&1
  
  	if [ -f /etc/random-seed ]; then
  		cat /etc/random-seed >/dev/urandom
 diff -Naur etc.old/rc.d/rc.udev etc/rc.d/rc.udev
---- etc.old/rc.d/rc.udev	2006-03-24 19:10:01.000000000 +0100
-+++ etc/rc.d/rc.udev	2006-04-02 11:08:14.000000000 +0200
+--- etc.old/rc.d/rc.udev	2006-07-10 12:45:48.000000000 +0200
++++ etc/rc.d/rc.udev	2006-07-30 19:34:45.000000000 +0200
 @@ -11,7 +11,7 @@
  # Thanks go out to the Gentoo developers for proving 
  # that this is possible to do.
@@ -123,7 +120,7 @@ diff -Naur etc.old/rc.d/rc.udev etc/rc.d/rc.udev
  
  if ls /lib/udev/devices/* 2>/dev/null >/dev/null;then
 -	cp -a /lib/udev/devices/* /dev
-+	cp -a /lib/udev/devices/* /dev  >/dev/null 2>&1
++	cp -a /lib/udev/devices/* /dev >/dev/null 2>&1
  fi
  
  # check if udevd is already running

@@ -11,13 +11,13 @@ _cut=`which cut`
 ## default settings
 cmdline=`$_cat /proc/cmdline`
 mode="normal"
-lang="en_US"
-depth=24
+lang="hu_HU"
+depth=16
 xstart=1
 resolution="1024x768"
 dhcp=0
 netcfg=0
-echo "gnome-session" > /tmp/x_start_wm
+echo "startkde" > /tmp/x_start_wm
 
 ## parsing cmdline
 for i in $cmdline; do
@@ -68,17 +68,17 @@ case $desktop in
 	xfce4)
 		echo "startxfce4" > /tmp/x_start_wm
 	;;
-	kde)
-		echo "startkde" > /tmp/x_start_wm
-	;;
 	blackbox)
 		echo "blackbox" > /tmp/x_start_wm
 	;;
 	icewm)
 		echo "icewm-session" > /tmp/x_start_wm
 	;;
-	*)
+	gnome)
 		echo "gnome-session" > /tmp/x_start_wm
+	;;
+	*)
+		echo "startkde" > /tmp/x_start_wm
 	;;
 esac
 
