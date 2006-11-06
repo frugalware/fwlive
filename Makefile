@@ -22,7 +22,7 @@ FWLLLANG = hu_HU
 # codepage
 FWLCP = ISO-8859-2
 # installed apps group minimal/server/qt/gtk
-APPSGROUP = minimal
+APPSGROUP = server
 # hostname
 FWLHOST = fwlive
 # iso name
@@ -44,8 +44,8 @@ BIGN = Frugalware
 # additional  packages to be installed
 INST_MIN_APPS = sudo cdrtools openssh mc wget lynx nmap irssi dbus hal linux-live
 INST_SERVER_APPS = sudo cdrtools openssh mc wget lynx nmap irssi dbus hal linux-live ncftp \
-	perl mysql libmysqlclient php php-cgi apache mod_perl \
-	perl-dbd-mysql iptables proftpd fuseftp postfix
+	perl mysql libmysqlclient php php-cgi apache mod_perl pure-ftpd phpmyadmin \
+	perl-dbd-mysql iptables proftpd fuseftp postfix bind
 # needed files (files that we can't live without)
 NEED_FILES = rc_scripts-no_remount_ro.diff sysctl-added_cdrom_locking.diff \
 	rc.4-desktop_start_fix.diff rc_scripts-silent.diff desktop.wm \
@@ -214,7 +214,7 @@ create-users: checkroot
 		sed "s|root::$$rof|root:$$rootpass:$$rof|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		echo "${FWLUSER}    ALL=(ALL) NOPASSWD:ALL" >${CHROOTDIR}/${TREE}/etc/sudoers; \
 		sed "s|bigname|${BIGN}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
-		sed "s|v0.0|v${FWLSREL}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
+		sed "s|v0.0|${FWLSREL}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|userpass|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|rootpass|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
