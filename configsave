@@ -34,8 +34,8 @@
   if [ "$MYSELF" = "configsave" ]; then
      echo "saving changes to $CONFFILE..."
      rm $CONFFILE 2>/dev/null
-     touch $CHANGES/{etc,home,root,var}
-     mksquashfs $CHANGES/{etc,home,root,var} $CONFFILE -e $CHANGES/var/{run,log,man,tmp} /etc/fstab >/dev/null 2>/dev/null
+     touch $CHANGES/{SAVEDIRS}
+     mksquashfs $CHANGES/{SAVEDIRS} $CONFFILE -e $CHANGES/var/{run,log,man,tmp} /etc/fstab >/dev/null 2>/dev/null
      if [ $? -ne 0 ]; then echo "can't write config to $CONFFILE"; exit 1; fi
   fi
 
