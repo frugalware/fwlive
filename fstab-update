@@ -1,0 +1,31 @@
+#!/bin/bash
+# recreate fstab entries in /etc/fstab
+# and make /mnt directories
+# If $1 is "--daemon" then it will run forever, else only once
+#
+# Author: Tomas M <http://slax.linux-live.org/>
+
+if [ "`cat /proc/cmdline | grep nohd`" != "" -o "`cat /proc/cmdline | grep nomount`" != "" ]; then
+   exit 0;
+fi
+
+. /usr/local/bin/liblinuxlive
+
+if [ "$1" != "--daemon" ]; then
+   fstab_update /
+   exit 0
+fi
+
+echo "Starting $0 daemon, which will update fstab automatically ..."
+# I know that it's not the best idea to use bash script for this,
+# but it's better then nothing for now
+while [ 1 ]; do
+   PARTS="$(< /proc/partitions)"
+   if [ "$OLDPARTS" != "$PARTS" ]; then
+      fstab_update /
+      OLDPARTS="$PARTS"
+      mount -a -t nodevpts,nosysfs,noproc
+   fi
+   sleep 1
+done
+

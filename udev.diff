@@ -1,0 +1,20 @@
+diff -Naur etc.orig/rc.d/rc.udev etc/rc.d/rc.udev
+--- etc.orig/rc.d/rc.udev	2006-10-21 10:02:47.000000000 +0000
++++ etc/rc.d/rc.udev	2006-11-08 18:39:40.000000000 +0000
+@@ -11,7 +11,7 @@
+ # Thanks go out to the Gentoo developers for proving 
+ # that this is possible to do.
+ 
+-mount / -o rw,remount
++#mount / -o rw,remount
+ mount none -t sysfs /sys
+ 
+ . /etc/udev/udev.conf
+@@ -110,6 +110,6 @@
+ else
+ 	echo "/sbin/udevsend" > /proc/sys/kernel/hotplug
+ fi 
+-mount / -o ro,remount
++mount / -o ro,remount > /dev/null 2>&1
+ 
+ # end of rc.udev

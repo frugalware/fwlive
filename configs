@@ -1,0 +1,37 @@
+# this file included Makefile variables points
+#
+# # use -current or -stable system
+TREE = current
+# # font to be installed onto consoles
+FWLFONT = lat2-16.psfu.gz
+# # locale (short and long)
+FWLSLANG = hu
+FWLLLANG = hu_HU
+# # codepage
+FWLCP = ISO-8859-2
+# # installed apps group minimal/server/qt/gtk
+APPSGROUP = server
+# # hostname
+FWLHOST = fwlive
+# # iso name
+FWLSREL = ${APPSGROUP}-0.2-i686
+# # release name
+FWLREL = ${FWLSREL} (Alderaan)
+# # Live user
+FWLUSER = fwlive
+# # Live user pass
+FWUSERPASS = ${FWLUSER}
+# # Live root pass
+FWROOTPASS = fwroot
+# # frugalware version which livecd is based on
+FWREL = 0.5 (Siwenna)
+# # ISO name
+ISONAME = ${FWLHOST}
+# # big name
+BIGN = Frugalware
+# # saved directories
+SAVEDIRS = etc,home,root,var
+# additional  packages to be installed
+INST_MIN_APPS = sudo cdrtools openssh mc wget lynx nmap irssi dbus hal linux-live wireless_tools
+INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
+	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin \
