@@ -16,13 +16,13 @@ KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/
 # needed files (files that we can't live without)
 NEED_FILES = rc_scripts-no_remount_ro.diff sysctl-added_cdrom_locking.diff fstab-update \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
-	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline
+	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount.diff
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /usr/local/bin/configsave \
 	/usr/local/bin/fileswap /usr/local/bin/fstab-update \
 	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline
 INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en
 PWD = $(shell pwd)
-PATCH_FILES = sysctl-added_cdrom_locking.diff rc_scripts-no_remount_ro.diff reboot.diff services.diff udev.diff
+PATCH_FILES = sysctl-added_cdrom_locking.diff rc_scripts-no_remount_ro.diff reboot.diff services.diff udev.diff mount.diff
 REMOVE_FILES = /etc/rc.d/rcS.d/S{12rc.fsck,17rc.swap,19rc.bootclean,07rc.frugalware} \
 	   /etc/rc.d/rc{3.d,4.d}/S{21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,99cups,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} \
 	   /etc/rc.d/rc0.d/K{00cups,01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces,56rc.sshd,30rc.postfix} \
@@ -158,7 +158,6 @@ create-files: checkroot
 	echo "[eth0]" >${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "options = dhcp" >>${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "127.0.0.1       localhost" >${CHROOTDIR}/${TREE}/etc/hosts
-	echo "/usr/local/bin/fstab-update --daemon &" >>${CHROOTDIR}/${TREE}/etc/rc.d/rc.mount
 
 # FIXME: do we need this esd check at all?
 fix-files: checkroot
