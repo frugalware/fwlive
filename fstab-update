@@ -24,7 +24,7 @@ while [ 1 ]; do
    if [ "$OLDPARTS" != "$PARTS" ]; then
       fstab_update /
       OLDPARTS="$PARTS"
-      mount -a -t nodevpts,nosysfs,noproc
+      mount -a -t nodevpts,nosysfs,noproc,nosmb,nonfs
    fi
    sleep 1
 done

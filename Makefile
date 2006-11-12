@@ -182,7 +182,7 @@ create-users: checkroot
 		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|userpass|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|rootpass|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
-		sed "s|SAVEDIRS|${SAVEDIRS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/configsave; \
+		sed "s|SAVE_DIRS|${SAVEDIRS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/configsave; \
 	fi
 
 linux-live: checkroot
@@ -192,10 +192,9 @@ linux-live: checkroot
 	cp ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_{disk,iso}.sh ${CHROOTDIR}/${TREE}/usr/local/bin/
 	ln -s make_disk.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_disk
 	ln -s make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_iso
-	sed -i "s|769|788|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/isolinux.cfg
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/linux-live/runme.sh
-	sed -i "s|SLAX|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
-	sed -i "s|slax|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
+	sed -i "s|FWLive|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
+	sed -i "s|FWLive|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
 	mkdir -p ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/$(shell ${KERNVER})
 	for i in $$(find ${CHROOTDIR}/${TREE}/lib/modules/$(shell ${KERNVER}) -name "*.ko") ; do \
 		cp $${i} ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/$(shell ${KERNVER})/; \

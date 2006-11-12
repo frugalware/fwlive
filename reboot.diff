@@ -27,7 +27,7 @@ diff -Naur etc.orig/rc.d/rc.reboot etc/rc.d/rc.reboot
 -		ok $?
 -	fi
 +# eject cdrom devices
-+CD=`ls -1 /mnt 2>/dev/null | grep cdrom | sed 's/_.*//'`
++CD=`ls -1 /$MOUNTDIR 2>/dev/null | grep cdrom | sed 's/_.*//'`
 +SLEEP=10
 +if [ ! "`cmdline_parameter copy2ram`" ]; then
 +  if [ "$CD" ]; then

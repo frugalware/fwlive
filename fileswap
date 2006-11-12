@@ -13,7 +13,7 @@ SWAPSIZE=$2
 
 if [ $(($SWAPSIZE)) -lt 1 ]; then
    echo "File Swap - create swap as a file in writable filesystem" >&2
-   echo "usage: $0 [/mnt/partition/new_name.swap] [size MB]" >&2
+   echo "usage: $0 [/media/partition/new_name.swap] [size MB]" >&2
    exit 1
 fi
 
@@ -22,8 +22,8 @@ if [ -d "$SWAPFILE" ]; then
    exit 1
 fi
 
-if [ "`echo \"$SWAPFILE\" | egrep \"^/mnt\"`" = "" ]; then
-   echo "you must use path in /mnt" >&2
+if [ "`echo \"$SWAPFILE\" | egrep \"^/media\"`" = "" ]; then
+   echo "you must use path in /media" >&2
    exit 1
 fi
 
