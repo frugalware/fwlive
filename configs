@@ -32,6 +32,6 @@ BIGN = Frugalware
 # # saved directories
 SAVEDIRS = etc,home,root,var
 # additional  packages to be installed
-INST_MIN_APPS = sudo cdrtools openssh mc wget lynx nmap irssi dbus hal linux-live wireless_tools
+INST_MIN_APPS = sudo cdrtools openssh mc wget lynx nmap irssi dbus hal linux-live wireless_tools ntfs-3g
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
-	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin \
+	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin
