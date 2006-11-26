@@ -13,7 +13,7 @@
   FWCONF=fwliveconf.mo
   MEMORY=/$MOUNTDIR/live/memory
   CHANGES=$MEMORY/changes
-  SAVEDIRS=SAVE_DIRS
+  SAVEDIRS=" SAVE_DIRS"
 
   CONFFILE=$1
   if [ "$CONFFILE" = "" ]; then echo "usage: $0 /media/sda?/$FWCONF"; exit 1; fi
