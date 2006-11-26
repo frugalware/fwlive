@@ -201,8 +201,6 @@ linux-live: checkroot
 	done
 	rm -fr ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/2.6.16/
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/linux-live/config
-	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/linux-live/tools/liblinuxlive
-	sed -i "s|vmlinuz-`uname -r`|vmlinuz-$(shell ${KERNVER})|" ${CHROOTDIR}/${TREE}/tmp/linux-live/runme.sh
 
 create: chroot-mount create-iso chroot-umount
 	echo "./${ISONAME}-${FWLSREL}.iso created."
