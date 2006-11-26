@@ -187,11 +187,11 @@ create-users: checkroot
 
 linux-live: checkroot
 	cp -a ${CHROOTDIR}/${TREE}/usr/share/linux-live ${CHROOTDIR}/${TREE}/tmp/
-	ln -s configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
+	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
 	cp ${CHROOTDIR}/${TREE}/tmp/linux-live/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
 	cp ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_{disk,iso}.sh ${CHROOTDIR}/${TREE}/usr/local/bin/
-	ln -s make_disk.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_disk
-	ln -s make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_iso
+	ln -sf make_disk.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_disk
+	ln -sf make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_iso
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/linux-live/runme.sh
 	sed -i "s|FWLive|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
 	sed -i "s|FWLive|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
@@ -201,6 +201,8 @@ linux-live: checkroot
 	done
 	rm -fr ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/2.6.16/
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/linux-live/config
+	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/linux-live/tools/liblinuxlive
+
 
 create: chroot-mount create-iso chroot-umount
 	echo "./${ISONAME}-${FWLSREL}.iso created."
