@@ -16,14 +16,14 @@ KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/
 # needed files (files that we can't live without)
 NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
-	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount.diff
+	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount_fsck.diff
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /usr/local/bin/configsave \
 	/usr/local/bin/fileswap /usr/local/bin/fstab-update \
-	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline
-INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en
+	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/linux-live/tools/fpm2mo
+INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en 
 PWD = $(shell pwd)
-PATCH_FILES = sysctl-added_cdrom_locking.diff reboot.diff services.diff udev.diff mount.diff
-REMOVE_FILES = /etc/rc.d/rcS.d/S{12rc.fsck,17rc.swap,19rc.bootclean,07rc.frugalware} \
+PATCH_FILES = sysctl-added_cdrom_locking.diff reboot.diff services.diff udev.diff mount_fsck.diff
+REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/rc.d/rc{3.d,4.d}/S{21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,99cups,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} \
 	   /etc/rc.d/rc0.d/K{00cups,01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces,56rc.sshd,30rc.postfix} \
 	   /etc/rc.d/rc6.d/K{01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces,56rc.sshd,30rc.postfix} \
@@ -69,25 +69,25 @@ chroot-mkdirs: checkroot
 	mkdir -p ${CHROOTDIR}/${TREE}/{dev,etc,proc,sys,var/cache/pacman}
 	
 create-pkgdb: checkroot
-	pacman -r ${CHROOTDIR}/${TREE} -Syu --noconfirm --config ${PACCONF}
+	pacman -r ${CHROOTDIR}/${TREE} -Syuf --noconfirm --config ${PACCONF}
 
 # pacman should really have a --dont-reinstall switch
 install-base: checkroot
 	if [ ! -d "${CHROOTDIR}/${TREE}/usr" ] ; then \
-		pacman -r ${CHROOTDIR}/${TREE} -S base --noconfirm --config ${PACCONF} ; \
+		pacman -r ${CHROOTDIR}/${TREE} -Sf base --noconfirm --config ${PACCONF} ; \
 	fi
 
 install-minimal-apps: checkroot
 	if [ "${INST_MIN_APPS}" ] ; then \
 		if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
-			pacman -r ${CHROOTDIR}/${TREE} -S ${INST_MIN_APPS} --noconfirm --config ${PACCONF} ; \
+			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_MIN_APPS} --noconfirm --config ${PACCONF} ; \
 		fi ; \
 	fi
 
 install-server-apps: checkroot
 	if [ "${INST_SERVER_APPS}" ] ; then \
 		if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
-			pacman -r ${CHROOTDIR}/${TREE} -S ${INST_SERVER_APPS} --noconfirm --config ${PACCONF} ; \
+			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_SERVER_APPS} --noconfirm --config ${PACCONF} ; \
 		fi ; \
 	fi
 
@@ -104,11 +104,11 @@ install-files: checkroot
 		install -m 644 -g root -o root -D $$(basename $$i) ${CHROOTDIR}/${TREE}/$$i; \
 	done
 
-#patch -p0 -R --dry-run -N -i ${PWD}/$$i
+#patch -p0 -R --dry-run -N -i -b ${PWD}/$$i
 patch-files: checkroot
 	cd ${CHROOTDIR}/${TREE}; \
 	for i in ${PATCH_FILES}; do \
-		patch -p0 -i ${PWD}/$$i ; \
+		patch -p0 -i ${PWD}/$$i; \
 	done; \
 	cd ${PWD}
 
@@ -202,6 +202,9 @@ linux-live: checkroot
 	rm -fr ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/2.6.16/
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/linux-live/config
 
+create-mo: checkroot
+
+
 create: chroot-mount create-iso chroot-umount
 	echo "./${ISONAME}-${FWLSREL}.iso created."
 
@@ -209,6 +212,7 @@ create-iso: checkroot
 	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -v $(shell ${KERNVER})
 	chroot ${CHROOTDIR}/${TREE} /tmp/linux-live/runme.sh
 	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${FWLSREL}.iso
+	cp ${ISONAME}-${FWLSREL}.iso /var/cache/pacman/
 	echo "Won't calculate any sums. Period."
 
 chroot-mount: checkroot
@@ -238,5 +242,5 @@ cache-umount: checkroot
 clean:
 	rm -f ${ISONAME}-${FWLSREL}.iso crypt_fwlive
 
-really-clean: clean checkroot
-	rm -rf ${CHROOTDIR}/${TREE}/*
+really-clean: checkroot
+	rm -rf ${CHROOTDIR}/${TREE}
