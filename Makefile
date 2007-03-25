@@ -16,11 +16,12 @@ KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/
 # needed files (files that we can't live without)
 NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update xstart \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
-	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount_fsck.diff 
+	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount_fsck.diff xstart xorg.conf menu.lst 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /usr/local/bin/configsave \
 	/usr/local/bin/fileswap /usr/local/bin/fstab-update /usr/local/bin/xstart \
 	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/live-base/tools/fpm2lzm
-INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en 
+INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en \
+		 /etc/X11/xorg.conf /boot/grub/menu.lst
 PWD = $(shell pwd)
 PATCH_FILES = sysctl-added_cdrom_locking.diff reboot.diff services.diff udev.diff mount_fsck.diff
 REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
@@ -188,12 +189,6 @@ live-base: checkroot
 	ln -sf install ${CHROOTDIR}/${TREE}/tmp/live-base/uninstall
 	ln -sf ../tools/liblinuxlive ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/liblinuxlive
 
-live-base-to: live-base
-	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
-	sed -i  "s|linuxcd|${FWLSREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
-	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
-	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
-
 live-bin: checkroot
 	pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 	cp ${CHROOTDIR}/${TREE}/sbin/blkid ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
@@ -220,6 +215,10 @@ live-bin: checkroot
 	ln -s message ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message-frugalware
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	sed "s|NAME|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	sed -i  "s|linuxcd|${FWLSREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
+	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	pacman -r ${CHROOTDIR}/${TREE} -Rd ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 
 create: chroot-mount create-iso chroot-umount
@@ -229,6 +228,7 @@ create-iso: checkroot
 	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
 	chroot ${CHROOTDIR}/${TREE} /tmp/live-base/build
 	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${FWLSREL}.iso
+	clean
 	cp ${ISONAME}-${FWLSREL}.iso /var/cache/pacman/
 	echo "Won't calculate any sums. Period."
 
