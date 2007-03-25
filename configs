@@ -10,13 +10,13 @@ FWLLLANG = hu_HU
 # # codepage
 FWLCP = ISO-8859-2
 # # installed apps group minimal/server/qt/gtk
-APPSGROUP = server
+APPSGROUP = KDE
 # # hostname
 FWLHOST = fwlive
 # # iso name
-FWLSREL = ${APPSGROUP}-0.2-i686
+FWLSREL = FWLive-${APPSGROUP}
 # # release name
-FWLREL = ${FWLSREL} (Alderaan)
+FWLREL = ${FWLSREL}-0.6-i686 (Voyager)
 # # Live user
 FWLUSER = fwlive
 # # Live user pass
@@ -24,7 +24,7 @@ FWUSERPASS = ${FWLUSER}
 # # Live root pass
 FWROOTPASS = fwroot
 # # frugalware version which livecd is based on
-FWREL = 0.5 (Siwenna)
+FWREL = 0.6 (Terminus)
 # # ISO name
 ISONAME = ${FWLHOST}
 # # big name
@@ -32,6 +32,10 @@ BIGN = Frugalware
 # # saved directories
 SAVEDIRS = etc home root var
 # additional  packages to be installed
-INST_MIN_APPS = sudo cdrtools openssh mc wget lynx nmap irssi dbus hal linux-live wireless_tools
+INST_BIN_APPS = busybox memtest86+ util-linux squashfs grub-theme-frugalware
+INST_MIN_APPS = ${INST_BIN_APPS} sudo aufs squashfs cdrtools openssh mc wget lynx nmap irssi \
+	dbus hal wireless_tools ndiswrapper vim elinks links
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
-	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin
+	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp dhcpcd lighttpd fcgi
+INST_X_APPS = ${INST_MIN_APPS} xorg-server fvwm
+INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer flashplugin

@@ -12,14 +12,14 @@
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 $(shell touch /tmp/tmp.fwlivetmp)
 PACCONF = /tmp/tmp.fwlivetmp
-KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
+KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fwlive-fw/'
 # needed files (files that we can't live without)
-NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update \
+NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update xstart \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
-	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount_fsck.diff
+	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount_fsck.diff 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /usr/local/bin/configsave \
-	/usr/local/bin/fileswap /usr/local/bin/fstab-update \
-	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/linux-live/tools/fpm2mo
+	/usr/local/bin/fileswap /usr/local/bin/fstab-update /usr/local/bin/xstart \
+	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/live-base/tools/fpm2lzm
 INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en 
 PWD = $(shell pwd)
 PATCH_FILES = sysctl-added_cdrom_locking.diff reboot.diff services.diff udev.diff mount_fsck.diff
@@ -30,7 +30,7 @@ REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/frugalware-release
 CC = cc
 
-all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-${APPSGROUP}-apps install-kernel cache-umount install-files patch-files remove-files kill-packages create-symlinks create-files fix-files create-users linux-live chroot-mount create-iso chroot-umount
+all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-apps install-kernel cache-umount install-files patch-files remove-files kill-packages create-symlinks create-files fix-files create-users live-base create
 	@echo "Finally, we do nothing more by now."
 	@echo "Now burn your iso and have fun!"
 
@@ -66,7 +66,7 @@ checkroot:
 	fi
 
 chroot-mkdirs: checkroot
-	mkdir -p ${CHROOTDIR}/${TREE}/{dev,etc,proc,sys,var/cache/pacman}
+	mkdir -p ${CHROOTDIR}/${TREE}/{dev,etc,proc,sys,var/cache/pacman,var/log}
 	
 create-pkgdb: checkroot
 	pacman -r ${CHROOTDIR}/${TREE} -Syuf --noconfirm --config ${PACCONF}
@@ -77,17 +77,10 @@ install-base: checkroot
 		pacman -r ${CHROOTDIR}/${TREE} -Sf base --noconfirm --config ${PACCONF} ; \
 	fi
 
-install-minimal-apps: checkroot
-	if [ "${INST_MIN_APPS}" ] ; then \
+install-apps: checkroot
+	if [ "${INST_${APPSGROUP}_APPS}" ] ; then \
 		if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
-			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_MIN_APPS} --noconfirm --config ${PACCONF} ; \
-		fi ; \
-	fi
-
-install-server-apps: checkroot
-	if [ "${INST_SERVER_APPS}" ] ; then \
-		if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
-			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_SERVER_APPS} --noconfirm --config ${PACCONF} ; \
+			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_${APPSGROUP}_APPS} --noconfirm --config ${PACCONF} ; \
 		fi ; \
 	fi
 
@@ -185,32 +178,53 @@ create-users: checkroot
 		sed "s|SAVE_DIRS|${SAVEDIRS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/configsave; \
 	fi
 
-linux-live: checkroot
-	cp -a ${CHROOTDIR}/${TREE}/usr/share/linux-live ${CHROOTDIR}/${TREE}/tmp/
+live-base: checkroot
+	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
-	cp ${CHROOTDIR}/${TREE}/tmp/linux-live/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
-	cp ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_{disk,iso}.sh ${CHROOTDIR}/${TREE}/usr/local/bin/
-	ln -sf make_disk.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_disk
+	cp ${CHROOTDIR}/${TREE}/tmp/live-base/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
+	cp ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/
 	ln -sf make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_iso
-	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/linux-live/runme.sh
-	sed -i "s|FWLive|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
-	sed -i "s|FWLive|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/linux-live/cd-root/make_iso.sh
-	mkdir -p ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/$(shell ${KERNVER})
-	for i in $$(find ${CHROOTDIR}/${TREE}/lib/modules/$(shell ${KERNVER}) -name "*.ko") ; do \
-		cp $${i} ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/$(shell ${KERNVER})/; \
-	done
-	rm -fr ${CHROOTDIR}/${TREE}/tmp/linux-live/initrd/kernel-modules/2.6.16/
-	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/linux-live/config
 
-create-mo: checkroot
+live-base-to: live-base
+	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	sed -i  "s|linuxcd|${FWLSREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
+	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 
+live-bin: checkroot
+	pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
+	cp ${CHROOTDIR}/${TREE}/sbin/blkid ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
+	cp ${CHROOTDIR}/${TREE}/sbin/blockdev ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
+	cp ${CHROOTDIR}/${TREE}/usr/share/busybox/bin/busybox ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
+	cp ${CHROOTDIR}/${TREE}/usr/bin/eject ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
+	cp ${CHROOTDIR}/${TREE}/usr/sbin/lspci ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
+	cp ${CHROOTDIR}/${TREE}/lib/ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
+	ln -s ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/ld-linux.so.2
+	cp ${CHROOTDIR}/${TREE}/lib/libblkid.so.1.0 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
+	ln -s libblkid.so.1.0 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libblkid.so.1
+	cp ${CHROOTDIR}/${TREE}/lib/libc-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
+	ln -s libc-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libc.so.6
+	cp ${CHROOTDIR}/${TREE}/lib/libuuid.so.1.2 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
+	ln -s libuuid.so.1.2 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libuuid.so.1
+	cp ${CHROOTDIR}/${TREE}/usr/lib/libz.so.1.2.3 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
+	ln -s libz.so.1.2.3 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libz.so
+	ln -s libz.so.1.2.3 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libz.so.1
+	cp ${CHROOTDIR}/${TREE}/usr/bin/mksquashfs ${CHROOTDIR}/${TREE}/tmp/live-base/tools/
+	cp ${CHROOTDIR}/${TREE}/usr/bin/unsquashfs ${CHROOTDIR}/${TREE}/tmp/live-base/tools/
+	cp ${CHROOTDIR}/${TREE}/boot/memtest.bin ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
+	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
+	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
+	ln -s message ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message-frugalware
+	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
+	sed "s|NAME|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	pacman -r ${CHROOTDIR}/${TREE} -Rd ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 
 create: chroot-mount create-iso chroot-umount
 	echo "./${ISONAME}-${FWLSREL}.iso created."
 
 create-iso: checkroot
-	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -v $(shell ${KERNVER})
-	chroot ${CHROOTDIR}/${TREE} /tmp/linux-live/runme.sh
+#	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
+	chroot ${CHROOTDIR}/${TREE} /tmp/live-base/build
 	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${FWLSREL}.iso
 	cp ${ISONAME}-${FWLSREL}.iso /var/cache/pacman/
 	echo "Won't calculate any sums. Period."
