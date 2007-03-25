@@ -31,7 +31,7 @@ REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/frugalware-release
 CC = cc
 
-all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-apps install-kernel cache-umount install-files patch-files remove-files kill-packages create-symlinks create-files fix-files create-users live-base create
+all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-apps install-kernel cache-umount install-files patch-files remove-files kill-packages create-symlinks create-files fix-files create-users live-base hacking-kdmrc create
 	@echo "Finally, we do nothing more by now."
 	@echo "Now burn your iso and have fun!"
 
@@ -152,7 +152,8 @@ create-files: checkroot
 	echo "[eth0]" >${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "options = dhcp" >>${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "127.0.0.1       localhost" >${CHROOTDIR}/${TREE}/etc/hosts
-	sed "s|id:4:initdefault:|id:3:initdefault:|" ${CHROOTDIR}/${TREE}/etc/inittab
+	sed -i "s|id:4:initdefault:|id:3:initdefault:|" ${CHROOTDIR}/${TREE}/etc/inittab
+	sed -i "s|NUMLOCK_ON=1|NUMLOCK_ON=0|" ${CHROOTDIR}/${TREE}/etc/sysconfig/numlock
 
 # FIXME: do we need this esd check at all?
 fix-files: checkroot
@@ -181,6 +182,7 @@ create-users: checkroot
 	fi
 
 live-base: checkroot
+	pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
@@ -188,9 +190,6 @@ live-base: checkroot
 	ln -sf make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_iso
 	ln -sf install ${CHROOTDIR}/${TREE}/tmp/live-base/uninstall
 	ln -sf ../tools/liblinuxlive ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/liblinuxlive
-
-live-bin: checkroot
-	pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 	cp ${CHROOTDIR}/${TREE}/sbin/blkid ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
 	cp ${CHROOTDIR}/${TREE}/sbin/blockdev ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
 	cp ${CHROOTDIR}/${TREE}/usr/share/busybox/bin/busybox ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
@@ -220,6 +219,20 @@ live-bin: checkroot
 	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	pacman -r ${CHROOTDIR}/${TREE} -Rd ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
+
+hacking-kdmrc: checkroot
+	if [ ${APPSGROUP} = "KDE" ]  ; then \
+		sed -i "s|RebootCmd=/sbin/reboot -n|RebootCmd=/sbin/reboot|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|AutoReLogin=false|AutoReLogin=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|AllowShutdown=Root|AllowShutdown=All|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|NoPassEnable=false|NoPassEnable=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|NoPassUsers=|NoPassUsers=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|NumLock=On|NumLock=Off|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|AutoLoginEnable=false|AutoLoginEnable=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|#AutoLoginUser=foo|AutoLoginUser=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|PreselectUser=Previous|PreselectUser=None|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|FocusPasswd=false|FocusPasswd=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+	fi
 
 create: chroot-mount create-iso chroot-umount
 	echo "./${ISONAME}-${FWLSREL}.iso created."
