@@ -15,6 +15,8 @@
 				to save and restore all filesystem changes     
   fileswap .... to create special file for swapping RAM to your harddisk
   make_disk ... to install FWLive, use make_disk script on FWLive CD
+  xstart ... to starting KDE with default X setting (1024x768 & vesa) or
+  using "setup" script your adjust sure enough.
 
 [1;32m  When finished, use "poweroff" or "reboot" command and wait until it completes [0;39m
 [1;32m =================================================================================================[0;39m

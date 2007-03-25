@@ -151,6 +151,7 @@ create-files: checkroot
 	echo "[eth0]" >${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "options = dhcp" >>${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "127.0.0.1       localhost" >${CHROOTDIR}/${TREE}/etc/hosts
+	sed "s|id:4:initdefault:|id:3:initdefault:|" ${CHROOTDIR}/${TREE}/etc/inittab
 
 # FIXME: do we need this esd check at all?
 fix-files: checkroot
@@ -184,6 +185,8 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/
 	ln -sf make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_iso
+	ln -sf install ${CHROOTDIR}/${TREE}/tmp/live-base/uninstall
+	ln -sf ../tools/liblinuxlive ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/liblinuxlive
 
 live-base-to: live-base
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
@@ -223,7 +226,7 @@ create: chroot-mount create-iso chroot-umount
 	echo "./${ISONAME}-${FWLSREL}.iso created."
 
 create-iso: checkroot
-#	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
+	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
 	chroot ${CHROOTDIR}/${TREE} /tmp/live-base/build
 	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${FWLSREL}.iso
 	cp ${ISONAME}-${FWLSREL}.iso /var/cache/pacman/
