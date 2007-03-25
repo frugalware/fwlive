@@ -1,0 +1,218 @@
+#!/bin/ash
+# Initial script for Linux Live operating system
+# Author: Tomas M <http://www.linux-live.org/>
+
+export PATH=.:/:/usr/sbin:/usr/bin:/sbin:/bin
+. liblinuxlive
+
+header "starting Linux Live scripts <http://www.linux-live.org/>"
+
+echolog "mounting /proc and /sys filesystems"
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+ln -sf /proc/mounts /etc/mtab # this allows us to use umount -a
+mount -o remount,rw /         # for the case we forgot rw boot option
+
+# use mdev to create /dev/ devices and setup it as a hotplug-handler
+mdev_start_hotplug
+
+# setup DEBUGCMD variable. If debug boot option is present, call debug()
+# function several times during script's execution to help fighting bugs
+if [ "`cmdline_parameter debug`" ]; then DEBUGCMD="debug"; else DEBUGCMD=""; fi
+
+if [ "$DEBUGCMD" != "" ]; then
+   # debug prompt requires a keyboard. Including USB keyboards
+   modprobe_usb_modules
+fi
+
+$DEBUGCMD
+
+# Find out how much of RAM do we like to use to save filesystem changes
+# Defaults to 60%. Moreover it's not used if changes= boot argument exists.
+RAMSIZE="`cmdline_value ramsize`"
+if [ "$RAMSIZE" = "" ]; then RAMSIZE="60%"; fi
+
+# Load essential drivers, like CDROM drivers, aufs/squashfs etc.
+modprobe_essential_modules
+
+# disable DMA if nodma parameter is used
+setup_dma
+
+# make sure ext3 partitions are not mounted using ext2 driver,
+# and vfat partitions are not mounted using msdos driver
+echo -e "ext3\next2\nvfat\n*" >/etc/filesystems
+
+mkdir -p $UNION
+mkdir -p $MEMORY
+
+$DEBUGCMD
+
+# Find livecd data directory
+echolog "looking for data directory"
+
+# First, try from= boot argument, if given
+DATAFROM="`cmdline_value from`"
+
+if [ "$DATAFROM" ]; then
+   DATAFROM="`find_file $MOUNTDIR $DATAFROM`"
+   if [ "$DATAFROM" = "" ]; then
+      # still empty? Load USB drivers and try again
+      modprobe_usb_modules
+      DATAFROM="`find_file $MOUNTDIR $DATAFROM`"
+   fi
+
+   if [ "$DATAFROM" ]; then
+      mount_device $DATAFROM $LOOPMOUNT # mount again, it may be loop device
+      if [ $? -eq 0 -a -f "$LOOPMOUNT/$LIVECDNAME" ]; then
+         echolog "found in $LOOPMOUNT"
+         DATA=$LOOPMOUNT/$LIVECDNAME
+      else
+         umount $LOOPMOUNT
+	 umount $MOUNTDIR/* 2>/dev/null
+      fi
+   fi
+fi
+
+if [ "$DATA" = "" ]; then
+   # from= is not used or it didn't contain valid data
+   DATA="`find_file $MOUNTDIR $LIVECDNAME`"
+fi
+
+if [ "$DATA" = "" ]; then
+   # Still nothing found? Load USB modules and try again
+   modprobe_usb_modules
+   DATA="`find_file $MOUNTDIR $LIVECDNAME`"
+fi
+
+if [ "$DATA" = "" ]; then fatal \
+"$LIVECDNAME data not found.
+You are maybe using an unsupported boot device (eg. SCSI or PCMCIA CD-ROM).
+Workaround: Copy the directory $LIVECDNAME from your boot device to an IDE/SATA
+disk, eg. to /mnt/hda1/$LIVECDNAME or C:\\$LIVECDNAME. Then try to boot again."
+fi
+
+echolog "Using $LIVECDNAME data from $DATA"
+
+$DEBUGCMD
+
+echolog "setting up directory for changes"
+CHANGESVAL="`cmdline_value changes`"
+
+if [ "$CHANGESVAL" ]; then
+   CHANGESMNT="`find_file $MOUNTDIR $CHANGESVAL`"
+   if [ "$CHANGESMNT" = "" ]; then
+      # still empty? Load USB modules and try again
+      modprobe_usb_modules
+      CHANGESPATH="`find_file $MOUNTDIR $CHANGESVAL`"
+   fi
+   echolog $CHANGESMNT
+fi
+
+mount_device $CHANGESMNT $MEMORY # if empty or fails, mount tmpfs:
+if [ $? -ne 0 ]; then mount -t tmpfs -o "size=$RAMSIZE" tmpfs $MEMORY; fi
+
+# $UNION will be used as a root directory, livecd modules will be added soon
+echolog "setup union directory (using aufs)"
+
+mkdir -p $CHANGES
+if [ $? -ne 0 ]; then
+   fatal "a Read-Only filesystem is not supported"
+fi
+
+mkdir -p $IMAGES
+mount -t aufs -o br:$CHANGES=rw aufs $UNION
+if [ $? -ne 0 ]; then fatal "can't setup union (aufs)"; fi
+
+$DEBUGCMD
+
+# If toram or copy2ram boot parameter is present, copy all fs modules to RAM.
+# (skip modules from /optional/ which are not listed in load= boot option)
+# Finaly modify DATA variable so it will point to correct directory
+if [ "`cmdline_parameter toram`" != "" -o "`cmdline_parameter copy2ram`" != "" ]; then
+   echolog "copying data to RAM, this may take some time..."
+   mkdir -p $COPY2RAM
+
+   # make sure it's in RAM even with changes= parameter
+   if [ "$CHANGESMNT" ]; then mount -t tmpfs -o "size=$RAMSIZE" tmpfs $COPY2RAM; fi
+   copy_to_ram $DATA $COPY2RAM
+
+   cd_autoeject 1
+   umount $DATA 2>/dev/null
+   umount $MOUNTDIR/* 2>/dev/null
+   rmdir $MOUNTDIR/* 2>/dev/null # mounted device names are empty, remove them
+   DATA=$COPY2RAM
+   cd_autoeject 0
+fi
+
+$DEBUGCMD
+
+# DATA contains path to the base directory of all fs modules which need
+# to be mounted and inserted into live filesystem. Do it now.
+echolog "inserting all modules and creating live filesystem"
+union_insert_modules $UNION $DATA $IMAGES
+
+# the $MEMORY directory can contain $MEMORY/modules too
+# in the case where changes= boot argument is used. If not, it doesn't hurt
+union_insert_modules $UNION $MEMORY $IMAGES
+
+$DEBUGCMD
+
+echolog "copying content of rootcopy directory"
+cp -a $DATA/rootcopy/* $UNION 2>/dev/null # may be empty
+
+$DEBUGCMD
+
+echolog "creating /etc/fstab"
+echo -ne > $UNION/etc/fstab
+fstab_update $UNION
+
+# More likely these directories aren't there.
+# Even if they are, this won't hurt.
+mkdir -p $UNION/boot
+mkdir -p $UNION/proc
+mkdir -p $UNION/sys
+mkdir -p $UNION/dev
+mkdir -p $UNION/tmp
+chmod 0777 $UNION/tmp
+
+# Boot will contain whatever was in ./boot directory in the bootable media
+# Error output goes to null, as nothing is mounted with copy2ram
+mount -o rbind `dirname $DATA`/boot $UNION/boot 2>/dev/null
+
+$DEBUGCMD
+
+# Union contains all the files and directories unioned from all modules.
+# Change root directory to it, and move initrd's root to /mnt/live/initramdisk
+# Finaly execute /sbin/init to start the distribution.
+echolog "changing root directory..."
+
+cd $UNION
+
+umount /sys # we won't need it anymore
+mkdir -p $INITRAMDISK
+
+# Copy all dev files (found by mdev) to unioned dev directory
+# so at least disk devices exist (your Linux may need them)
+if [ ! -e /dev/console ]; then mknod /dev/console c 5 1; fi
+cp -fdR /dev .
+
+# find chroot and init
+if [ -x bin/chroot ]; then  CHROOT=/bin/chroot; fi
+if [ -x sbin/chroot ]; then  CHROOT=/sbin/chroot; fi
+if [ -x usr/bin/chroot ]; then  CHROOT=/usr/bin/chroot; fi
+if [ -x usr/sbin/chroot ]; then CHROOT=/usr/sbin/chroot; fi
+if [ "$CHROOT" = "" ]; then fatal "Can't find executable chroot command"; fi
+
+if [ -x bin/init ]; then INIT=bin/init; fi
+if [ -x sbin/init ]; then INIT=sbin/init; fi
+if [ "$INIT" = "" ]; then fatal "Can't find executable init command"; fi
+
+# time to end Linux Live scripts and start the distribution itself
+header "linux live end, starting the Linux distribution"
+
+mount -n -o remount,ro aufs .
+pivot_root . $INITRAMDISK
+exec $CHROOT . $INIT <dev/console >dev/console 2>&1
+
+header "!!ERROR!!"
+fatal "You are not supposed to be here, something went wrong!"
