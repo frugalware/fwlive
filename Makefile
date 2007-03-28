@@ -182,7 +182,6 @@ create-users: checkroot
 	fi
 
 live-base: checkroot
-	pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
@@ -218,7 +217,6 @@ live-base: checkroot
 	sed -i "s|linuxcd|${FWLSREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
-	pacman -r ${CHROOTDIR}/${TREE} -Rd ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 
 hacking-kdmrc: checkroot
 	if [ ${APPSGROUP} = "KDE" ]  ; then \
