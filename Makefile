@@ -211,7 +211,7 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/boot/memtest.bin ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
 	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
-	ln -s message ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message-frugalware
+	ln -s message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	sed -i "s|NAME|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
