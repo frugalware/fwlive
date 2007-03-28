@@ -102,7 +102,6 @@ cp -R rootfs/* $INITRD_TREE
 ln -s busybox $INITRD_TREE/bin/ash
 ln -s busybox $INITRD_TREE/bin/sh
 ln -s busybox $INITRD_TREE/bin/bash
-ln -s busybox $INITRD_TREE/bin/echo
 ln -s busybox $INITRD_TREE/bin/[
 ln -s busybox $INITRD_TREE/bin/mount
 ln -s busybox $INITRD_TREE/bin/umount
@@ -115,7 +114,28 @@ ln -s busybox $INITRD_TREE/bin/head
 ln -s busybox $INITRD_TREE/bin/cat
 ln -s busybox $INITRD_TREE/bin/grep
 ln -s busybox $INITRD_TREE/bin/sleep
+ln -s busybox $INITRD_TREE/bin/echo
+ln -s busybox $INITRD_TREE/bin/egrep
 ln -s busybox $INITRD_TREE/bin/sed
+ln -s busybox $INITRD_TREE/bin/cut
+ln -s busybox $INITRD_TREE/bin/basename
+ln -s busybox $INITRD_TREE/bin/mkdir
+ln -s busybox $INITRD_TREE/bin/mknod
+ln -s busybox $INITRD_TREE/bin/tr
+ln -s busybox $INITRD_TREE/bin/tail
+ln -s busybox $INITRD_TREE/bin/ln
+ln -s busybox $INITRD_TREE/bin/uname
+ln -s busybox $INITRD_TREE/bin/dirname
+ln -s busybox $INITRD_TREE/bin/cp
+ln -s busybox $INITRD_TREE/bin/rm
+ln -s busybox $INITRD_TREE/bin/gunzip
+ln -s busybox $INITRD_TREE/bin/chmod
+ln -s busybox $INITRD_TREE/bin/chown
+ln -s busybox $INITRD_TREE/bin/find
+ln -s busybox $INITRD_TREE/bin/sort
+ln -s busybox $INITRD_TREE/bin/mkswap
+ln -s busybox $INITRD_TREE/bin/mv
+ln -s busybox $INITRD_TREE/bin/pivot_root
 ln -s busybox $INITRD_TREE/bin/mdev
 ln -s bin $INITRD_TREE/sbin
 
@@ -137,7 +157,9 @@ rcopy_ex $ROOT/$LMK/kernel/fs/ext3 $INITRD_TREE 2>>$DEBUG
 rcopy_ex $ROOT/$LMK/kernel/fs/reiserfs $INITRD_TREE 2>>$DEBUG
 
 # add language support for filesystems
-rcopy_ex $ROOT/$LMK/kernel/fs/nls $INITRD_TREE 2>>$DEBUG
+rcopy_ex $ROOT/$LMK/kernel/fs/nls/nls_cp437.* $INITRD_TREE 2>>$DEBUG
+rcopy_ex $ROOT/$LMK/kernel/fs/nls/nls_iso8859-1.* $INITRD_TREE 2>>$DEBUG
+rcopy_ex $ROOT/$LMK/kernel/fs/nls/nls_iso8859-2.* $INITRD_TREE 2>>$DEBUG
 
 # usb modules
 rcopy_ex $ROOT/$LMK/kernel/drivers/usb/storage $INITRD_TREE 2>>$DEBUG
@@ -163,7 +185,7 @@ mkdir $MOUNTDIR
 
 debug "mounting $INITRDIMG to it"
 modprobe loop 2>>$DEBUG
-mount -o loop -t ext2 $INITRDIMG $MOUNTDIR
+mount -o loop $INITRDIMG $MOUNTDIR
 if [ "$?" -ne 0 ]; then
    echo "Error mounting initrd! Not enough free loop devices?"
    exit 1
