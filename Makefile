@@ -12,7 +12,7 @@
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 $(shell touch /tmp/tmp.fwlivetmp)
 PACCONF = /tmp/tmp.fwlivetmp
-KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fwlive-fw/'
+KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
 # needed files (files that we can't live without)
 NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update xstart \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
@@ -31,7 +31,7 @@ REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/frugalware-release
 CC = cc
 
-all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-apps install-kernel cache-umount install-files patch-files remove-files kill-packages create-symlinks create-files fix-files create-users live-base hacking-kdmrc create
+all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-kernel install-apps install-files patch-files remove-files kill-packages create-symlinks create-files fix-files create-users live-base cache-umount hacking-kdmrc create
 	@echo "Finally, we do nothing more by now."
 	@echo "Now burn your iso and have fun!"
 
