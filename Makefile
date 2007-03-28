@@ -213,25 +213,25 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	ln -s message ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message-frugalware
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
-	sed "s|NAME|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	sed -i "s|NAME|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
-	sed -i  "s|linuxcd|${FWLSREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	sed -i "s|linuxcd|${FWLSREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	pacman -r ${CHROOTDIR}/${TREE} -Rd ${INST_BIN_APPS} --noconfirm --config ${PACCONF}
 
 hacking-kdmrc: checkroot
 	if [ ${APPSGROUP} = "KDE" ]  ; then \
-		sed -i "s|RebootCmd=/sbin/reboot -n|RebootCmd=/sbin/reboot|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|AutoReLogin=false|AutoReLogin=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|AllowShutdown=Root|AllowShutdown=All|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|NoPassEnable=false|NoPassEnable=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|NoPassUsers=|NoPassUsers=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|NumLock=On|NumLock=Off|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|AutoLoginEnable=false|AutoLoginEnable=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|#AutoLoginUser=foo|AutoLoginUser=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|PreselectUser=Previous|PreselectUser=None|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
-		sed -i "s|FocusPasswd=false|FocusPasswd=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc \
+		sed -i "s|RebootCmd=/sbin/reboot -n|RebootCmd=/sbin/reboot|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|AutoReLogin=false|AutoReLogin=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|AllowShutdown=Root|AllowShutdown=All|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|NoPassEnable=false|NoPassEnable=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|NoPassUsers=|NoPassUsers=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|NumLock=On|NumLock=Off|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|AutoLoginEnable=false|AutoLoginEnable=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|#AutoLoginUser=foo|AutoLoginUser=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|PreselectUser=Previous|PreselectUser=None|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i "s|FocusPasswd=false|FocusPasswd=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 	fi
 
 create: chroot-mount create-iso chroot-umount
