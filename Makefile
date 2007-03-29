@@ -239,7 +239,6 @@ create-iso: checkroot
 	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
 	chroot ${CHROOTDIR}/${TREE} /tmp/live-base/build
 	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${FWLSREL}.iso
-	clean
 	cp ${ISONAME}-${FWLSREL}.iso /var/cache/pacman/
 	echo "Won't calculate any sums. Period."
 
