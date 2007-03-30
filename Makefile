@@ -229,6 +229,7 @@ hacking-kdmrc: checkroot
 		sed -i "s|#AutoLoginUser=foo|AutoLoginUser=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 		sed -i "s|PreselectUser=Previous|PreselectUser=None|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 		sed -i "s|FocusPasswd=false|FocusPasswd=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
+		sed -i 's/desktop="/desktop="/usr/bin/kdm -nodaemon"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop; \
 	fi
 
 create: chroot-mount create-iso chroot-umount
