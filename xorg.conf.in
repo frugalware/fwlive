@@ -33,7 +33,7 @@ EndSection
 Section "InputDevice"
 	Identifier  "Keyboard0"
 	Driver      "kbd"
-	Option      "XkbLayout" "hu"
+	Option      "XkbLayout" "@FWLSLANG@"
 EndSection
 
 Section "InputDevice"

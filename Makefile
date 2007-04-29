@@ -52,7 +52,14 @@ check-tree:
 		fi \
 	fi 
 
-checkfiles:
+parse_cmdline: parse_cmdline.in
+	sed 's/@FWLLLANG@/$(FWLLLANG)/' $@.in > $@
+
+xorg.conf: xorg.conf.in
+	sed 's/@FWLSLANG@/$(FWLSLANG)/' $@.in > $@
+	sed -i 's/"en"/"us"/' $@
+
+checkfiles: parse_cmdline xorg.conf
 	for i in ${NEED_FILES}; do \
 		if [ ! -f $$i ] ; then \
 			echo "Missing file: $$i"; \
@@ -267,7 +274,7 @@ cache-umount: checkroot
 	fi
 
 clean:
-	rm -f ${ISONAME}-${FWLSREL}.iso crypt_fwlive
+	rm -f ${ISONAME}-${FWLSREL}.iso crypt_fwlive parse_cmdline xorg.conf
 
 really-clean: checkroot
 	rm -rf ${CHROOTDIR}/${TREE}

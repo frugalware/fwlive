@@ -11,7 +11,7 @@ _cut=`which cut`
 ## default settings
 cmdline=`$_cat /proc/cmdline`
 mode="normal"
-lang="hu_HU"
+lang="@FWLLLANG@"
 
 if [ "$mode" == "normal" ]; then
 	case $lang in
