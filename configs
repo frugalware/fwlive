@@ -9,7 +9,7 @@ FWLSLANG = hu
 FWLLLANG = hu_HU
 # # codepage
 FWLCP = ISO-8859-2
-# # installed apps group minimal/server/qt/gtk
+# # installed apps group,  KDE / SERVER / MIN 
 APPSGROUP = KDE
 # # hostname
 FWLHOST = fwlive
@@ -32,7 +32,7 @@ BIGN = Frugalware
 # # saved directories
 SAVEDIRS = etc home root var
 # additional  packages to be installed
-INST_BIN_APPS = busybox memtest86+ util-linux grub-theme-frugalware
+INST_BIN_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware
 INST_MIN_APPS = ${INST_BIN_APPS} sudo aufs squashfs cdrtools openssh mc wget lynx nmap irssi \
 	dbus hal wireless_tools ndiswrapper vim elinks links
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
