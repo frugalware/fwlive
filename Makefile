@@ -174,7 +174,7 @@ create-users: checkroot
 		sed "s|root::$$rof|root:$$rootpass:$$rof|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		echo "${FWLUSER}    ALL=(ALL) NOPASSWD:ALL" >${CHROOTDIR}/${TREE}/etc/sudoers; \
 		sed "s|bigname|${BIGN}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
-		sed "s|v0.0|${FWLSREL}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
+		sed "s|v0.0|${FWLHOST}-${APPSGROUP}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|userpass|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|rootpass|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
@@ -213,7 +213,7 @@ live-base: checkroot
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	sed -i "s|NAME|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
-	sed -i "s|linuxcd|${FWLSREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	sed -i "s|linuxcd|${FWLHOST}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 
@@ -233,13 +233,13 @@ hacking-kdmrc: checkroot
 	fi
 
 create: chroot-mount create-iso chroot-umount
-	echo "./${ISONAME}-${FWLSREL}.iso created."
+	echo "./${ISONAME}-${APPSGROUP}.iso created."
 
 create-iso: checkroot
 	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
 	chroot ${CHROOTDIR}/${TREE} /tmp/live-base/build
-	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${FWLSREL}.iso
-	cp ${ISONAME}-${FWLSREL}.iso /var/cache/pacman/
+	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${APPSGROUP}.iso
+	cp ${ISONAME}-${APPSGROUP}.iso /var/cache/pacman/
 	echo "Won't calculate any sums. Period."
 
 chroot-mount: checkroot
