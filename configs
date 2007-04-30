@@ -37,9 +37,8 @@ BIGN = Frugalware
 SAVEDIRS = etc home root var
 # additional  packages to be installed
 DRIVERS = ndiswrapper ipw2200-firmware acx100 madwifi rt2500
-INST_MUSTHAVE_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware sudo aufs squashfs
-INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} cdrtools openssh mc wget lynx nmap irssi \
-	dbus hal wireless_tools vim elinks links
+INST_MUSTHAVE_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware sudo aufs squashfs cdrtools
+INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap irssi dbus hal wireless_tools vim elinks links
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
 	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp dhcpcd lighttpd fcgi
 INST_X_APPS = ${INST_MIN_APPS} xorg-server fvwm mplayer alsa-utils alsa-tools-gui
