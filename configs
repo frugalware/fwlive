@@ -24,7 +24,11 @@ FWUSERPASS = ${FWLUSER}
 # # Live root pass
 FWROOTPASS = fwroot
 # # frugalware version which livecd is based on
+ifeq ($(TREE),current)
+FWREL = $(shell date +%Y%m%d) (-current)
+else
 FWREL = 0.6 (Terminus)
+endif
 # # ISO name
 ISONAME = ${FWLHOST}
 # # big name
@@ -39,3 +43,5 @@ INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind 
 	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp dhcpcd lighttpd fcgi
 INST_X_APPS = ${INST_MIN_APPS} xorg-server fvwm mplayer alsa-utils alsa-tools-gui
 INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer flashplugin qtparted
+
+# vim: ft=make
