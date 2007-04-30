@@ -10,8 +10,7 @@
 #
 -include configs
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
-$(shell touch /tmp/tmp.fwlivetmp)
-PACCONF = /tmp/tmp.fwlivetmp
+PACCONF = $(shell mktemp)
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
 # needed files (files that we can't live without)
 NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update xstart \
@@ -273,7 +272,7 @@ cache-umount: checkroot
 	fi
 
 clean:
-	rm -f ${ISONAME}-${FWLSREL}.iso crypt_fwlive parse_cmdline xorg.conf
+	rm -f ${ISONAME}-${FWLSREL}.iso crypt_fwlive parse_cmdline xorg.conf ${PACCONF}
 
 really-clean: checkroot
 	rm -rf ${CHROOTDIR}/${TREE}
