@@ -1,2 +1,6 @@
 #!/bin/sh
-sudo su -c 'init 4'
+if [ `id -u` = 0 ]; then
+	init 4
+else
+	sudo su -c 'init 4'
+fi
