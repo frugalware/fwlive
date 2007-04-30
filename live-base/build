@@ -43,7 +43,7 @@ cp $VMLINUZ $CDDATA/boot/vmlinuz
 echo "creating initrd image..."
 echo "Using kernel modules from $ROOT/$LMK"
 cd initrd
-./initrd_create $LIVECDNAME
+sh initrd_create $LIVECDNAME
 if [ "$?" -ne 0 ]; then exit; fi
 cd ..
 
@@ -63,7 +63,7 @@ done
 
 cd $CDDATA/$LIVECDNAME
 echo "creating LiveCD ISO image..."
-./make_iso.sh /tmp/livecd.iso
+sh make_iso.sh /tmp/livecd.iso
 
 cd /tmp
 header "Your ISO is created in /tmp/livecd.iso"
