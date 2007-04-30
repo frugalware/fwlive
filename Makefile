@@ -36,7 +36,7 @@ all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount inst
 
 check-tree:
 	source /etc/repoman.conf; \
-	grep -v Include /etc/pacman.conf >${PACCONF}
+	grep -v Include /etc/pacman.conf >${PACCONF}; \
 	for i in `echo ${TREE}|sed 's/,/ /g'`; do \
 		repo=$$(eval "echo \$${$${i}_fdb/.fdb}"); \
 		[ -z "$$repo" ] && repo="$$i"; \
