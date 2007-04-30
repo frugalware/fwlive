@@ -35,21 +35,13 @@ all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount inst
 	@echo "Now burn your iso and have fun!"
 
 check-tree:
-	if grep -q ^Include.*current$$ /etc/pacman.conf; then \
-		if [ "${TREE}" = "current" ]; then \
-			cat /etc/pacman.conf > ${PACCONF}; \
-		else \
-			cat /etc/pacman.conf |sed 's|^\(Include = /etc/pacman.d/frugalware-current$$\)|#\1| ; \
-				s|^#\(Include = /etc/pacman.d/frugalware$$\)|\1|'> ${PACCONF}; \
-		fi \
-	else \
-		if [ "${TREE}" = "current" ]; then \
-			cat /etc/pacman.conf |sed 's|^#\(Include = /etc/pacman.d/frugalware-current$$\)|\1| ; \
-				s|^\(Include = /etc/pacman.d/frugalware$$\)|#\1|' > ${PACCONF}; \
-		else \
-			cat /etc/pacman.conf > ${PACCONF} ; \
-		fi \
-	fi 
+	source /etc/repoman.conf; \
+	grep -v Include /etc/pacman.conf >${PACCONF}
+	for i in `echo ${TREE}|sed 's/,/ /g'`; do \
+		repo=$$(eval "echo \$${$${i}_fdb/.fdb}"); \
+		[ -z "$$repo" ] && repo="$$i"; \
+		echo "Include = /etc/pacman.d/$$repo" >> ${PACCONF}; \
+	done
 
 parse_cmdline: parse_cmdline.in
 	sed 's/@FWLLLANG@/$(FWLLLANG)/;s/@FWLCP@/$(FWLCP)/' $@.in > $@
