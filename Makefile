@@ -244,7 +244,7 @@ create: chroot-mount create-iso chroot-umount
 
 create-iso: checkroot
 	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
-	chroot ${CHROOTDIR}/${TREE} /tmp/live-base/build
+	chroot ${CHROOTDIR}/${TREE} sh /tmp/live-base/build
 	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${APPSGROUP}.iso
 	cp ${ISONAME}-${APPSGROUP}.iso /var/cache/pacman/
 	echo "Won't calculate any sums. Period."
