@@ -209,7 +209,7 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
-	sed -i "s|NAME|${FWLHOST}-${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	sed -i "s|NAME|${FWLSREL} ${FWREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|linuxcd|${FWLHOST}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh

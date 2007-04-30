@@ -63,7 +63,8 @@ if [ $? -ne 0 ]; then
 fi
 
 mkdir -p $IMAGES
-mount -t aufs -o br:$CHANGES=rw aufs $UNION
+#mount -t aufs -o br:$CHANGES=rw aufs $UNION
+mount -t aufs -o nowarn_perm,udba=none,br:$CHANGES=rw aufs $UNION
 if [ $? -ne 0 ]; then fatal "can't setup union (aufs)"; fi
 
 $DEBUGCMD
