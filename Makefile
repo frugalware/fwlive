@@ -53,7 +53,7 @@ check-tree:
 	fi 
 
 parse_cmdline: parse_cmdline.in
-	sed 's/@FWLLLANG@/$(FWLLLANG)/' $@.in > $@
+	sed 's/@FWLLLANG@/$(FWLLLANG)/;s/@FWLCP@/$(FWLCP)/' $@.in > $@
 
 xorg.conf: xorg.conf.in
 	sed 's/@FWLSLANG@/$(FWLSLANG)/' $@.in > $@

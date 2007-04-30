@@ -29,7 +29,7 @@ keymap=$keymap
 EOF
 	echo "export LANG=$lang" > /etc/profile.d/lang.sh
 	echo "export LC_ALL=$lang" >> /etc/profile.d/lang.sh
-	echo "export CHARSET=iso-8859-2" >> /etc/profile.d/lang.sh
+	echo "export CHARSET=@FWLCP@" >> /etc/profile.d/lang.sh
 	export LC_ALL=$lang
 else
 	echo ""
