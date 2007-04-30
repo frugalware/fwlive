@@ -1,6 +1,6 @@
 #!/bin/sh
-if [ `id -u` = 0 ]; then
+if (( `id -u` == 0 )); then
 	init 4
-else if [ `id -u` = 1000 ]; then
+elif (( `id -u` == 1000 )); then
 	sudo su -c 'init 4'
 fi
