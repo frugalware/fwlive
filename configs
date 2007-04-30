@@ -9,7 +9,7 @@ FWLSLANG = hu
 FWLLLANG = hu_HU
 # # codepage
 FWLCP = iso-8859-2
-# # installed apps group,  KDE / X / SERVER / MIN / BIN
+# # installed apps group,  KDE / X / SERVER / MIN / MUSTHAVE
 APPSGROUP = KDE
 # # hostname
 FWLHOST = fwlive
@@ -36,8 +36,8 @@ BIGN = Frugalware
 # # saved directories
 SAVEDIRS = etc home root var
 # additional  packages to be installed
-INST_BIN_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware sudo aufs squashfs
-INST_MIN_APPS = ${INST_BIN_APPS} cdrtools openssh mc wget lynx nmap irssi \
+INST_MUSTHAVE_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware sudo aufs squashfs
+INST_MIN_APPS = ${INST_MUSTHAVE_APPS} cdrtools openssh mc wget lynx nmap irssi \
 	dbus hal wireless_tools ndiswrapper vim elinks links
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
 	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp dhcpcd lighttpd fcgi
