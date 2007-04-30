@@ -8,7 +8,7 @@ FWLFONT = lat2-16.psfu.gz
 FWLSLANG = hu
 FWLLLANG = hu_HU
 # # codepage
-FWLCP = ISO-8859-2
+FWLCP = iso-8859-2
 # # installed apps group,  KDE / X / SERVER / MIN / BIN
 APPSGROUP = KDE
 # # hostname
