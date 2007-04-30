@@ -16,7 +16,7 @@ FWLHOST = fwlive
 # # iso name
 FWLSREL = FWLive-${APPSGROUP}
 # # release name
-FWLREL = ${FWLSREL}-0.6-i686 (Voyager)
+FWLREL = 0.6-i686 (Voyager)
 # # Live user
 FWLUSER = fwlive
 # # Live user pass

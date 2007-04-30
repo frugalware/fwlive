@@ -181,7 +181,7 @@ create-users: checkroot
 		sed "s|root::$$rof|root:$$rootpass:$$rof|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		echo "${FWLUSER}    ALL=(ALL) NOPASSWD:ALL" >${CHROOTDIR}/${TREE}/etc/sudoers; \
 		sed "s|bigname|${BIGN}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
-		sed "s|v0.0|${FWLHOST}-${APPSGROUP}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
+		sed "s|v0.0|${FWLREL}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|userpass|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|rootpass|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
@@ -218,7 +218,7 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
-	sed -i "s|NAME|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	sed -i "s|NAME|${FWLHOST}-${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|linuxcd|${FWLHOST}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
