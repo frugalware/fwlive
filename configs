@@ -41,11 +41,11 @@ INST_MUSTHAVE_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware 
 INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap irssi dbus hal wireless_tools vim elinks links
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind mysql libmysqlclient \
 		   php php-cgi apache pure-ftpd phpmyadmin samba dhcp dhcpcd lighttpd fcgi
-INST_X_APPS = ${INST_SERVER_APPS} xorg-server fvwm mplayer alsa-utils alsa-tools-gui
+INST_X_APPS = ${INST_MIN_APPS} xorg-server fvwm mplayer alsa-utils alsa-tools-gui
 INST_EXTRA_APPS = gimp gwenview wireshark amarok kaffeine kasablanca scribus ktorrent
 INST_LOCALE_APPS = firefox-hu kde-i18n-hu openoffice.org-dict-hu openoffice.org-i18n-hu bibletime-i18n \
 		   firefox-de firefox-fr kde-i18n-de kde-i18n-fr openoffice.org-dict-fr k3b-i18n \
-		   openoffice.org-i18n-de openoffice.org-i18n-fr openoffice.org-dict-de \
-INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer flashplugin qtparted k3b ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
+		   openoffice.org-i18n-de openoffice.org-i18n-fr openoffice.org-dict-de
+INST_KDE_APPS = ${INST_X_APPS} ${INST_SERVER_APPS} kdebase openoffice.org-kde firefox kmplayer flashplugin qtparted k3b ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
 
 # vim: ft=make
