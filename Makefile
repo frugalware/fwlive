@@ -1,12 +1,10 @@
 # Makefile for livecd creation
 #
 # The only tested entry points/targets are:
-# really-clean - should clean the chroot & co.
+# distclean - should clean the chroot & co.
 # all - should do everything in one BIG	step (now it only installs pkgs to chroot)
 #
-# Preferably you want to run sudo make really-clean before sudo make all ;)
-#
-# temporary chroot where livecd's fs will be built
+# Preferably you want to run sudo make distclean before sudo make all ;)
 #
 -include configs
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
@@ -266,5 +264,5 @@ cache-umount: checkroot
 clean:
 	rm -f ${ISONAME}-${APPSGROUP}.iso crypt_fwlive parse_cmdline xorg.conf ${PACCONF}
 
-really-clean: checkroot
+distclean: checkroot
 	rm -rf ${CHROOTDIR}/${TREE}
