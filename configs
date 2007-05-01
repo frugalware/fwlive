@@ -4,11 +4,8 @@
 TREE = current
 # # font to be installed onto consoles
 FWLFONT = lat2-16.psfu.gz
-# # locale (short and long)
-FWLSLANG = hu
+# # locale
 FWLLLANG = hu_HU
-# # codepage
-FWLCP = iso-8859-2
 # # installed apps group,  KDE / X / SERVER / MIN / MUSTHAVE
 APPSGROUP = KDE
 # # hostname
