@@ -15,7 +15,7 @@ FSTABLLFLAG="# AutoUpdate"
 # We have to set these variables very carefully
 UNION=union
 MEMORY=memory
-MOUNTDIR=mnt
+MOUNTDIR=media
 CHANGES=$MEMORY/changes
 COPY2RAM=$MEMORY/copy2ram
 IMAGES=$MEMORY/images
@@ -453,6 +453,7 @@ modprobe_essential_modules()
    modprobe_module vfat
    echolog "starting ntfs support"
    modprobe_module ntfs
+   modprobe_module fuse
 
    echo "$PRINTK" >/proc/sys/kernel/printk
 }
@@ -541,7 +542,8 @@ fstab_update()
    fstab_update_line $FSTAB~ devpts /dev/pts devpts gid=5,mode=620
    fstab_update_line $FSTAB~ proc /proc proc defaults
    list_cdrom_devices | while read DEVICE; do
-      MOUNTDIR="/mnt/`basename $DEVICE`_cdrom"
+#      MOUNTDIR="/mnt/`basename $DEVICE`_cdrom"
+      MOUNTDIR="/media/`basename $DEVICE`_cdrom"
       mkdir -p $1/$MOUNTDIR
       fstab_update_line $FSTAB~ $DEVICE $MOUNTDIR iso9660 noauto,users,exec
    done
@@ -551,14 +553,14 @@ fstab_update()
          REMOVABLE="_removable"
       fi
 
-      MOUNTDIR="/mnt/$DEV$REMOVABLE"
+#      MOUNTDIR="/mnt/$DEV$REMOVABLE"
+      MOUNTDIR="/media/$DEV$REMOVABLE"
       FS="`blkid -s TYPE $DEVICE | cut -d = -f 2 | tr -d ' \"'`"
 
       # add special options for NTFS
       if [ "$FS" = "ntfs" ]; then
-         OPT=",ro"
-#	 FS="ntfs-3g"
-         if [ "$IOCHARSET" != "" ]; then OPT="$OPT,nls=$IOCHARSET"; fi
+         OPT=",rw"
+         if [ "$IOCHARSET" != "" ]; then FS="ntfs-3g" OPT="$OPT,nls=$IOCHARSET"; fi
       fi
 
       # add special options for VFAT
@@ -575,8 +577,10 @@ fstab_update()
       fi
    done
 
-   fstab_update_line $FSTAB~ /dev/fd0 /mnt/floppy vfat,msdos noauto,noatime,users,suid,dev,exec
-   mkdir -p $1/mnt/floppy
+#   fstab_update_line $FSTAB~ /dev/fd0 /mnt/floppy vfat,msdos noauto,noatime,users,suid,dev,exec
+   fstab_update_line $FSTAB~ /dev/fd0 /media/floppy vfat,msdos noauto,noatime,users,suid,dev,exec
+#   mkdir -p $1/mnt/floppy
+   mkdir -p $1/media/floppy
    
    mv -f $FSTAB~ $FSTAB
 }
