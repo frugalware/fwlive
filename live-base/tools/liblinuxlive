@@ -53,7 +53,9 @@ echolog()
 # store given text in /var/log/livedbg
 log()
 {
-   echo "$@" >>/var/log/livedbg
+   if [ -w /var/log/livedbg ]; then
+      echo "$@" >>/var/log/livedbg
+   fi
 }
 
 # debug
