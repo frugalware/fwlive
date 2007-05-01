@@ -7,7 +7,7 @@
 
 deflang="@FWLLLANG@"
 
-lang=`grep network /proc/cmdline|sed 's/.*lang=\([^ ]*\)\( .*\|$\)/\1/'`
+lang=`grep lang /proc/cmdline|sed 's/.*lang=\([^ ]*\)\( .*\|$\)/\1/'`
 if [ -z "$lang" ]; then
 	lang=$deflang
 fi
