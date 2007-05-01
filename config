@@ -1,27 +1,31 @@
-# this file included Makefile variables points
 #
-# # use -current or -stable system
+# this file is included by Makefile and contains configuration variables for
+# FWLive
+#
+
+# repos to be included in the chroot. probably you want "current" or "stable".
+# use a come-separated list if you want to list multiple repos. the first one
+# takes precedence
 TREE = current
-# # font to be installed onto consoles
-FWLFONT = lat2-16.psfu.gz
-# # locale
+
+# default language, in an xx_YY form
 FWLLLANG = en_US
-# # installed apps group,  KDE / X / SERVER / MIN / MUSTHAVE
+# this font will be used by the consoles
+FWLFONT = lat2-16.psfu.gz
+
+# select FWLive profile, the following ones are available:
+# * KDE
+# * X - minimal graphical environment with fvwm
+# * SERVER
+# * MIN - comfortable console workstation
+# * MUSTHAVE - minimalistic one, base of all profiles
 APPSGROUP = KDE
-# # hostname
-FWLHOST = fwlive
-# # iso name
+
+# grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
-# # release name
-FWLREL = 0.6-i686 (Voyager)
-# # Live user
-FWLUSER = fwlive
-# # Live user pass
-FWUSERPASS = ${FWLUSER}
-# # Live root pass
-FWROOTPASS = fwroot
-# # frugalware version which livecd is based on
-ifeq ($(TREE),current)
+
+# grub title part 2
+ifeq ($(findstring current,$(TREE)),current)
 FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
 else
@@ -29,23 +33,51 @@ FWVER = 0.6
 FWCODENAME = Terminus
 endif
 FWREL = ${FWVER} (${FWCODENAME})
-# # ISO name
+
+# filename of the is
+# FIXME: don't append the -${APPSGROUP}.iso suffix automatically
 ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)
-# # big name
+
+# this will be included in /etc/issue and /etc/fwlive-release
+# FIXME: do we really need this?
+FWLREL = 0.6-$(shell uname -m) (Voyager)
+
+# Vendor name
+# FIXME: do we really need this? sometimes this would have to be Fwlive, the
+# best would be to get rid of it
 BIGN = Frugalware
-# # saved directories
+
+# hostname
+FWLHOST = fwlive
+# login of the regular live user
+FWLUSER = fwlive
+# and the password of it
+FWUSERPASS = ${FWLUSER}
+# password of the root account
+FWROOTPASS = fwroot
+
+# configsave will save these directories
 SAVEDIRS = etc home root var
-# additional  packages to be installed
+
+# additional packages to be installed by the profiles
 DRIVERS = ndiswrapper ipw2200-firmware acx100 madwifi rt2500
-INST_MUSTHAVE_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware sudo aufs squashfs cdrtools ntfs-3g
-INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap irssi dbus hal wireless_tools vim elinks links
-INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind mysql libmysqlclient \
-		   php php-cgi apache pure-ftpd phpmyadmin samba dhcp dhcpcd lighttpd fcgi
-INST_X_APPS = ${INST_MIN_APPS} xorg-server xorg-drivers fvwm mplayer alsa-utils alsa-tools-gui
-INST_EXTRA_APPS = gimp gwenview wireshark amarok kaffeine kasablanca scribus ktorrent
-INST_LOCALE_APPS = firefox-hu kde-i18n-hu openoffice.org-dict-hu openoffice.org-i18n-hu bibletime-i18n \
-		   firefox-de firefox-fr kde-i18n-de kde-i18n-fr openoffice.org-dict-fr k3b-i18n \
-		   openoffice.org-i18n-de openoffice.org-i18n-fr openoffice.org-dict-de
-INST_KDE_APPS = ${INST_X_APPS} ${INST_SERVER_APPS} kdebase openoffice.org-kde firefox kmplayer flashplugin qtparted k3b ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
+INST_MUSTHAVE_APPS = busybox-fwlive memtest86+ util-linux grub-theme-frugalware \
+	sudo aufs squashfs cdrtools ntfs-3g
+INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap \
+	irssi dbus hal wireless_tools vim elinks links
+INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
+	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp \
+	dhcpcd lighttpd fcgi
+INST_X_APPS = ${INST_MIN_APPS} xorg-server xorg-drivers fvwm mplayer alsa-utils \
+	alsa-tools-gui
+INST_EXTRA_APPS = gimp gwenview wireshark amarok kaffeine kasablanca scribus \
+	ktorrent
+INST_LOCALE_APPS = firefox-hu kde-i18n-hu openoffice.org-dict-hu \
+	openoffice.org-i18n-hu bibletime-i18n firefox-de firefox-fr kde-i18n-de \
+	kde-i18n-fr openoffice.org-dict-fr k3b-i18n openoffice.org-i18n-de \
+	openoffice.org-i18n-fr openoffice.org-dict-de
+INST_KDE_APPS = ${INST_X_APPS} ${INST_SERVER_APPS} ${INST_EXTRA_APPS} \
+	${INST_LOCALE_APPS} kdebase openoffice.org-kde firefox kmplayer flashplugin \
+	qtparted k3b
 
 # vim: ft=make
