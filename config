@@ -35,8 +35,7 @@ endif
 FWREL = ${FWVER} (${FWCODENAME})
 
 # filename of the is
-# FIXME: don't append the -${APPSGROUP}.iso suffix automatically
-ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)
+ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)-${APPSGROUP}.iso
 
 # this will be included in /etc/issue and /etc/fwlive-release
 # FIXME: do we really need this?

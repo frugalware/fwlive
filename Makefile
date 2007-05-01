@@ -229,12 +229,12 @@ hacking-kdmrc: checkroot
 	fi
 
 create: chroot-mount create-iso chroot-umount
-	echo "./${ISONAME}-${APPSGROUP}.iso created."
+	echo "./${ISONAME} created."
 
 create-iso: checkroot
 	chroot ${CHROOTDIR}/${TREE} /sbin/depmod -ae -v $(shell ${KERNVER})
 	chroot ${CHROOTDIR}/${TREE} sh /tmp/live-base/build
-	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}-${APPSGROUP}.iso
+	mv ${CHROOTDIR}/${TREE}/tmp/livecd.iso ./${ISONAME}
 	echo "Won't calculate any sums. Period."
 
 chroot-mount: checkroot
