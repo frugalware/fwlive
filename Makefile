@@ -142,6 +142,9 @@ create-files: checkroot
 	echo "${BIGN} ${FWLREL}, based on Frugalware Linux ${FWREL}" >${CHROOTDIR}/${TREE}/etc/fwlive-release
 	echo 'desktop=""' >${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
 	echo "font=${FWLFONT}" >${CHROOTDIR}/${TREE}/etc/sysconfig/font
+	echo "export LANG=${FWLLLANG}" >${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
+	echo 'export LC_ALL=$$LANG' >>${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
+	chmod +x ${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
 	echo "[eth0]" >${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "options = dhcp" >>${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "127.0.0.1       localhost" >${CHROOTDIR}/${TREE}/etc/hosts
