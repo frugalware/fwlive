@@ -10,11 +10,9 @@ _cut=`which cut`
 
 ## default settings
 cmdline=`$_cat /proc/cmdline`
-mode="normal"
 lang="@FWLLLANG@"
 fwlcp=$(grep $lang /usr/share/locale/locale.alias|sed 's/.*\.//;q'|tr [A-Z] [a-z])
 
-if [ "$mode" == "normal" ]; then
 	case $lang in
 		en_*)
 			keymap=us
@@ -33,9 +31,3 @@ EOF
 	echo "export CHARSET=$fwlcp" >> /etc/profile.d/lang.sh
 	chmod +x /etc/profile.d/lang.sh
 	export LC_ALL=$lang
-else
-	echo ""
-	/bin/bash
-	reboot
-#	This is the rescue mode, now just for support for latter versions...
-fi
