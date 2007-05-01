@@ -12,6 +12,7 @@ _cut=`which cut`
 cmdline=`$_cat /proc/cmdline`
 mode="normal"
 lang="@FWLLLANG@"
+fwlcp=$(grep $lang /usr/share/locale/locale.alias|sed 's/.*\.//;q'|tr [A-Z] [a-z])
 
 if [ "$mode" == "normal" ]; then
 	case $lang in
@@ -29,7 +30,7 @@ keymap=$keymap
 EOF
 	echo "export LANG=$lang" > /etc/profile.d/lang.sh
 	echo 'export LC_ALL=$LANG' >> /etc/profile.d/lang.sh
-	echo "export CHARSET=@FWLCP@" >> /etc/profile.d/lang.sh
+	echo "export CHARSET=$fwlcp" >> /etc/profile.d/lang.sh
 	chmod +x /etc/profile.d/lang.sh
 	export LC_ALL=$lang
 else

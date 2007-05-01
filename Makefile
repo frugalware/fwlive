@@ -10,7 +10,6 @@
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
-FWLCP = $(shell grep $(FWLLLANG) /usr/share/locale/locale.alias|sed 's/.*\.//;q'|tr [A-Z] [a-z])
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
 # needed files (files that we can't live without)
 NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update xstart \
@@ -44,7 +43,7 @@ check-tree:
 	done
 
 parse_cmdline: parse_cmdline.in
-	sed 's/@FWLLLANG@/$(FWLLLANG)/;s/@FWLCP@/$(FWLCP)/' $@.in > $@
+	sed 's/@FWLLLANG@/$(FWLLLANG)/' $@.in > $@
 
 xorg.conf: xorg.conf.in
 	sed 's/@FWLSLANG@/$(FWLSLANG)/' $@.in > $@
