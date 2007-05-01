@@ -13,21 +13,21 @@ cmdline=`$_cat /proc/cmdline`
 lang="@FWLLLANG@"
 fwlcp=$(grep $lang /usr/share/locale/locale.alias|sed 's/.*\.//;q'|tr [A-Z] [a-z])
 
-	case $lang in
-		en_*)
-			keymap=us
-		;;
-		*)
-			keymap=`echo $lang | $_cut -b 1-2`
-		;;
-	esac
-	cat << EOF > /etc/sysconfig/keymap 
+case $lang in
+	en_*)
+	keymap=us
+	;;
+	*)
+	keymap=`echo $lang | $_cut -b 1-2`
+	;;
+esac
+cat << EOF > /etc/sysconfig/keymap
 # /etc/sysconfig/keymap
 
 keymap=$keymap
 EOF
-	echo "export LANG=$lang" > /etc/profile.d/lang.sh
-	echo 'export LC_ALL=$LANG' >> /etc/profile.d/lang.sh
-	echo "export CHARSET=$fwlcp" >> /etc/profile.d/lang.sh
-	chmod +x /etc/profile.d/lang.sh
-	export LC_ALL=$lang
+echo "export LANG=$lang" > /etc/profile.d/lang.sh
+echo 'export LC_ALL=$LANG' >> /etc/profile.d/lang.sh
+echo "export CHARSET=$fwlcp" >> /etc/profile.d/lang.sh
+chmod +x /etc/profile.d/lang.sh
+export LC_ALL=$lang
