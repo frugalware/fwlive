@@ -141,10 +141,6 @@ create-files: checkroot
 	echo "UTC" >${CHROOTDIR}/${TREE}/etc/hardwareclock
 	echo "${FWLHOST}" >${CHROOTDIR}/${TREE}/etc/HOSTNAME
 	echo "${BIGN} ${FWLREL}, based on Frugalware Linux ${FWREL}" >${CHROOTDIR}/${TREE}/etc/fwlive-release
-	echo "export LANG=${FWLLLANG}" >${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
-	echo "export LC_ALL=$$LANG" >>${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
-	echo "export CHARSET=${FWLCP}" >>${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
-	chmod +x ${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
 	echo 'desktop=""' >${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
 	echo "font=${FWLFONT}" >${CHROOTDIR}/${TREE}/etc/sysconfig/font
 	echo "[eth0]" >${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
