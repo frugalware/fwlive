@@ -6,7 +6,7 @@
 #
 # Preferably you want to run sudo make distclean before sudo make all ;)
 #
--include configs
+-include config
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
