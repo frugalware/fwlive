@@ -1,16 +1,16 @@
 #!/bin/sh
 
-# /proc/cmdline parser v0.1 for FwLive
-# created by Krisztian VASAS <iron@frugalware.org>
+# (c) 2007 Miklos Vajna <vmiklos@frugalware.org>
+# (c) 2006 Krisztian VASAS <iron@frugalware.org>
+# parse_cmdline for Frugalware
+# distributed under GPL License
 
-## get the paths dinamically
-_tr=`which tr`
-_cat=`which cat`
-_cut=`which cut`
+deflang="@FWLLLANG@"
 
-## default settings
-cmdline=`$_cat /proc/cmdline`
-lang="@FWLLLANG@"
+lang=`grep network /proc/cmdline|sed 's/.*lang=\([^ ]*\)\( .*\|$\)/\1/'`
+if [ -z "$lang" ]; then
+	lang=$deflang
+fi
 fwlcp=$(grep $lang /usr/share/locale/locale.alias|sed 's/.*\.//;q'|tr [A-Z] [a-z])
 
 case $lang in
@@ -18,7 +18,7 @@ case $lang in
 	keymap=us
 	;;
 	*)
-	keymap=`echo $lang | $_cut -b 1-2`
+	keymap=`echo $lang |sed 's/_.*//'`
 	;;
 esac
 cat << EOF > /etc/sysconfig/keymap
