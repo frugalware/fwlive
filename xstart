@@ -1,6 +1,29 @@
 #!/bin/sh
-if (( `id -u` == 0 )); then
-	init 4
-elif (( `id -u` == 1000 )); then
-	sudo su -c 'init 4'
+
+sudo()
+{
+	if (( `id -u` == 0 )); then
+		eval $*
+	elif (( `id -u` == 1000 )); then
+		/usr/bin/sudo su -c "eval $*"
+	fi
+}
+
+if [ -e /etc/X11/xorg.conf ]; then
+	sudo mv /etc/X11/xorg.conf /etc/X11/xorg.conf-vesa
 fi
+
+sudo /sbin/xconfig --live 1024x768 24
+
+XINITRC=/usr/libexec/xconfig-helper xinit -- :1
+
+if [ -e /tmp/_xconfig_clicked ]; then
+	# the new config is okay
+	sudo rm /tmp/_xconfig_clicked
+else
+	if [ -e /etc/X11/xorg.conf-vesa ]; then
+		sudo mv /etc/X11/xorg.conf-vesa /etc/X11/xorg.conf
+	fi
+fi
+
+sudo init 4
