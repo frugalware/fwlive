@@ -25,12 +25,15 @@ FWUSERPASS = ${FWLUSER}
 FWROOTPASS = fwroot
 # # frugalware version which livecd is based on
 ifeq ($(TREE),current)
-FWREL = $(shell date +%Y%m%d) (-current)
+FWVER = $(shell date +%Y%m%d)
+FWCODENAME = -current
 else
-FWREL = 0.6 (Terminus)
+FWVER = 0.6
+FWCODENAME = Terminus
 endif
+FWREL = ${FWVER} (${FWCODENAME})
 # # ISO name
-ISONAME = ${FWLHOST}
+ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)
 # # big name
 BIGN = Frugalware
 # # saved directories
