@@ -26,8 +26,10 @@ cat << EOF > /etc/sysconfig/keymap
 
 keymap=$keymap
 EOF
-echo "export LANG=$lang" > /etc/profile.d/lang.sh
-echo 'export LC_ALL=$LANG' >> /etc/profile.d/lang.sh
-echo "export CHARSET=$fwlcp" >> /etc/profile.d/lang.sh
+cat << EOF > /etc/profile.d/lang.sh
+export LANG=$lang
+export LC_ALL=\$LANG
+export CHARSET=$fwlcp
+EOF
 chmod +x /etc/profile.d/lang.sh
 export LC_ALL=$lang
