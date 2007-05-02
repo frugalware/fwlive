@@ -20,6 +20,7 @@ XINITRC=/usr/libexec/xconfig-helper xinit -- :1
 if [ -e /tmp/_xconfig_clicked ]; then
 	# the new config is okay
 	sudo rm /tmp/_xconfig_clicked
+	sudo sed -i  '/^Modes/d' /etc/X11/xorg.conf
 else
 	if [ -e /etc/X11/xorg.conf-vesa ]; then
 		sudo mv /etc/X11/xorg.conf-vesa /etc/X11/xorg.conf
