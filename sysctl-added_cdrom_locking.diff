@@ -1,9 +1,0 @@
-diff -Naur etc.old/sysctl.conf etc/sysctl.conf
---- etc.old/sysctl.conf	2006-01-08 00:15:05.000000000 +0100
-+++ etc/sysctl.conf	2006-04-14 23:33:52.000000000 +0200
-@@ -58,4 +58,4 @@
- # This limits PID values to 4 digits, which allows tools like ps
- # to save screen space.
- #kernel/pid_max=10000
--dev.cdrom.lock=0
-+dev.cdrom.lock=1
