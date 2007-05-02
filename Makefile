@@ -209,7 +209,7 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	sed -i "s|NAME|${FWLSREL} ${FWREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
-ifeq($(ARCH),x86_64)
+ifeq ($(ARCH),x86_64)
 	sed -i /[Mm]emtest/d ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 endif
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config

@@ -62,7 +62,7 @@ SAVEDIRS = etc home root var
 DRIVERS = ndiswrapper ipw2200-firmware acx100 madwifi rt2500
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux grub-theme-frugalware \
 	sudo aufs squashfs cdrtools ntfs-3g
-ifneq($(ARCH),x86_64)
+ifneq ($(ARCH),x86_64)
 INST_MUSTHAVE_APPS += memtest86+
 endif
 INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap \
