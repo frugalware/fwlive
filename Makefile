@@ -266,7 +266,7 @@ cache-umount: checkroot
 	fi
 
 clean:
-	rm -f ${ISONAME}-${APPSGROUP}.iso crypt_fwlive parse_cmdline xorg.conf ${PACCONF}
+	rm -f ${ISONAME} crypt_fwlive parse_cmdline xorg.conf ${PACCONF}
 
 distclean: checkroot clean
 	rm -rf ${CHROOTDIR}/${TREE}
