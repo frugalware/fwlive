@@ -78,8 +78,7 @@ INST_LOCALE_APPS = firefox-hu kde-i18n-hu openoffice.org-dict-hu \
 	openoffice.org-i18n-hu bibletime-i18n firefox-de firefox-fr kde-i18n-de \
 	kde-i18n-fr openoffice.org-dict-fr k3b-i18n openoffice.org-i18n-de \
 	openoffice.org-i18n-fr openoffice.org-dict-de
-INST_KDE_APPS = ${INST_X_APPS} ${INST_SERVER_APPS} ${INST_EXTRA_APPS} \
-	${INST_LOCALE_APPS} kdebase openoffice.org-kde firefox kmplayer flashplugin \
-	qtparted k3b
+INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
+	flashplugin qtparted k3b
 
 # vim: ft=make
