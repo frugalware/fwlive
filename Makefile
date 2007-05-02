@@ -204,7 +204,9 @@ live-base: checkroot
 	ln -s libz.so.1.2.3 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libz.so.1
 	cp ${CHROOTDIR}/${TREE}/usr/bin/mksquashfs ${CHROOTDIR}/${TREE}/tmp/live-base/tools/
 	cp ${CHROOTDIR}/${TREE}/usr/bin/unsquashfs ${CHROOTDIR}/${TREE}/tmp/live-base/tools/
+ifneq ($(ARCH),x86_64)
 	cp ${CHROOTDIR}/${TREE}/boot/memtest.bin ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
+endif
 	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
