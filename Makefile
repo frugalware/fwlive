@@ -13,7 +13,7 @@ PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
 # needed files (files that we can't live without)
-NEED_FILES = sysctl-added_cdrom_locking.diff fstab-update xstart \
+NEED_FILES = fstab-update xstart \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
 	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount_fsck.diff xstart xorg.conf menu.lst 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /usr/local/bin/configsave \
@@ -22,7 +22,7 @@ INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /usr/local/bin/configsa
 INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en \
 		 /etc/X11/xorg.conf /boot/grub/menu.lst
 PWD = $(shell pwd)
-PATCH_FILES = sysctl-added_cdrom_locking.diff reboot.diff services.diff udev.diff mount_fsck.diff
+PATCH_FILES = reboot.diff services.diff udev.diff mount_fsck.diff
 REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/rc.d/rc{3.d,4.d}/S{21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,99cups,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} \
 	   /etc/rc.d/rc0.d/K{00cups,01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces,56rc.sshd,30rc.postfix} \
