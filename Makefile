@@ -194,6 +194,10 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/usr/sbin/lspci ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
 	cp ${CHROOTDIR}/${TREE}/lib/ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
 	ln -s ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/ld-linux.so.2
+ifeq ($(ARCH),x86_64)
+	ln -s lib ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib64
+	ln -s ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/ld-linux-x86-64.so.2
+endif
 	cp ${CHROOTDIR}/${TREE}/lib/libblkid.so.1.0 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
 	ln -s libblkid.so.1.0 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libblkid.so.1
 	cp ${CHROOTDIR}/${TREE}/lib/libc-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
