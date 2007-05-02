@@ -263,9 +263,7 @@ chroot-umount: checkroot
 	umount ${CHROOTDIR}/${TREE}/{proc,sys,dev} &>/dev/null
 
 cache-umount: checkroot
-	if [ $(shell mount|grep -o ${CHROOTDIR}/${TREE}/var/cache/pacman) ] ; then \
-		umount ${CHROOTDIR}/${TREE}/var/cache/pacman; \
-	fi
+	umount ${CHROOTDIR}/${TREE}/var/cache/pacman &>/dev/null
 
 clean:
 	rm -f ${ISONAME} crypt_fwlive parse_cmdline xorg.conf ${PACCONF}
