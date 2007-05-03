@@ -58,12 +58,18 @@ FWROOTPASS = fwroot
 # configsave will save these directories
 SAVEDIRS = etc home root var
 
+# set this to 'n' if you don't want to include the installer on the livecd
+CONFIG_SETUP = y
+
 # additional packages to be installed by the profiles
 DRIVERS = ndiswrapper ipw2200-firmware acx100 madwifi rt2500
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux grub-theme-frugalware \
 	sudo aufs squashfs cdrtools ntfs-3g
 ifneq ($(ARCH),x86_64)
 INST_MUSTHAVE_APPS += memtest86+
+endif
+ifeq ($(CONFIG_SETUP),y)
+INST_MUSTHAVE_APPS += fwsetup
 endif
 INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap \
 	irssi dbus hal wireless_tools vim elinks links

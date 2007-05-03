@@ -12,6 +12,13 @@ CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
+ifeq ($(CONFIG_SETUP),y)
+SETUPDIR = ${CHROOTDIR}/${TREE}/usr/share/setup
+SETUPKERNELVER = cd $(SETUPDIR); ls vmlinuz*|sed 's/vmlinuz-//'
+SETUPKERNEL = $(SETUPDIR)/vmlinuz-$(shell ${SETUPKERNELVER})
+SETUPINITRD = $(SETUPDIR)/initrd-$(ARCH).img.gz
+SETUPINITRDSIZE = echo "$$(($$(gzip --list $(SETUPINITRD) |grep initrd-$(ARCH).img|sed 's/.*[0-9]\+ \+\([0-9]\+\) .*/\1/')/1024))"
+endif
 # needed files (files that we can't live without)
 NEED_FILES = fstab-update parse_cmdline.in xorg.conf.in \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
@@ -212,12 +219,21 @@ endif
 ifneq ($(ARCH),x86_64)
 	cp ${CHROOTDIR}/${TREE}/boot/memtest.bin ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
 endif
+ifeq ($(CONFIG_SETUP),y)
+	cp ${SETUPKERNEL} ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
+	cp ${SETUPINITRD} ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
+endif
 	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-frugalware ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	sed -i "s|NAME|${FWLSREL} ${FWREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 ifeq ($(ARCH),x86_64)
 	sed -i /[Mm]emtest/d ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+endif
+ifeq ($(CONFIG_SETUP),y)
+	echo "title Install Frugalware $(FWREL) - $(shell ${SETUPKERNELVER})" >> ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	echo "	kernel /boot/vmlinuz-$(shell ${SETUPKERNELVER}) initrd=initrd-$(ARCH).img.gz load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=$(shell ${SETUPINITRDSIZE}) rw root=/dev/ram quiet vga=791" >> ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	echo "	initrd /boot/initrd-$(ARCH).img.gz" >> ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 endif
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|linuxcd|${FWLHOST}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
