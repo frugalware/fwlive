@@ -13,7 +13,7 @@ PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
 # needed files (files that we can't live without)
-NEED_FILES = fstab-update xstart \
+NEED_FILES = fstab-update parse_cmdline.in xorg.conf.in \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
 	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline mount_fsck.diff xstart xorg.conf menu.lst 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /usr/local/bin/configsave \
