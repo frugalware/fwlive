@@ -12,7 +12,7 @@ if [ "$UID" != 0 ] ; then
 fi
 
 if [ -z "$1" -o -z "$2" ] ; then
-	echo "usage: $0 out.mo pkg1 [ pkg2 [ ... ] ]"
+	echo "usage: $0 out.lzm pkg1 [ pkg2 [ ... ] ]"
 	exit 1
 fi
 
