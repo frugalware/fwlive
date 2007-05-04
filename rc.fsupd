@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# (c) 2005 Marcus Habermehl <bmh1980de@yahoo.de>
+# (c) 2003 Vajna Miklos <vmiklos@frugalware.org>
+# rc.frugalware for Frugalware
+# distributed under GPL License
+
+# chkconfig: 2345 00 94
+# description: restart / start / stop fstab-update daemon.
+
+source /lib/initscripts/functions
+TEXTDOMAIN=frugalware
+TEXTDOMAINDIR=/lib/initscripts/messages
+
+actions=(start stop restart)
+
+if [ "$1" = "stop" ]; then
+        echo -e "Stop fstab update daemon, which will update fstab automatically"
+        killall fstab-update 2>&1 /dev/null
+        ok $?
+elif [ "$1" = "restart" ]; then
+       "$0" stop
+       sleep 5
+       "$0" start
+else # start
+	echo -e "Starting fstab update daemon, which will update fstab automatically"
+	if [ -e /usr/local/bin/fstab-update ]; then
+		/usr/local/bin/fstab-update --daemon &
+	fi
+	ok $?
+fi
+
