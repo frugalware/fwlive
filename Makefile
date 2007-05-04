@@ -153,7 +153,7 @@ kill-packages:
 create-files: checkroot
 	echo "UTC" >${CHROOTDIR}/${TREE}/etc/hardwareclock
 	echo "${FWLHOST}" >${CHROOTDIR}/${TREE}/etc/HOSTNAME
-	echo "${BIGN} ${FWLREL}, based on Frugalware Linux ${FWREL}" >${CHROOTDIR}/${TREE}/etc/fwlive-release
+	echo "FWLive ${FWLREL}, based on Frugalware Linux ${FWREL}" >${CHROOTDIR}/${TREE}/etc/fwlive-release
 	echo 'desktop=""' >${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
 	echo "font=${FWLFONT}" >${CHROOTDIR}/${TREE}/etc/sysconfig/font
 	echo "export LANG=${FWLLLANG}" >${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
