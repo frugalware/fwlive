@@ -8,7 +8,7 @@ CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
-FWLREL = pacman -r ${CHROOTDIR}/${TREE} -Q frugalware |cut -d ' ' -f2
+FWLREL = pacman -r ${CHROOTDIR}/${TREE} -Q frugalware |sed 's/.* \(.*\)-.*/\1/'
 ifeq ($(CONFIG_SETUP),y)
 SETUPDIR = ${CHROOTDIR}/${TREE}/usr/share/setup
 SETUPKERNELVER = cd $(SETUPDIR); ls vmlinuz*|sed 's/vmlinuz-//'
