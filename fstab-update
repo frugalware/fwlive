@@ -16,7 +16,6 @@ if [ "$1" != "--daemon" ]; then
    exit 0
 fi
 
-echo -ne "\nStarting $0 daemon, which will update fstab automatically ..."
 # I know that it's not the best idea to use bash script for this,
 # but it's better then nothing for now
 while [ 1 ]; do
