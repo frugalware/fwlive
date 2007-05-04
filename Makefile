@@ -12,6 +12,7 @@ CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
+FWLREL = pacman -r ${CHROOTDIR}/${TREE} -Q frugalware |cut -d ' ' -f2
 ifeq ($(CONFIG_SETUP),y)
 SETUPDIR = ${CHROOTDIR}/${TREE}/usr/share/setup
 SETUPKERNELVER = cd $(SETUPDIR); ls vmlinuz*|sed 's/vmlinuz-//'
@@ -156,7 +157,7 @@ kill-packages:
 create-files: checkroot
 	echo "UTC" >${CHROOTDIR}/${TREE}/etc/hardwareclock
 	echo "${FWLHOST}" >${CHROOTDIR}/${TREE}/etc/HOSTNAME
-	echo "FWLive ${FWLREL}, based on Frugalware Linux ${FWREL}" >${CHROOTDIR}/${TREE}/etc/fwlive-release
+	echo "FWLive $(shell ${FWLREL}) (${FWLCODENAME}), based on Frugalware Linux ${FWREL}" >${CHROOTDIR}/${TREE}/etc/fwlive-release
 	echo 'desktop=""' >${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
 	echo "font=${FWLFONT}" >${CHROOTDIR}/${TREE}/etc/sysconfig/font
 	echo "export LANG=${FWLLLANG}" >${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
@@ -188,7 +189,7 @@ create-users: checkroot
 		sed "s|root::$$rof|root:$$rootpass:$$rof|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		echo "${FWLUSER}    ALL=(ALL) NOPASSWD:ALL" >${CHROOTDIR}/${TREE}/etc/sudoers; \
 		sed "s|@VENDOR@|${VENDOR}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
-		sed "s|@FWLREL@|${FWLREL}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
+		sed "s|@FWLREL@|$(shell ${FWLREL}) (${FWLCODENAME})|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|userpass|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|rootpass|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue; \
@@ -246,7 +247,7 @@ ifeq ($(CONFIG_SETUP),y)
 endif
 	sed -i 's/`uname -r`/$(shell ${KERNVER})/' ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|linuxcd|${FWLHOST}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
-	sed -i "s|Live|${FWLREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
+	sed -i "s|Live|$(shell ${FWLREL}) (${FWLCODENAME})|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 
 hacking-kdmrc: checkroot

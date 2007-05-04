@@ -37,9 +37,8 @@ FWREL = ${FWVER} (${FWCODENAME})
 # filename of the is
 ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)-${APPSGROUP}.iso
 
-# this will be included in /etc/issue and /etc/fwlive-release
-# FIXME: do we really need this?
-FWLREL = 0.6-$(shell uname -m) (Voyager)
+# codename of the livecd, used in /etc/issue and /etc/fwlive-release
+FWLCODENAME = Voyager
 
 # Vendor name (used in /etc/issue only)
 VENDOR = Frugalware
