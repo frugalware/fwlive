@@ -149,6 +149,9 @@ kill-packages:
 	if [ $(shell pacman -r ${CHROOTDIR}/${TREE} -Q splashy &>/dev/null; echo $$?) = 0 ] ; then \
 		pacman -r ${CHROOTDIR}/${TREE} -Rf splashy --noconfirm --config ${PACCONF} ; \
 	fi
+	if [ $(shell pacman -r ${CHROOTDIR}/${TREE} -Q fwsetup &>/dev/null; echo $$?) = 0 ] ; then \
+		pacman -r ${CHROOTDIR}/${TREE} -Rf fwsetup --noconfirm --config ${PACCONF} ; \
+	fi
 
 create-files: checkroot
 	echo "UTC" >${CHROOTDIR}/${TREE}/etc/hardwareclock
