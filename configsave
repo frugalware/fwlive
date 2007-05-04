@@ -1,5 +1,5 @@
 #!/bin/bash
-# save and restore FWLive config to a file
+# save/restore FWLive config to/from a file
 # $1 = full path to new fwliveconf.mo file
 
   PATH=$PATH:/usr/sbin
@@ -19,9 +19,9 @@
   if [ "$CONFFILE" = "" ]; then echo "usage: $0 /media/sda?/$FWCONF"; exit 1; fi
   if [ -e "$CONFFILE" -a ! -f "$CONFFILE" ]; then echo "not a regular file $CONFFILE"; exit 1; fi
 
-  # directory with changes is only in FWLiveCD, not in installed version
+  # directory with changes is only in FWLive, not in installed version
   if [ ! -d $CHANGES ]; then
-     echo "This script can work only from FWLive CD"; exit 1
+     echo "This script can work only from FWLive."; exit 1
   fi
 
 # INIT
@@ -33,18 +33,23 @@
 # ***********************
 
   if [ "$MYSELF" = "configsave" ]; then
-     echo "saving changes to $CONFFILE..."
+     echo -n "Saving changes to $CONFFILE... "
      rm $CONFFILE 2>/dev/null
      touch ${SAVEDIRS// / $CHANGES/}
      mksquashfs ${SAVEDIRS// / $CHANGES/} $CONFFILE -e $CHANGES/var/{run,log,man,tmp} /etc/fstab >/dev/null 2>/dev/null
-     if [ $? -ne 0 ]; then echo "can't write config to $CONFFILE"; exit 1; fi
+     if [ $? -ne 0 ]; then
+       echo "can't write config to $CONFFILE"; exit 1
+     else
+       echo "done."
+     fi
   fi
 
 # RESTORE
 # ***********************
 
   if [ "$MYSELF" = "configrestore" ]; then
-     echo "restoring changes from $CONFFILE..."
+     echo -n "Restoring changes from $CONFFILE... "
      mo2dir $CONFFILE $CHANGES
      uniondbg -g /
+     echo "done."
   fi
