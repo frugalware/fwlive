@@ -41,10 +41,8 @@ ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)-${APPSGROUP}.iso
 # FIXME: do we really need this?
 FWLREL = 0.6-$(shell uname -m) (Voyager)
 
-# Vendor name
-# FIXME: do we really need this? sometimes this would have to be Fwlive, the
-# best would be to get rid of it
-BIGN = Frugalware
+# Vendor name (used in /etc/issue only)
+VENDOR = Frugalware
 
 # hostname
 FWLHOST = fwlive
