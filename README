@@ -1,0 +1,22 @@
+This is the source of the Frugalware LiveCD, FWLive.
+
+Building
+--------
+
+To build the livecd:
+
+	# make
+
+To clean up compiled code in the source dir:
+
+	# make clean
+
+To remove the building chroot:
+
+	# make distclean
+
+Customizing
+-----------
+
+Have a look at the file named 'config', you can set several configuration
+options there.

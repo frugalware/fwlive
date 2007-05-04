@@ -1,11 +1,7 @@
+#
 # Makefile for livecd creation
 #
-# The only tested entry points/targets are:
-# distclean - should clean the chroot & co.
-# all - should do everything in one BIG	step (now it only installs pkgs to chroot)
-#
-# Preferably you want to run sudo make distclean before sudo make all ;)
-#
+
 ARCH = $(shell uname -m)
 -include config
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
