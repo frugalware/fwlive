@@ -2,54 +2,54 @@
 # save/restore FWLive config to/from a file
 # $1 = full path to new fwliveconf.mo file
 
-  PATH=$PATH:/usr/sbin
+PATH=$PATH:/usr/sbin
 
-  # only root can run this
-  if [ "0$UID" -ne 0 ]; then
-     echo "Only root can run `basename $0`"; exit 1
-  fi
+# only root can run this
+if [ "0$UID" -ne 0 ]; then
+	echo "Only root can run `basename $0`"; exit 1
+fi
 
-  . /usr/local/bin/liblinuxlive
-  FWCONF=fwliveconf.mo
-  MEMORY=/$MOUNTDIR/live/memory
-  CHANGES=$MEMORY/changes
-  SAVEDIRS=" SAVE_DIRS"
+. /usr/local/bin/liblinuxlive
+FWCONF=fwliveconf.mo
+MEMORY=/$MOUNTDIR/live/memory
+CHANGES=$MEMORY/changes
+SAVEDIRS=" SAVE_DIRS"
 
-  CONFFILE=$1
-  if [ "$CONFFILE" = "" ]; then echo "usage: $0 /media/sda?/$FWCONF"; exit 1; fi
-  if [ -e "$CONFFILE" -a ! -f "$CONFFILE" ]; then echo "not a regular file $CONFFILE"; exit 1; fi
+CONFFILE=$1
+if [ "$CONFFILE" = "" ]; then echo "usage: $0 /media/sda?/$FWCONF"; exit 1; fi
+if [ -e "$CONFFILE" -a ! -f "$CONFFILE" ]; then echo "not a regular file $CONFFILE"; exit 1; fi
 
-  # directory with changes is only in FWLive, not in installed version
-  if [ ! -d $CHANGES ]; then
-     echo "This script can work only from FWLive."; exit 1
-  fi
+# directory with changes is only in FWLive, not in installed version
+if [ ! -d $CHANGES ]; then
+	echo "This script can work only from FWLive."; exit 1
+fi
 
 # INIT
 # ***********************
 
-  MYSELF="`basename \"$0\"`"
+MYSELF="`basename \"$0\"`"
 
 # SAVE
 # ***********************
 
-  if [ "$MYSELF" = "configsave" ]; then
-     echo -n "Saving changes to $CONFFILE... "
-     rm $CONFFILE 2>/dev/null
-     touch ${SAVEDIRS// / $CHANGES/}
-     mksquashfs ${SAVEDIRS// / $CHANGES/} $CONFFILE -e $CHANGES/var/{run,log,man,tmp} /etc/fstab >/dev/null 2>/dev/null
-     if [ $? -ne 0 ]; then
-       echo "can't write config to $CONFFILE"; exit 1
-     else
-       echo "done."
-     fi
-  fi
+if [ "$MYSELF" = "configsave" ]; then
+	echo -n "Saving changes to $CONFFILE... "
+	rm $CONFFILE 2>/dev/null
+	touch ${SAVEDIRS// / $CHANGES/}
+	mksquashfs ${SAVEDIRS// / $CHANGES/} $CONFFILE -e $CHANGES/var/{run,log,man,tmp} /etc/fstab >/dev/null 2>/dev/null
+	if [ $? -ne 0 ]; then
+		echo "can't write config to $CONFFILE"; exit 1
+	else
+		echo "done."
+	fi
+fi
 
 # RESTORE
 # ***********************
 
-  if [ "$MYSELF" = "configrestore" ]; then
-     echo -n "Restoring changes from $CONFFILE... "
-     mo2dir $CONFFILE $CHANGES
-     uniondbg -g /
-     echo "done."
-  fi
+if [ "$MYSELF" = "configrestore" ]; then
+	echo -n "Restoring changes from $CONFFILE... "
+	mo2dir $CONFFILE $CHANGES
+	uniondbg -g /
+	echo "done."
+fi
