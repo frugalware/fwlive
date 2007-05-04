@@ -37,7 +37,7 @@ REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/frugalware-release
 CC = cc
 
-all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-apps install-kernel cache-umount install-files patch-files remove-files kill-packages create-symlinks create-files fix-files create-users live-base hacking-kdmrc create
+all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-apps install-kernel cache-umount install-files patch-files remove-files create-symlinks create-files fix-files create-users live-base hacking-kdmrc kill-packages create
 	@echo "Finally, we do nothing more by now."
 	@echo "Now burn your iso and have fun!"
 
