@@ -2,7 +2,7 @@ default=0
 timeout=5
 gfxmenu /boot/grub/message
 
-title NAME
+title @GRUBTITLE@
         kernel /boot/vmlinuz initrd=/boot/initrd.gz init=linuxrc max_loop=255 load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=4444 rw root=/dev/ram0
         initrd /boot/initrd.gz
 
