@@ -165,6 +165,7 @@ create-files: checkroot
 	sed -i "s|id:4:initdefault:|id:3:initdefault:|" ${CHROOTDIR}/${TREE}/etc/inittab
 	sed -i "s|NUMLOCK_ON=1|NUMLOCK_ON=0|" ${CHROOTDIR}/${TREE}/etc/sysconfig/numlock
 	sed -i "s|dev.cdrom.lock=0|dev.cdrom.lock=1|" ${CHROOTDIR}/${TREE}/etc/sysctl.conf
+	sed -i "s|/sbin/fsck|true|" ${CHROOTDIR}/${TREE}/etc/rc.d/rc.fsck
 
 # FIXME: do we need this esd check at all?
 fix-files: checkroot
