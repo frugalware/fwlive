@@ -15,7 +15,7 @@ TEXTDOMAINDIR=/lib/initscripts/messages
 actions=(start stop restart)
 
 if [ "$1" = "stop" ]; then
-        echo -e "Stop fstab update daemon, which will update fstab automatically"
+        stop $stopfsupd
         killall fstab-update 2>&1 /dev/null
         ok $?
 elif [ "$1" = "restart" ]; then
@@ -23,7 +23,7 @@ elif [ "$1" = "restart" ]; then
        sleep 5
        "$0" start
 else # start
-	echo -e "Starting fstab update daemon, which will update fstab automatically"
+	start $startfsupd
 	if [ -e /usr/local/bin/fstab-update ]; then
 		/usr/local/bin/fstab-update --daemon &
 	fi

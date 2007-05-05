@@ -17,14 +17,14 @@ SETUPINITRD = $(SETUPDIR)/initrd-$(ARCH).img.gz
 SETUPINITRDSIZE = echo "$$(($$(gzip --list $(SETUPINITRD) |grep initrd-$(ARCH).img|sed 's/.*[0-9]\+ \+\([0-9]\+\) .*/\1/')/1024))"
 endif
 # needed files (files that we can't live without)
-NEED_FILES = fstab-update parse_cmdline.in xorg.conf.in rc.fsupd \
+NEED_FILES = fstab-update parse_cmdline.in xorg.conf.in rc.fsupd fsupd.hu fsupd.en \
 	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff \
 	rc.parse_cmdline parse_cmdline.en parse_cmdline.hu parse_cmdline xstart xorg.conf menu.lst 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /etc/rc.d/rc.fsupd /usr/local/bin/configsave \
 	/usr/local/bin/fileswap /usr/local/bin/fstab-update /usr/local/bin/xstart \
 	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/live-base/tools/fpm2lzm
 INST_FILES_644 = /etc/issue /etc/rc.d/rc.messages/parse_cmdline.hu /etc/rc.d/rc.messages/parse_cmdline.en \
-		 /etc/X11/xorg.conf /boot/grub/menu.lst
+		 /etc/X11/xorg.conf /boot/grub/menu.lst /etc/rc.d/rc.messages/fsupd.hu /etc/rc.d/rc.messages/fsupd.en
 PWD = $(shell pwd)
 PATCH_FILES = reboot.diff services.diff udev.diff
 REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \

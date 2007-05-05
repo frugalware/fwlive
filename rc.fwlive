@@ -11,9 +11,23 @@ TEXTDOMAINDIR=/lib/initscripts/messages
 
 actions=(start)
 
+lang=`grep lang /proc/cmdline|sed 's/.*lang=\([^ ]*\)\( .*\|$\)/\1/'`
+if [ -z "$lang" ] || [ $lang == "en_US" ]; then
+	        greet="Welcome to"
+	else if [ $lang == "hu_HU" ]; then
+		greet="Üdvözli az"
+	else if [ $lang == "de_DE" ]; then
+		greet="Empfehlung"
+	else if [ $lang == "fr_FR" ]; then
+		greet=""
+	fi
+      fi
+    fi
+fi
+
 rc_start()
 {
-	fwgreet=$"\e[01mWelcome to \e[01;36mFwLive\e[0m"
+	fwgreet=$"\e[01m${greet} \e[01;36mFwLive\e[0m"
 	((spaces=(($(tput cols) - $(echo -ne ${fwgreet} | wc -m) - 1)) / 2))
 	echo -e "\n"
 	for i in $(seq 1 ${spaces}) ; do
