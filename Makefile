@@ -233,7 +233,7 @@ endif
 	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-fwlive ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
-	sed -i "s|@GRUBTILE@|${FWLSREL} ${FWREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
+	sed -i "s|@GRUBTITLE@|${FWLSREL} ${FWREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 ifeq ($(ARCH),x86_64)
 	sed -i /[Mm]emtest/d ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
 endif
