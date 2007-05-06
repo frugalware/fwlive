@@ -3,7 +3,7 @@
 export PATH=.:/:/usr/sbin:/usr/bin:/sbin:/bin
 . liblinuxlive
 
-header "starting Linux Live scripts <http://www.linux-live.org/>"
+header "Starting Frugalware Linux Live scripts"
 
 echolog "mounting /proc and /sys filesystems"
 mount -t proc proc /proc
@@ -191,7 +191,7 @@ if [ -x sbin/init ]; then INIT=sbin/init; fi
 if [ "$INIT" = "" ]; then fatal "Can't find executable init command"; fi
 
 # time to end Linux Live scripts and start the distribution itself
-header "linux live end, starting the Linux distribution"
+header "Starting the Frugalware Linux distribution"
 
 mount -n -o remount,ro aufs .
 pivot_root . $INITRAMDISK
