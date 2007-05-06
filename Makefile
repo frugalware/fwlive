@@ -299,4 +299,5 @@ clean:
 	rm -f ${ISONAME} crypt_fwlive parse_cmdline xorg.conf ${PACCONF}
 
 distclean: checkroot clean
+	${MAKE} -C po distclean
 	rm -rf ${CHROOTDIR}/${TREE}
