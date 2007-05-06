@@ -13,7 +13,7 @@ TEXTDOMAIN=fwlive
 TEXTDOMAINDIR=/usr/share/locale
 
 actions=(stop restart start)
-daemon="fstab updater daemon"
+daemon=$"fstab updater daemon"
 
 rc_start()
 {
