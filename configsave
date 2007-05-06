@@ -10,7 +10,8 @@ if [ "0$UID" -ne 0 ]; then
 fi
 
 . /usr/local/bin/liblinuxlive
-FWCONF=fwliveconf.mo
+
+FWCONF=fwliveconf.lzm
 MEMORY=/$MOUNTDIR/live/memory
 CHANGES=$MEMORY/changes
 SAVEDIRS=" SAVE_DIRS"
@@ -49,7 +50,7 @@ fi
 
 if [ "$MYSELF" = "configrestore" ]; then
 	echo -n "Restoring changes from $CONFFILE... "
-	mo2dir $CONFFILE $CHANGES
+	lzm2dir $CONFFILE $CHANGES
 	uniondbg -g /
 	echo "done."
 fi
