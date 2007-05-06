@@ -2,11 +2,14 @@
 # save/restore FWLive config to/from a file
 # $1 = full path to new fwliveconf.mo file
 
+TEXTDOMAIN=fwlive
+TEXTDOMAINDIR=/usr/share/locale
+
 PATH=$PATH:/usr/sbin
 
 # only root can run this
 if [ "0$UID" -ne 0 ]; then
-	echo "Only root can run `basename $0`"; exit 1
+	printf $"Only root can run %s\n." "`basename $0`"; exit 1
 fi
 
 . /usr/local/bin/liblinuxlive
@@ -17,12 +20,12 @@ CHANGES=$MEMORY/changes
 SAVEDIRS=" SAVE_DIRS"
 
 CONFFILE=$1
-if [ "$CONFFILE" = "" ]; then echo "usage: $0 /media/sda?/$FWCONF"; exit 1; fi
-if [ -e "$CONFFILE" -a ! -f "$CONFFILE" ]; then echo "not a regular file $CONFFILE"; exit 1; fi
+if [ "$CONFFILE" = "" ]; then printf $"usage: %s /media/sda?/%s\n" $0 $FWCONF; exit 1; fi
+if [ -e "$CONFFILE" -a ! -f "$CONFFILE" ]; then printf $"Not a regular file: %s\n" $CONFFILE; exit 1; fi
 
 # directory with changes is only in FWLive, not in installed version
 if [ ! -d $CHANGES ]; then
-	echo "This script can work only from FWLive."; exit 1
+	echo $"This script can work only from FWLive."; exit 1
 fi
 
 # INIT
@@ -34,14 +37,14 @@ MYSELF="`basename \"$0\"`"
 # ***********************
 
 if [ "$MYSELF" = "configsave" ]; then
-	echo -n "Saving changes to $CONFFILE... "
+	printf $"Saving changes to %s... " $CONFFILE
 	rm $CONFFILE 2>/dev/null
 	touch ${SAVEDIRS// / $CHANGES/}
 	mksquashfs ${SAVEDIRS// / $CHANGES/} $CONFFILE -e $CHANGES/var/{run,log,man,tmp} /etc/fstab >/dev/null 2>/dev/null
 	if [ $? -ne 0 ]; then
-		echo "can't write config to $CONFFILE"; exit 1
+		printf $"Can't write config to %s\n" $CONFFILE; exit 1
 	else
-		echo "done."
+		echo $"done."
 	fi
 fi
 
@@ -49,8 +52,8 @@ fi
 # ***********************
 
 if [ "$MYSELF" = "configrestore" ]; then
-	echo -n "Restoring changes from $CONFFILE... "
+	printf $"Restoring changes from %s... " $CONFFILE
 	lzm2dir $CONFFILE $CHANGES
 	uniondbg -g /
-	echo "done."
+	echo $"done."
 fi
