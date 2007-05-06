@@ -1,20 +1,22 @@
-#!/bin/sh
+#!/bin/bash
 
 # (c) 2006 Krisztian VASAS <iron@frugalware.org>
 # rc.parse_cmdline for FwLive
 # distributed under GPL License
 
-. /etc/rc.d/rc.functions
-
 # description: Parses the parameters given in boot loader's command line
 
-case $1 in
-	start)
-		start "$startparse"
-		/usr/local/bin/parse_cmdline
-		ok $?
-	;;
-	stop)
-		/bin/true
-	;;
-esac
+source /lib/initscripts/functions
+TEXTDOMAIN=fwlive
+TEXTDOMAINDIR=/usr/share/locale
+
+actions=(start)
+
+rc_start()
+{
+	start $"Parsing /proc/cmdline"
+	/usr/local/bin/parse_cmdline
+	ok $?
+}
+
+rc_exec $1
