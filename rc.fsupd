@@ -1,21 +1,18 @@
 #!/bin/bash
 
 # (c) 2005 Marcus Habermehl <bmh1980de@yahoo.de>
-# (c) 2003 Vajna Miklos <vmiklos@frugalware.org>
-# rc.frugalware for Frugalware
+# (c) 2003 Miklos Vajna <vmiklos@frugalware.org>
+# rc.fsupd for FWLive
 # distributed under GPL License
 
 # chkconfig: 2345 00 94
 # description: restart / start / stop fstab-update daemon.
 
-source /lib/initscripts/functions
-TEXTDOMAIN=frugalware
-TEXTDOMAINDIR=/lib/initscripts/messages
-
-actions=(start stop restart)
+TEXTDOMAIN=fwlive
+TEXTDOMAINDIR=/usr/share/locale
 
 if [ "$1" = "stop" ]; then
-        stop $stopfsupd
+        stop $"Stop fstab update daemon..."
         killall fstab-update 2>&1 /dev/null
         ok $?
 elif [ "$1" = "restart" ]; then
@@ -23,7 +20,7 @@ elif [ "$1" = "restart" ]; then
        sleep 5
        "$0" start
 else # start
-	start $startfsupd
+	start $"Starting fstab update daemon..."
 	if [ -e /usr/local/bin/fstab-update ]; then
 		/usr/local/bin/fstab-update --daemon &
 	fi
