@@ -14,12 +14,13 @@ FWLLLANG = en_US
 FWLFONT = lat2-16.psfu.gz
 
 # select FWLive profile, the following ones are available:
+# * ALL - for all packages installed
 # * KDE
 # * X - minimal graphical environment with fvwm
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = MIN
+APPSGROUP = ALL
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
@@ -74,13 +75,13 @@ INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind 
 	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp \
 	dhcpcd lighttpd fcgi
 INST_X_APPS = ${INST_MIN_APPS} xorg-server xorg-drivers fvwm mplayer alsa-utils
-INST_EXTRA_APPS = gimp gwenview wireshark amarok kaffeine kasablanca scribus \
-	ktorrent
+INST_EXTRA_APPS = gimp gwenview wireshark kaffeine kasablanca scribus ktorrent
 INST_LOCALE_APPS = firefox-hu kde-i18n-hu openoffice.org-dict-hu \
 	openoffice.org-i18n-hu bibletime-i18n firefox-de firefox-fr kde-i18n-de \
 	kde-i18n-fr openoffice.org-dict-fr k3b-i18n openoffice.org-i18n-de \
 	openoffice.org-i18n-fr openoffice.org-dict-de
 INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
 	flashplugin qtparted k3b
+INST_ALL_APPS = ${INST_SERVER_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
 
 # vim: ft=make
