@@ -55,6 +55,7 @@ xorg.conf: xorg.conf.in
 	sed -i 's/"en"/"us"/' $@
 
 checkfiles: parse_cmdline xorg.conf
+	${MAKE} -C po pos
 	for i in ${NEED_FILES}; do \
 		if [ ! -f $$i ] ; then \
 			echo "Missing file: $$i"; \
@@ -99,6 +100,7 @@ install-files: checkroot
 	for i in ${INST_FILES_644}; do \
 		install -m 644 -g root -o root -D $$(basename $$i) ${CHROOTDIR}/${TREE}/$$i; \
 	done
+	${MAKE} -C po CHROOTDIR=${CHROOTDIR} TREE=${TREE} mos
 
 #patch -p0 -R --dry-run -N -i -b ${PWD}/$$i
 patch-files: checkroot
