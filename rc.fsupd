@@ -8,22 +8,27 @@
 # chkconfig: 2345 00 94
 # description: restart / start / stop fstab-update daemon.
 
+source /lib/initscripts/functions
 TEXTDOMAIN=fwlive
 TEXTDOMAINDIR=/usr/share/locale
 
-if [ "$1" = "stop" ]; then
-        stop $"Stop fstab update daemon..."
-        killall fstab-update 2>&1 /dev/null
-        ok $?
-elif [ "$1" = "restart" ]; then
-       "$0" stop
-       sleep 5
-       "$0" start
-else # start
-	start $"Starting fstab update daemon..."
+actions=(stop restart start)
+daemon="fstab updater daemon"
+
+rc_start()
+{
+	start_msg
 	if [ -e /usr/local/bin/fstab-update ]; then
 		/usr/local/bin/fstab-update --daemon &
 	fi
 	ok $?
-fi
+}
 
+rc_stop()
+{
+	stop_msg
+	killall fstab-update &>/dev/null
+	ok $?
+}
+
+rc_exec $1
