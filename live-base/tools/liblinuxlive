@@ -34,7 +34,7 @@ LIVECDNAME="linux"
 #
 echogreen()
 {
-   echo -ne "[0;34m""$@""[0;39m"
+   echo -ne "[0;36m""$@""[0;39m"
 }
 
 # echolog
