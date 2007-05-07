@@ -31,8 +31,8 @@ cd darcs/fwlive
 
 then read the section titled "Building".
 
-NOTE: you can place your fwlive repo where you want, and if you want to place
-your translations repo somewhere else, you just need to edit po/Makefile.
+NOTE: you can place your fwlive repo anywhere you want, and if you want to
+place your translations repo somewhere else, you just need to edit po/Makefile.
 
 Customizing
 -----------
