@@ -1,0 +1,10 @@
+VERSION         DESCRIPTION
+-----------------------------------------------------------------------------
+0.7.1         - gettext support, can be translated via pootle (vmiklos)
+              - now using ntfs-3g for ntfs partitions (janny)
+              - the iso now contains a netinstall, too (vmiklos)
+	      - language, acpi and framebuffer settings can be choosen from the
+	        grub menu (ironiq)
+              - random warning fixes (janny)
+0.7.0         - initial release using the Makefile-based build system (mostly
+                boobaa, janny)
