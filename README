@@ -15,6 +15,25 @@ To remove the building chroot:
 
 	# make distclean
 
+From scatch
+-----------
+
+If you never compiled the FWLive, you need the following steps:
+
+cd ~
+mkdir darcs
+cd darcs
+darcs get --partial http://darcs.frugalware.org/repos/fwlive
+darcs get --partial http://darcs.frugalware.org/repos/translations
+su -
+ln -s ~user/darcs ./
+cd darcs/fwlive
+
+then read the section titled "Building".
+
+NOTE: you can place your fwlive repo where you want, and if you want to place
+your translations repo somewhere else, you just need to edit po/Makefile.
+
 Customizing
 -----------
 
