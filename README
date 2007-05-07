@@ -15,8 +15,8 @@ To remove the building chroot:
 
 	# make distclean
 
-From scatch
------------
+From scratch
+------------
 
 If you never compiled the FWLive, you need the following steps:
 
