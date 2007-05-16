@@ -29,6 +29,10 @@ su -
 ln -s ~user/darcs ./
 cd darcs/fwlive
 
+Check if all referenced repos are configured. Check the TREE variable in the
+file 'config': for example if it contains 'current' then check if current is
+enabled as a repo in /etc/repoman.conf.
+
 then read the section titled "Building".
 
 NOTE: you can place your fwlive repo anywhere you want, and if you want to
