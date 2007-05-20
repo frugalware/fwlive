@@ -8,6 +8,7 @@ CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
 KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
+GLIBCVER = pacman -r ${CHROOTDIR}/${TREE} -Q glibc|sed 's/.* \(.*\)-.*/\1/'
 FWLREL = pacman -r ${CHROOTDIR}/${TREE} -Q frugalware |sed 's/.* \(.*\)-.*/\1/'
 ifeq ($(CONFIG_SETUP),y)
 SETUPDIR = ${CHROOTDIR}/${TREE}/usr/share/setup
@@ -207,16 +208,16 @@ live-base: checkroot
 	cp ${CHROOTDIR}/${TREE}/usr/share/busybox/bin/busybox ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
 	cp ${CHROOTDIR}/${TREE}/usr/bin/eject ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
 	cp ${CHROOTDIR}/${TREE}/usr/sbin/lspci ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/bin/
-	cp ${CHROOTDIR}/${TREE}/lib/ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
-	ln -s ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/ld-linux.so.2
+	cp ${CHROOTDIR}/${TREE}/lib/ld-$(shell ${GLIBCVER}).so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
+	ln -s ld-$(shell ${GLIBCVER}).so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/ld-linux.so.2
 ifeq ($(ARCH),x86_64)
 	ln -s lib ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib64
-	ln -s ld-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/ld-linux-x86-64.so.2
+	ln -s ld-$(shell ${GLIBCVER}).so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/ld-linux-x86-64.so.2
 endif
 	cp ${CHROOTDIR}/${TREE}/lib/libblkid.so.1.0 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
 	ln -s libblkid.so.1.0 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libblkid.so.1
-	cp ${CHROOTDIR}/${TREE}/lib/libc-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
-	ln -s libc-2.5.so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libc.so.6
+	cp ${CHROOTDIR}/${TREE}/lib/libc-$(shell ${GLIBCVER}).so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
+	ln -s libc-$(shell ${GLIBCVER}).so ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libc.so.6
 	cp ${CHROOTDIR}/${TREE}/lib/libuuid.so.1.2 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
 	ln -s libuuid.so.1.2 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/libuuid.so.1
 	cp ${CHROOTDIR}/${TREE}/usr/lib/libz.so.1.2.3 ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/lib/
