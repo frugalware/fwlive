@@ -36,7 +36,7 @@ endif
 FWREL = ${FWVER} (${FWCODENAME})
 
 # filename of the is
-ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)-${APPSGROUP}.iso
+ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)-$(shell echo ${APPSGROUP}|tr [A-Z] [a-z]).iso
 
 # codename of the livecd, used in /etc/issue and /etc/fwlive-release
 FWLCODENAME = Voyager
