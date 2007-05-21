@@ -14,13 +14,13 @@ FWLLLANG = en_US
 FWLFONT = lat2-16.psfu.gz
 
 # select FWLive profile, the following ones are available:
-# * ALL - for all packages installed
+# * FULL - for all packages installed
 # * KDE
 # * X - minimal graphical environment with fvwm
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = ALL
+APPSGROUP = FULL
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
@@ -82,6 +82,6 @@ INST_LOCALE_APPS = firefox-hu kde-i18n-hu openoffice.org-dict-hu \
 	openoffice.org-i18n-fr openoffice.org-dict-de
 INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
 	flashplugin qtparted k3b
-INST_ALL_APPS = ${INST_SERVER_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
+INST_FULL_APPS = ${INST_SERVER_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
 
 # vim: ft=make

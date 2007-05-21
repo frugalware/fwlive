@@ -250,7 +250,7 @@ endif
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 
 hacking-kdmrc: checkroot
-	if [ ${APPSGROUP} == "KDE" ] || [ ${APPSGROUP} == "ALL" ] ; then \
+	if [ ${APPSGROUP} == "KDE" ] || [ ${APPSGROUP} == "FULL" ] ; then \
 		sed -i "s|RebootCmd=/sbin/reboot -n|RebootCmd=/sbin/reboot|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 		sed -i "s|AutoReLogin=false|AutoReLogin=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 		sed -i "s|AllowShutdown=Root|AllowShutdown=All|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
