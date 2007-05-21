@@ -29,10 +29,13 @@ FWLSREL = FWLive-${APPSGROUP}
 ifeq ($(findstring current,$(TREE)),current)
 FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
-else
-FWVER = 0.6
-FWCODENAME = Terminus
 endif
+ifeq ($(findstring testing,$(TREE)),testing)
+FWVER = 0.7pre1
+FWCODENAME = Sayshell
+endif
+FWVER ?= 0.6
+FWCODENAME ?= Terminus
 FWREL = ${FWVER} (${FWCODENAME})
 
 # filename of the is
