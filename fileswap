@@ -8,7 +8,7 @@ TEXTDOMAINDIR=/usr/share/locale
 
 # only root can run this
 if [ "0$UID" -ne 0 ]; then
-   printf $"Only root can run %s\n" "`basename $0`"; exit 1
+   printf $"Only root can run %s.\n" "`basename $0`"; exit 1
 fi
 
 SWAPFILE=$1

@@ -30,8 +30,7 @@ checkpkg()
 }
 
 if [ "$UID" != 0 ] ; then
-	echo $"you are not root. bye"
-	exit 1
+	printf $"Only root can run %s.\n" "`basename $0`"; exit 1
 fi
 
 if [ -z "$1" -o -z "$2" ] ; then
