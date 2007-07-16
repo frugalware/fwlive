@@ -5,15 +5,15 @@ Building
 
 To build the livecd:
 
-	# make
+	$ sudo make
 
 To clean up compiled code in the source dir:
 
-	# make clean
+	$ sudo make clean
 
 To remove the building chroot:
 
-	# make distclean
+	$ sudo make distclean
 
 From scratch
 ------------
@@ -21,13 +21,11 @@ From scratch
 If you never compiled the FWLive, you need the following steps:
 
 cd ~
-mkdir darcs
-cd darcs
-darcs get --partial http://darcs.frugalware.org/repos/fwlive
-darcs get --partial http://darcs.frugalware.org/repos/translations
-su -
-ln -s ~user/darcs ./
-cd darcs/fwlive
+mkdir -p git
+cd git
+git clone http://git.frugalware.org/repos/fwlive/.git
+git clone http://git.frugalware.org/repos/translations/.git
+cd fwlive
 
 Check if all referenced repos are configured. Check the TREE variable in the
 file 'config': for example if it contains 'current' then check if current is
