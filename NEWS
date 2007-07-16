@@ -1,5 +1,9 @@
 VERSION         DESCRIPTION
 -----------------------------------------------------------------------------
+0.7.2         - output cleanups (hermier)
+              - spelling fixes (boobaa)
+              - support for kernel-2.6.22 (janny)
+              - converted to git, some git-related fixes (vmiklos)
 0.7.1         - gettext support, can be translated via pootle (vmiklos)
               - now using ntfs-3g for ntfs partitions (janny)
               - the iso now contains a netinstall, too (vmiklos)
