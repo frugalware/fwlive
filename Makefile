@@ -197,6 +197,7 @@ create-users: checkroot
 
 live-base: checkroot
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
+	mkdir -p ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/{lib,bin,etc}
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/
