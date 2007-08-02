@@ -63,7 +63,7 @@ SAVEDIRS = etc home root var
 CONFIG_SETUP = y
 
 # additional packages to be installed by the profiles
-DRIVERS = ndiswrapper ipw2200-firmware acx100 madwifi rt2500
+DRIVERS = ndiswrapper-fwlive ipw2200-firmware acx100 madwifi rt2500
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux grub-theme-fwlive \
 	sudo aufs squashfs cdrtools ntfs-3g
 ifneq ($(ARCH),x86_64)
@@ -74,15 +74,16 @@ INST_MUSTHAVE_APPS += fwsetup
 endif
 INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap \
 	irssi dbus hal wireless_tools vim elinks links
-INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables proftpd fuseftp postfix bind \
+INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables fuseftp postfix bind \
 	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp \
 	dhcpcd lighttpd fcgi
 INST_X_APPS = ${INST_MIN_APPS} xorg-server xorg-drivers fvwm mplayer alsa-utils
-INST_EXTRA_APPS = gimp gwenview wireshark kaffeine kasablanca scribus ktorrent
-INST_LOCALE_APPS = firefox-hu kde-i18n-hu openoffice.org-dict-hu \
-	openoffice.org-i18n-hu bibletime-i18n firefox-de firefox-fr kde-i18n-de \
-	kde-i18n-fr openoffice.org-dict-fr k3b-i18n openoffice.org-i18n-de \
-	openoffice.org-i18n-fr openoffice.org-dict-de
+INST_EXTRA_APPS = gimp gwenview wireshark kaffeine kasablanca ktorrent
+INST_LOCALE_APPS = firefox-hu firefox-de firefox-fr \
+	kde-i18n-hu kde-i18n-de kde-i18n-fr \
+	openoffice.org-dict-hu 	openoffice.org-dict-fr openoffice.org-dict-de \
+	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr \
+	bibletime-i18n  k3b-i18n
 INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
 	flashplugin qtparted k3b
 INST_FULL_APPS = ${INST_SERVER_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}

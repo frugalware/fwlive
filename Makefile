@@ -41,11 +41,16 @@ all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount inst
 check-tree:
 	source /etc/repoman.conf; \
 	grep -v Include /etc/pacman.conf >${PACCONF}; \
+	echo "Include = /etc/pacman.d/janny" >> ${PACCONF}; \
 	for i in `echo ${TREE}|sed 's/,/ /g'`; do \
 		repo=$$(eval "echo \$${$${i}_fdb/.fdb}"); \
 		[ -z "$$repo" ] && repo="$$i"; \
 		echo "Include = /etc/pacman.d/$$repo" >> ${PACCONF}; \
 	done
+	if [ ! -e /etc/pacman.d/janny ] ; then \
+		echo "[janny]" > /etc/pacman.d/janny; \
+		echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> /etc/pacman.d/janny; \
+	fi
 
 parse_cmdline: parse_cmdline.in
 	sed 's/@FWLLLANG@/$(FWLLLANG)/' $@.in > $@
