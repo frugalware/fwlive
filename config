@@ -63,7 +63,12 @@ SAVEDIRS = etc home root var
 CONFIG_SETUP = y
 
 # additional packages to be installed by the profiles
-DRIVERS = ndiswrapper-fwlive ipw2200-firmware acx100 madwifi rt2500
+DRIVERS = ndiswrapper-fwlive ipw2200-firmware gspcav1-fwlive \
+	qc-usb-fwlive cdemu-fwlive truecrypt-fwlive dazuko-fwlive \
+	busybox-fwlive lirc-fwlive acerhk-fwlive fglrx-fwlive \
+	nvidia-96xx-fwlive nvidia-fwlive madwifi-fwlive rt2500-fwlive \
+	wlan-ng-fwlive acx100-fwlive adm8211-fwlive ipw3945-fwlive \
+	ndiswrapper-fwlive rt2400-fwlive rtl8110-fwlive kqemu-fwlive
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux grub-theme-fwlive \
 	sudo aufs squashfs cdrtools ntfs-3g
 ifneq ($(ARCH),x86_64)
