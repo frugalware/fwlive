@@ -201,6 +201,9 @@ create-users: checkroot
 	fi
 
 live-base: checkroot
+	echo "Include = /etc/pacman.d/janny" >> ${CHROOTDIR}/${TREE}/etc/pacman.conf; \
+	echo "[janny]" > ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
+        echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
 	mkdir -p ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/{lib,bin,etc}
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore

@@ -542,7 +542,6 @@ fstab_update()
    fstab_update_line $FSTAB~ devpts /dev/pts devpts gid=5,mode=620
    fstab_update_line $FSTAB~ proc /proc proc defaults
    list_cdrom_devices | while read DEVICE; do
-#      MOUNTDIR="/mnt/`basename $DEVICE`_cdrom"
       MOUNTDIR="/media/`basename $DEVICE`_cdrom"
       mkdir -p $1/$MOUNTDIR
       fstab_update_line $FSTAB~ $DEVICE $MOUNTDIR iso9660 noauto,users,exec
@@ -553,7 +552,6 @@ fstab_update()
          REMOVABLE="_removable"
       fi
 
-#      MOUNTDIR="/mnt/$DEV$REMOVABLE"
       MOUNTDIR="/media/$DEV$REMOVABLE"
       FS="`blkid -s TYPE $DEVICE | cut -d = -f 2 | tr -d ' \"'`"
 
@@ -577,9 +575,7 @@ fstab_update()
       fi
    done
 
-#   fstab_update_line $FSTAB~ /dev/fd0 /mnt/floppy vfat,msdos noauto,noatime,users,suid,dev,exec
    fstab_update_line $FSTAB~ /dev/fd0 /media/floppy vfat,msdos noauto,noatime,users,suid,dev,exec
-#   mkdir -p $1/mnt/floppy
    mkdir -p $1/media/floppy
    
    mv -f $FSTAB~ $FSTAB

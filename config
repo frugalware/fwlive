@@ -31,7 +31,7 @@ FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
 endif
 ifeq ($(findstring testing,$(TREE)),testing)
-FWVER = 0.7pre1
+FWVER = 0.7rc1
 FWCODENAME = Sayshell
 endif
 FWVER ?= 0.6
@@ -57,7 +57,7 @@ FWUSERPASS = ${FWLUSER}
 FWROOTPASS = fwroot
 
 # configsave will save these directories
-SAVEDIRS = etc home root var
+SAVEDIRS = etc home lib root usr var
 
 # set this to 'n' if you don't want to include the installer on the livecd
 CONFIG_SETUP = y
@@ -65,10 +65,9 @@ CONFIG_SETUP = y
 # additional packages to be installed by the profiles
 DRIVERS = ndiswrapper-fwlive ipw2200-firmware gspcav1-fwlive \
 	qc-usb-fwlive cdemu-fwlive truecrypt-fwlive dazuko-fwlive \
-	busybox-fwlive lirc-fwlive acerhk-fwlive fglrx-fwlive \
-	nvidia-96xx-fwlive nvidia-fwlive madwifi-fwlive rt2500-fwlive \
+	busybox-fwlive lirc-fwlive acerhk-fwlive madwifi-fwlive \
 	wlan-ng-fwlive acx100-fwlive adm8211-fwlive ipw3945-fwlive \
-	ndiswrapper-fwlive rt2400-fwlive rtl8110-fwlive kqemu-fwlive
+	rt2500-fwlive rt2400-fwlive rtl8110-fwlive kqemu-fwlive
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux grub-theme-fwlive \
 	sudo aufs squashfs cdrtools ntfs-3g
 ifneq ($(ARCH),x86_64)
