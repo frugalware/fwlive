@@ -174,7 +174,7 @@ create-files: checkroot
 	chmod +x ${CHROOTDIR}/${TREE}/etc/profile.d/lang.sh
 	echo "[eth0]" >${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
 	echo "options = dhcp" >>${CHROOTDIR}/${TREE}/etc/sysconfig/network/default
-	echo "127.0.0.1       localhost" >${CHROOTDIR}/${TREE}/etc/hosts
+	echo "127.0.0.1		localhost	fwlive" >${CHROOTDIR}/${TREE}/etc/hosts
 	sed -i "s|id:4:initdefault:|id:3:initdefault:|" ${CHROOTDIR}/${TREE}/etc/inittab
 	sed -i "s|NUMLOCK_ON=1|NUMLOCK_ON=0|" ${CHROOTDIR}/${TREE}/etc/sysconfig/numlock
 	sed -i "s|dev.cdrom.lock=0|dev.cdrom.lock=1|" ${CHROOTDIR}/${TREE}/etc/sysctl.conf
