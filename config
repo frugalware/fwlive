@@ -14,13 +14,15 @@ FWLLLANG = en_US
 FWLFONT = lat2-16.psfu.gz
 
 # select FWLive profile, the following ones are available:
+# * FULL_GTK - for all gtk && xfce packages installed
 # * FULL - for all packages installed
 # * KDE
+# * XFCE
 # * X - minimal graphical environment with fvwm
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = FULL
+APPSGROUP = MUSTHAVE
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
@@ -83,13 +85,24 @@ INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables fuseftp postfix bind \
 	dhcpcd lighttpd fcgi
 INST_X_APPS = ${INST_MIN_APPS} xorg-server xorg-drivers fvwm mplayer alsa-utils
 INST_EXTRA_APPS = gimp gwenview wireshark kaffeine kasablanca ktorrent
+INST_EXTRA_GTK_APPS = gimp wireshark gqview
 INST_LOCALE_APPS = firefox-hu firefox-de firefox-fr \
 	kde-i18n-hu kde-i18n-de kde-i18n-fr \
 	openoffice.org-dict-hu 	openoffice.org-dict-fr openoffice.org-dict-de \
 	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr \
 	bibletime-i18n  k3b-i18n
+INST_LOCALE_GTK_APPS = firefox-hu firefox-de firefox-fr \
+	openoffice.org-dict-hu  openoffice.org-dict-fr openoffice.org-dict-de \
+	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr
 INST_KDE_APPS = ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
 	flashplugin qtparted k3b
+INST_XFCE_APPS = ${INST_X_APPS} dbh gtk-xfce-engine libexo libxfce4mcs libxfce4util \
+	libxfcegui4 orage terminal thunar thunar-volman xfce-frugalware \
+	xfce-mcs-manager xfce-mcs-plugins xfce-utils xfce4-appfinder \
+	xfce4-dev-tools xfce4-icon-theme xfce4-mixer xfce4-panel xfce4-session \
+	xfce4-trigger-launcher xfdesktop xfprint xfwm4 xfwm4-themes firefox \
+	openoffice.org flashplugin mplayer
 INST_FULL_APPS = ${INST_SERVER_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
+INST_FULL_GTK_APPS = ${INST_SERVER_APPS} ${INST_XFCE_APPS} ${INST_EXTRA_GTK_APPS} ${INST_LOCALE_GTK_APPS}
 
 # vim: ft=make

@@ -557,19 +557,20 @@ fstab_update()
 
       # add special options for NTFS
       if [ "$FS" = "ntfs" ]; then
-         OPT=",rw"
-         if [ "$IOCHARSET" != "" ]; then FS="ntfs-3g" OPT="$OPT,nls=$IOCHARSET"; fi
+         OPT=",rw,gid=100,"
+	 FS="ntfs-3g"
+         if [ "$IOCHARSET" != "" ]; then OPT="$OPT,locale=en_US.UTF-8"; fi
       fi
 
       # add special options for VFAT
-      if [ "$FS" = "vfat" -a "$IOCHARSET" != ""  ]; then OPT=",iocharset=$IOCHARSET"; fi
+      if [ "$FS" = "vfat" -a "$IOCHARSET" != ""  ]; then OPT=",noatime,users,suid,dev,exec,iocharset=$IOCHARSET"; fi
 
       # if the partition has filesystem, add it to fstab
       if [ "$FS" != "" ]; then
          if [ "$FS" = "swap" ]; then
             fstab_update_line $FSTAB~ $DEVICE swap swap $AUTO,defaults
          else
-            fstab_update_line $FSTAB~ $DEVICE $MOUNTDIR $FS $AUTO,noatime,users,suid,dev,exec$OPT
+            fstab_update_line $FSTAB~ $DEVICE $MOUNTDIR $FS $AUTO$OPT
             mkdir -p "$1/$MOUNTDIR"
          fi
       fi

@@ -92,6 +92,14 @@ install-apps: checkroot
 			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_${APPSGROUP}_APPS} --noconfirm --config ${PACCONF} ; \
 		fi ; \
 	fi
+ifeq ($(APPSGROUP),XFCE)
+	pacman -r ${CHROOTDIR}/${TREE} -Rf kdm --noconfirm --config ${PACCONF}
+	pacman -r ${CHROOTDIR}/${TREE} -Sf gdm --noconfirm --config ${PACCONF}
+endif
+ifeq ($(APPSGROUP),FULL_GTK)
+	pacman -r ${CHROOTDIR}/${TREE} -Rf kdm --noconfirm --config ${PACCONF}
+	pacman -r ${CHROOTDIR}/${TREE} -Sf gdm --noconfirm --config ${PACCONF}
+endif
 
 install-kernel: checkroot
 	if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
@@ -138,8 +146,8 @@ create-symlinks: checkroot
 		ln -s /tmp ${CHROOTDIR}/${TREE}/var/tmp ; \
 	fi
 	if [ ! -e ${CHROOTDIR}/${TREE}/etc/rc.d/rcS.d/S16rc.fsupd ] ; then \
-                ln -s ../rc.fsupd ${CHROOTDIR}/${TREE}/etc/rc.d/rcS.d/S16rc.fsupd ; \
-        fi
+	    ln -s ../rc.fsupd ${CHROOTDIR}/${TREE}/etc/rc.d/rcS.d/S16rc.fsupd ; \
+	fi
 	if [ ! -e ${CHROOTDIR}/${TREE}/etc/rc.d/rc6.d/K95rc.fsupd ] ; then \
 		ln -s ../rc.fsupd ${CHROOTDIR}/${TREE}/etc/rc.d/rc6.d/K95rc.fsupd ; \
 	fi
@@ -203,12 +211,13 @@ create-users: checkroot
 live-base: checkroot
 	echo "Include = /etc/pacman.d/janny" >> ${CHROOTDIR}/${TREE}/etc/pacman.conf; \
 	echo "[janny]" > ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
-        echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
+	echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
 	mkdir -p ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/{lib,bin,etc}
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/tools/* ${CHROOTDIR}/${TREE}/usr/local/bin/
 	cp ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/
+	chmod 777 ${CHROOTDIR}/${TREE}/usr/local/bin/*
 	ln -sf make_iso.sh ${CHROOTDIR}/${TREE}/usr/local/bin/make_iso
 	ln -sf install ${CHROOTDIR}/${TREE}/tmp/live-base/uninstall
 	ln -sf ../tools/liblinuxlive ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/liblinuxlive
@@ -270,7 +279,7 @@ hacking-kdmrc: checkroot
 		sed -i "s|#AutoLoginUser=foo|AutoLoginUser=fwlive|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 		sed -i "s|PreselectUser=Previous|PreselectUser=None|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 		sed -i "s|FocusPasswd=false|FocusPasswd=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
-                sed -i 's/desktop=""/desktop="\/usr\/bin\/kdm -nodaemon"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop; \
+		sed -i 's/desktop=""/desktop="\/usr\/bin\/kdm -nodaemon"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop; \
 	fi
 
 create: chroot-mount create-iso chroot-umount
