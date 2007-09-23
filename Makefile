@@ -93,11 +93,9 @@ install-apps: checkroot
 		fi ; \
 	fi
 ifeq ($(APPSGROUP),XFCE)
-	pacman -r ${CHROOTDIR}/${TREE} -Rf kdm --noconfirm --config ${PACCONF}
 	pacman -r ${CHROOTDIR}/${TREE} -Sf gdm --noconfirm --config ${PACCONF}
 endif
 ifeq ($(APPSGROUP),FULL_GTK)
-	pacman -r ${CHROOTDIR}/${TREE} -Rf kdm --noconfirm --config ${PACCONF}
 	pacman -r ${CHROOTDIR}/${TREE} -Sf gdm --noconfirm --config ${PACCONF}
 endif
 
