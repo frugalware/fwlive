@@ -33,7 +33,7 @@ FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
 endif
 ifeq ($(findstring testing,$(TREE)),testing)
-FWVER = 0.7rc1
+FWVER = 0.7rc2
 FWCODENAME = Sayshell
 endif
 FWVER ?= 0.6
@@ -102,7 +102,7 @@ INST_XFCE_APPS = ${INST_X_APPS} gtk-xfce-engine libexo libxfce4mcs libxfce4util 
 	xfce4-dev-tools xfce4-icon-theme xfce4-mixer xfce4-panel xfce4-session \
 	xfdesktop xfprint xfwm4 xfwm4-themes firefox \
 	openoffice.org flashplugin mplayer
-INST_FULL_APPS = ${INST_SERVER_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
+INST_FULL_APPS = ${INST_MIN_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
 INST_FULL_GTK_APPS = ${INST_SERVER_APPS} ${INST_XFCE_APPS} ${INST_EXTRA_GTK_APPS} ${INST_LOCALE_GTK_APPS}
 
 # vim: ft=make
