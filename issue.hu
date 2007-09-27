@@ -1,0 +1,24 @@
+[H[J
+[1;32m =================================================================================================[0;39m
+[1;32m  Üdvözöl az FWLive @FWLREL@  @VENDOR@                        \l    [0;39m
+[1;32m =================================================================================================[0;39m
+
+ [1;29m A rendszer felált.[0;29m
+
+  Bejelentkezéshez használja a "username", ezzel a jelszóval "userpass" vagy bejelentkezhet mint "root",
+      ezzel a jelszóval "rootpass". (Mindkettõt a leírtaknak megfelelõen és kisbetüvel.)
+
+ [1;29m Bejelentkezés után próbálja ki a következõ parancsokat:[0;29m
+
+  mc .... ez indítja a Midnight Commandert (fájlok szerkesztése/másolása/mozgatása/létrehozása/törlése)
+  configsave/configrestore .... - vagy használható a - service config save/restore - parancs a
+	rendszerben történt változások mentésére és helyreállítására     
+  fileswap .... készíthet egy speciális fájlt a merevlemezre, swapnak
+  make_disk .... az FWLive instalálásához, használja a make_disk scriptet
+  xstart .... elindítja a KDE ablakkezelõt az automatikusan észlelt beállításokkal 
+	hiba esetén a VESA meghajtót használunk
+  setup .... beállító script a saját beállításainak
+
+[1;32m  Ha végzett, használja a "poweroff" vagy a "reboot" parancsot és várja meg amíg a rendszer leáll [0;39m
+[1;32m =================================================================================================[0;39m
+
