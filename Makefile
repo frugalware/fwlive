@@ -19,12 +19,12 @@ SETUPINITRDSIZE = echo "$$(($$(gzip --list $(SETUPINITRD) |grep initrd-$(ARCH).i
 endif
 # needed files (files that we can't live without)
 NEED_FILES = fstab-update parse_cmdline.in xorg.conf.in rc.fsupd \
-	crypt.c	rc.fwlive rc.config configsave issue fileswap reboot.diff services.diff udev.diff rc.S.diff \
+	crypt.c	rc.fwlive rc.config configsave issue.{en,hu} fileswap reboot.diff services.diff udev.diff rc.S.diff \
 	rc.parse_cmdline parse_cmdline xstart xorg.conf menu.lst 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /etc/rc.d/rc.fsupd /usr/local/bin/configsave \
 	/usr/local/bin/fileswap /usr/local/bin/fstab-update /usr/local/bin/xstart \
 	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/live-base/tools/fpm2lzm
-INST_FILES_644 = /etc/issue{en,hu} /etc/X11/xorg.conf /boot/grub/menu.lst
+INST_FILES_644 = /etc/issue.{en,hu} /etc/X11/xorg.conf /boot/grub/menu.lst
 PWD = $(shell pwd)
 PATCH_FILES = reboot.diff services.diff udev.diff rc.S.diff
 REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
@@ -198,11 +198,11 @@ create-users: checkroot
 		sed "s|${FWLUSER}:\!:$$fwf|${FWLUSER}:$$fwpass:$$fwf|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		sed "s|root::$$rof|root:$$rootpass:$$rof|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		echo "${FWLUSER}    ALL=(ALL) NOPASSWD:ALL" >${CHROOTDIR}/${TREE}/etc/sudoers; \
-		sed "s|@VENDOR@|${VENDOR}|" -i ${CHROOTDIR}/${TREE}/etc/issue{en,hu}; \
-		sed "s|@FWLREL@|$(shell ${FWLREL}) (${FWLCODENAME})|" -i ${CHROOTDIR}/${TREE}/etc/issue{en,hu}; \
-		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue{en,hu}; \
-		sed "s|userpass|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue{en,hu}; \
-		sed "s|rootpass|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue{en,hu}; \
+		sed "s|@VENDOR@|${VENDOR}|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
+		sed "s|@FWLREL@|$(shell ${FWLREL}) (${FWLCODENAME})|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
+		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
+		sed "s|userpass|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
+		sed "s|rootpass|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
 		sed "s|SAVE_DIRS|${SAVEDIRS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/configsave; \
 	fi
 
