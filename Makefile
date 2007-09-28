@@ -92,12 +92,6 @@ install-apps: checkroot
 			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_${APPSGROUP}_APPS} --noconfirm --config ${PACCONF} ; \
 		fi ; \
 	fi
-ifeq ($(APPSGROUP),XFCE)
-	sed -i 's/desktop=""/desktop="startxfce4"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
-endif
-ifeq ($(APPSGROUP),FULL_GTK)
-	sed -i 's/desktop=""/desktop="startxfce4"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
-endif
 
 install-kernel: checkroot
 	if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
@@ -185,6 +179,12 @@ fix-files: checkroot
 	if [ -f ${CHROOTDIR}/${TREE}/etc/esd.conf ]; then \
 		sed -i 's|terminate|no&|' ${CHROOTDIR}/${TREE}/etc/esd.conf; \
 	fi
+ifeq ($(APPSGROUP),XFCE)
+	sed -i 's/desktop=""/desktop="startxfce4"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
+endif
+ifeq ($(APPSGROUP),FULL_GTK)
+	sed -i 's/desktop=""/desktop="startxfce4"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
+endif
 
 create-users: checkroot
 	if (( $(shell grep ${FWLUSER} ${CHROOTDIR}/${TREE}/etc/shadow &>/dev/null; echo $$?) > 0 )); then \

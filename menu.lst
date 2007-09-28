@@ -3,7 +3,7 @@ timeout=5
 gfxmenu /boot/grub/message
 
 title @GRUBTITLE@
-        kernel /boot/vmlinuz initrd=/boot/initrd.gz init=linuxrc max_loop=255 load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=39484 rw root=/dev/ram
+        kernel /boot/vmlinuz initrd=/boot/initrd.gz init=linuxrc max_loop=255 load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=19742 rw root=/dev/ram
         initrd /boot/initrd.gz
 
 title Memtest86+
