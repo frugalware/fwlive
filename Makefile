@@ -198,6 +198,7 @@ create-users: checkroot
 		sed "s|${FWLUSER}:\!:$$fwf|${FWLUSER}:$$fwpass:$$fwf|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		sed "s|root::$$rof|root:$$rootpass:$$rof|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		echo "${FWLUSER}    ALL=(ALL) NOPASSWD:ALL" >${CHROOTDIR}/${TREE}/etc/sudoers; \
+		rm -f ${CHROOTDIR}/${TREE}/etc/issue; \
 		sed "s|@VENDOR@|${VENDOR}|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
 		sed "s|@FWLREL@|$(shell ${FWLREL}) (${FWLCODENAME})|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
 		sed "s|username|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/etc/issue.{en,hu}; \
