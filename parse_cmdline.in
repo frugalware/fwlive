@@ -24,6 +24,7 @@ case $lang in
 	;;
 	*)
 	keymap=`echo $lang |sed 's/_.*//'`
+	ln -sf issue.en /etc/issue
 	;;
 esac
 cat << EOF > /etc/sysconfig/keymap
