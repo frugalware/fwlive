@@ -16,11 +16,11 @@ fwlcp=$(grep $lang /usr/share/locale/locale.alias|sed 's/.*\.//;q'|tr [A-Z] [a-z
 case $lang in
 	en_*)
 	keymap=us
-	ln -sf issue /etc/issue.en
+	ln -sf issue.en /etc/issue
 	;;
 	hu_*)
 	keymap=`echo $lang |sed 's/_.*//'`
-	ln -sf issue /etc/issue.hu
+	ln -sf issue.hu /etc/issue
 	;;
 	*)
 	keymap=`echo $lang |sed 's/_.*//'`
