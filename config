@@ -22,7 +22,7 @@ FWLFONT = lat2-16.psfu.gz
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = FULL
+APPSGROUP = MUSTHAVE
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}

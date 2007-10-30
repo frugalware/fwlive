@@ -19,6 +19,7 @@ mos:
 	done
 
 pot: intltool-extract
+	ln -s parse_cmdline.in ../parse_cmdline
 	for i in `cat POTFILES.in`; do \
 		ln -s `basename $$i .sh` ../$$i; \
 	done
@@ -26,6 +27,7 @@ pot: intltool-extract
 	for i in `cat POTFILES.in`; do \
 		rm ../$$i; \
 	done
+	rm ../parse_cmdline
 
 intltool-extract:
 	cp /usr/bin/intltool-extract ./

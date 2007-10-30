@@ -5,7 +5,9 @@
 # parse_cmdline for Frugalware
 # distributed under GPL License
 
-deflang="@FWLLLANG@"
+TEXTDOMAIN=fwlive
+TEXTDOMAINDIR=/usr/share/locale
+deflang="FWLLLANG"
 
 lang=`grep lang /proc/cmdline|sed 's/.*lang=\([^ ]*\)\( .*\|$\)/\1/'`
 if [ -z "$lang" ]; then
@@ -16,15 +18,12 @@ fwlcp=$(grep $lang /usr/share/locale/locale.alias|sed 's/.*\.//;q'|tr [A-Z] [a-z
 case $lang in
 	en_*)
 	keymap=us
-	ln -sf issue.en /etc/issue
 	;;
 	hu_*)
 	keymap=`echo $lang |sed 's/_.*//'`
-	ln -sf issue.hu /etc/issue
 	;;
 	*)
 	keymap=`echo $lang |sed 's/_.*//'`
-	ln -sf issue.en /etc/issue
 	;;
 esac
 cat << EOF > /etc/sysconfig/keymap
@@ -39,3 +38,31 @@ export CHARSET=$fwlcp
 EOF
 chmod +x /etc/profile.d/lang.sh
 export LC_ALL=$lang
+
+# generate /etc/issue
+gen_issue()
+{
+printf '[H[J\n'
+printf '[1;32m =================================================================================================[0;39m\n'
+printf '[1;32m  '
+printf $"Welcome to FWLive %s by %s" "FWLREL" "VENDOR"
+printf '                        \l    [0;39m\n'
+printf '[1;32m =================================================================================================[0;39m'
+printf '\n\n'
+printf ' [1;29m %s[0;29m\n\n  ' $"The system is up and running now."
+printf $"Login as '%s', with password '%s' or" "USERNAME" "USERPASS"
+printf '\n    '
+printf $"login as 'root', with password '%s', both without quotes, lowercase." "ROOTPASS"
+printf '\n\n [1;29m %s[0;29m\n\n' $"After login, try the following commands:"
+printf '  %s\n' $"mc .... to start Midnight Commander (edit/copy/move/create/delete files)"
+printf '  %s \n' $"configsave/configrestore  - or use - service config save/restore ..."
+printf '	%s     \n' $"to save and restore all filesystem changes"
+printf '  %s\n' $"fileswap .... to create special file for swapping RAM to your harddisk"
+printf '  %s\n' $"make_disk .... to install FWLive, use make_disk script on FWLive CD"
+printf '  %s\n' $"xstart .... to start KDE with autodetected settings (upon failure vesa driver will be used)"
+printf '  %s\n\n' $"setup .... a script for your own settings"
+printf '[1;32m  %s [0;39m\n' $"When finished, use 'poweroff' or 'reboot' command and wait until it completes"
+printf '[1;32m =================================================================================================[0;39m\n\n'
+}
+
+gen_issue > /etc/issue
