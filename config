@@ -17,12 +17,13 @@ FWLFONT = lat2-16.psfu.gz
 # * FULL_GTK - for all gtk && xfce packages installed
 # * FULL - for all packages installed
 # * KDE
+# * KDE4
 # * XFCE
 # * X - minimal graphical environment with fvwm
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = MUSTHAVE
+APPSGROUP = KDE4
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
@@ -33,11 +34,11 @@ FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
 endif
 ifeq ($(findstring testing,$(TREE)),testing)
-FWVER = 0.7rc2
-FWCODENAME = Sayshell
+FWVER = 0.8pre2
+FWCODENAME = Kalgan
 endif
-FWVER ?= 0.6
-FWCODENAME ?= Terminus
+FWVER ?= 0.7
+FWCODENAME ?= Sayshell
 FWREL = ${FWVER} (${FWCODENAME})
 
 # filename of the is
@@ -96,6 +97,7 @@ INST_LOCALE_GTK_APPS = firefox-hu firefox-de firefox-fr firefox-da openoffice.or
 	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr
 INST_KDE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
 	flashplugin qtparted k3b
+INST_KDE4_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kde4
 INST_XFCE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} gtk-xfce-engine libexo libxfce4mcs libxfce4util \
 	libxfcegui4 orage terminal thunar thunar-volman xfce-frugalware xsetroot \
 	xfce-mcs-manager xfce-mcs-plugins xfce-utils xfce4-appfinder \

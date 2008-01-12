@@ -7,9 +7,9 @@ ARCH = $(shell uname -m)
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
-KERNVER = pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
-GLIBCVER = pacman -r ${CHROOTDIR}/${TREE} -Q glibc|sed 's/.* \(.*\)-.*/\1/'
-FWLREL = pacman -r ${CHROOTDIR}/${TREE} -Q frugalware |sed 's/.* \(.*\)-.*/\1/'
+KERNVER = pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
+GLIBCVER = pacman-g2 -r ${CHROOTDIR}/${TREE} -Q glibc|sed 's/.* \(.*\)-.*/\1/'
+FWLREL = pacman-g2 -r ${CHROOTDIR}/${TREE} -Q frugalware |sed 's/.* \(.*\)-.*/\1/'
 ifeq ($(CONFIG_SETUP),y)
 SETUPDIR = ${CHROOTDIR}/${TREE}/usr/share/setup
 SETUPKERNELVER = cd $(SETUPDIR); ls vmlinuz*|sed 's/vmlinuz-//'
@@ -40,17 +40,19 @@ all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount inst
 
 check-tree:
 	source /etc/repoman.conf; \
-	grep -v Include /etc/pacman.conf >${PACCONF}; \
-	echo "Include = /etc/pacman.d/janny" >> ${PACCONF}; \
+	grep -v Include /etc/pacman-g2.conf >${PACCONF}; \
+        echo "[janny]" >> ${PACCONF}; \
+        echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${PACCONF}; \
+	if [ ${APPSGROUP} == "KDE4" ] ; then \
+	        echo "[playground]" >> ${PACCONF}; \
+	        echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686" >> ${PACCONF}; \
+	fi
 	for i in `echo ${TREE}|sed 's/,/ /g'`; do \
 		repo=$$(eval "echo \$${$${i}_fdb/.fdb}"); \
 		[ -z "$$repo" ] && repo="$$i"; \
-		echo "Include = /etc/pacman.d/$$repo" >> ${PACCONF}; \
+		echo "[frugalware-$$repo]" >> ${PACCONF}; \
+		echo "Server = http://ftp.frugalware.org/pub/frugalware/frugalware-$$repo/frugalware-i686" >> ${PACCONF}; \
 	done
-	if [ ! -e /etc/pacman.d/janny ] ; then \
-		echo "[janny]" > /etc/pacman.d/janny; \
-		echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> /etc/pacman.d/janny; \
-	fi
 
 parse_cmdline: parse_cmdline.in
 	sed 's/FWLLLANG/$(FWLLLANG)/' $@.in > $@
@@ -75,27 +77,27 @@ checkroot:
 	fi
 
 chroot-mkdirs: checkroot
-	mkdir -p ${CHROOTDIR}/${TREE}/{dev,etc,proc,sys,var/cache/pacman,var/log}
+	mkdir -p ${CHROOTDIR}/${TREE}/{dev,etc,proc,sys,var/cache/pacman-g2,var/log}
 	
 create-pkgdb: checkroot
-	pacman -r ${CHROOTDIR}/${TREE} -Syuf --noconfirm --config ${PACCONF}
+	pacman-g2 -r ${CHROOTDIR}/${TREE} -Syuf --noconfirm --config ${PACCONF}
 
 # pacman should really have a --dont-reinstall switch
 install-base: checkroot
 	if [ ! -d "${CHROOTDIR}/${TREE}/usr" ] ; then \
-		pacman -r ${CHROOTDIR}/${TREE} -Sf base --noconfirm --config ${PACCONF} ; \
+		pacman-g2 -r ${CHROOTDIR}/${TREE} -Sf base --noconfirm --config ${PACCONF} ; \
 	fi
 
 install-apps: checkroot
 	if [ "${INST_${APPSGROUP}_APPS}" ] ; then \
-		if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
-			pacman -r ${CHROOTDIR}/${TREE} -Sf ${INST_${APPSGROUP}_APPS} --noconfirm --config ${PACCONF} ; \
+		if (( $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
+			pacman-g2 -r ${CHROOTDIR}/${TREE} -Sf ${INST_${APPSGROUP}_APPS} --noconfirm --config ${PACCONF} ; \
 		fi ; \
 	fi
 
 install-kernel: checkroot
-	if (( $(shell pacman -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
-		pacman -r ${CHROOTDIR}/${TREE} -Sf kernel-fwlive --noconfirm --config ${PACCONF} ; \
+	if (( $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
+		pacman-g2 -r ${CHROOTDIR}/${TREE} -Sf kernel-fwlive --noconfirm --config ${PACCONF} ; \
 	fi
 
 install-files: checkroot
@@ -150,14 +152,15 @@ remove-files: checkroot
 	done
 
 kill-packages:
-	if [ $(shell pacman -r ${CHROOTDIR}/${TREE} -Q splashy &>/dev/null; echo $$?) = 0 ] ; then \
-		pacman -r ${CHROOTDIR}/${TREE} -Rf splashy --noconfirm --config ${PACCONF} ; \
+	if [ $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Q splashy &>/dev/null; echo $$?) = 0 ] ; then \
+		pacman-g2 -r ${CHROOTDIR}/${TREE} -Rf splashy --noconfirm --config ${PACCONF} ; \
 	fi
-	if [ $(shell pacman -r ${CHROOTDIR}/${TREE} -Q fwsetup &>/dev/null; echo $$?) = 0 ] ; then \
-		pacman -r ${CHROOTDIR}/${TREE} -Rf fwsetup --noconfirm --config ${PACCONF} ; \
+	if [ $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Q fwsetup &>/dev/null; echo $$?) = 0 ] ; then \
+		pacman-g2 -r ${CHROOTDIR}/${TREE} -Rf fwsetup --noconfirm --config ${PACCONF} ; \
 	fi
 
 create-files: checkroot
+	cp -f ${PACCONF} ${CHROOTDIR}/${TREE}/etc/pacman-g2.conf
 	echo "UTC" >${CHROOTDIR}/${TREE}/etc/hardwareclock
 	echo "${FWLHOST}" >${CHROOTDIR}/${TREE}/etc/HOSTNAME
 	echo "FWLive $(shell ${FWLREL}) (${FWLCODENAME}), based on Frugalware Linux ${FWREL}" >${CHROOTDIR}/${TREE}/etc/fwlive-release
@@ -208,7 +211,7 @@ create-users: checkroot
 	fi
 
 live-base: checkroot
-	echo "Include = /etc/pacman.d/janny" >> ${CHROOTDIR}/${TREE}/etc/pacman.conf; \
+	echo "Include = /etc/pacman.d/janny" >> ${CHROOTDIR}/${TREE}/etc/pacman-g2.conf; \
 	echo "[janny]" > ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
 	echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
@@ -302,15 +305,15 @@ chroot-mount: checkroot
 	fi
 
 cache-mount: checkroot
-	if [ ! $(shell mount|grep -o ${CHROOTDIR}/${TREE}/var/cache/pacman) ] ; then \
-		mount -o bind /var/cache/pacman ${CHROOTDIR}/${TREE}/var/cache/pacman ; \
+	if [ ! $(shell mount|grep -o ${CHROOTDIR}/${TREE}/var/cache/pacman-g2) ] ; then \
+		mount -o bind /var/cache/pacman-g2 ${CHROOTDIR}/${TREE}/var/cache/pacman-g2 ; \
 	fi
 
 chroot-umount: checkroot
 	umount ${CHROOTDIR}/${TREE}/{proc,sys,dev} &>/dev/null
 
 cache-umount: checkroot
-	umount ${CHROOTDIR}/${TREE}/var/cache/pacman &>/dev/null
+	umount ${CHROOTDIR}/${TREE}/var/cache/pacman-g2 &>/dev/null
 
 clean:
 	rm -f ${ISONAME} crypt_fwlive parse_cmdline xorg.conf ${PACCONF}
