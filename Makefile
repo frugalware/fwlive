@@ -43,6 +43,12 @@ check-tree:
 	grep -v Include /etc/pacman-g2.conf >${PACCONF}; \
         echo "[janny]" >> ${PACCONF}; \
         echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${PACCONF}; \
+	if [ ${APPSGROUP} == TEST ] ; then \
+	       echo "[xorg73]" >> ${PACCONF}; \
+	       echo "Server = http://ftp.frugalware.org/pub/other/people/krix/xorg73/frugalware-i686" >> ${PACCONF}; \
+	       echo "[playground]" >> ${PACCONF}; \
+	       echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686" >> ${PACCONF}; \
+	fi
 	if [ ${APPSGROUP} == "KDE4" ] ; then \
 	        echo "[playground]" >> ${PACCONF}; \
 	        echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686" >> ${PACCONF}; \
