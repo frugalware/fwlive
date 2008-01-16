@@ -18,12 +18,13 @@ FWLFONT = lat2-16.psfu.gz
 # * FULL - for all packages installed
 # * KDE
 # * KDE4
+# * TEST
 # * XFCE
 # * X - minimal graphical environment with fvwm
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = KDE4
+APPSGROUP = TEST
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
@@ -98,6 +99,7 @@ INST_LOCALE_GTK_APPS = firefox-hu firefox-de firefox-fr firefox-da openoffice.or
 INST_KDE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
 	flashplugin qtparted k3b
 INST_KDE4_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kde4
+INST_TEST_APPS = ${INST_MIN_APPS} xorg-server xorg-drivers fvwm kde4
 INST_XFCE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} gtk-xfce-engine libexo libxfce4mcs libxfce4util \
 	libxfcegui4 orage terminal thunar thunar-volman xfce-frugalware xsetroot \
 	xfce-mcs-manager xfce-mcs-plugins xfce-utils xfce4-appfinder \
