@@ -6,7 +6,7 @@
 # repos to be included in the chroot. probably you want "current" or "stable".
 # use a come-separated list if you want to list multiple repos. the first one
 # takes precedence
-TREE = current
+TREE = testing
 
 # default language, in an xx_YY form
 FWLLLANG = en_US
@@ -24,7 +24,7 @@ FWLFONT = lat2-16.psfu.gz
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = MUSTHAVE
+APPSGROUP = FULL
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}

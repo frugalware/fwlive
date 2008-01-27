@@ -50,7 +50,8 @@ check-tree:
 	for i in `echo ${TREE}|sed 's/,/ /g'`; do \
 		repo=$$(eval "echo \$${$${i}_fdb/.fdb}"); \
 		[ -z "$$repo" ] && repo="$$i"; \
-		echo "[frugalware-$$repo]" >> ${PACCONF}; \
+		[ ${TREE} == testing ] && echo "[frugalware-current]" >> ${PACCONF}; \
+		[ ${TREE} == current ] || [ ${TREE} == stable ]	 && echo "[frugalware-$$repo]" >> ${PACCONF}; \
 		echo "Server = http://ftp.frugalware.org/pub/frugalware/frugalware-$$repo/frugalware-i686" >> ${PACCONF}; \
 	done
 
