@@ -6,6 +6,14 @@ title @GRUBTITLE@
         kernel /boot/vmlinuz initrd=/boot/initrd.gz init=linuxrc max_loop=255 load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=19742 rw root=/dev/ram
         initrd /boot/initrd.gz
 
+title @GRUBTITLE@ Copy to RAM
+        kernel /boot/vmlinuz initrd=/boot/initrd.gz init=linuxrc max_loop=255 load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=19742 rw root=/dev/ram noresume copy2ram
+        initrd /boot/initrd.gz
+
+title  @GRUBTITLE@ Failsafe
+	kernel /boot/vmlinuz initrd=/boot/initrd.gz init=linuxrc max_loop=255 load_ramdisk=1 prompt_ramdisk=0 ramdisk_size=19742 rw root=/dev/ram showopts ide=nodma apm=off acpi=off vga=normal noresume selinux=0 barrier=off nosmp noapic maxcpus=0
+	initrd /boot/initrd.gz
+
 title Memtest86+
 	kernel /boot/memtest.bin
 

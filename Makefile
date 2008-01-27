@@ -19,14 +19,14 @@ SETUPINITRDSIZE = echo "$$(($$(gzip --list $(SETUPINITRD) |grep initrd-$(ARCH).i
 endif
 # needed files (files that we can't live without)
 NEED_FILES = fstab-update parse_cmdline.in xorg.conf.in rc.fsupd \
-	crypt.c	rc.fwlive rc.config configsave fileswap reboot.diff services.diff udev.diff rc.S.diff \
+	crypt.c	rc.fwlive rc.config configsave fileswap reboot.diff services.diff rc.S.diff \
 	rc.parse_cmdline parse_cmdline xstart xorg.conf menu.lst 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /etc/rc.d/rc.fsupd /usr/local/bin/configsave \
 	/usr/local/bin/fileswap /usr/local/bin/fstab-update /usr/local/bin/xstart \
 	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/live-base/tools/fpm2lzm
 INST_FILES_644 = /etc/X11/xorg.conf /boot/grub/menu.lst
 PWD = $(shell pwd)
-PATCH_FILES = reboot.diff services.diff udev.diff rc.S.diff
+PATCH_FILES = reboot.diff services.diff rc.S.diff
 REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/rc.d/rc{3.d,4.d}/S{21rc.firewall,26rc.lmsensors,32rc.sshd,78rc.mysqld,80rc.postfix,81rc.courier-authlib,82rc.imapd,82rc.pop3d,85rc.httpd,95rc.crond,99rc.cups,99rc.mono,99cups,12rc.syslog,13rc.portmap,19rc.rmount,50rc.atd} \
 	   /etc/rc.d/rc0.d/K{00cups,01rc.cups,05rc.crond,60rc.atd,87rc.portmap,88rc.syslog,90rc.rmount,96rc.swap,98rc.interfaces,56rc.sshd,30rc.postfix} \
@@ -41,6 +41,7 @@ all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount inst
 check-tree:
 	source /etc/repoman.conf; \
 	grep -v Include /etc/pacman-g2.conf >${PACCONF}; \
+<<<<<<< HEAD:Makefile
         echo "[janny]" >> ${PACCONF}; \
         echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${PACCONF}; \
 	if [ ${APPSGROUP} == TEST ] ; then \
@@ -49,9 +50,17 @@ check-tree:
 	       echo "[playground]" >> ${PACCONF}; \
 	       echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686" >> ${PACCONF}; \
 	fi
+=======
+        echo "[fwlive_pkgs]" >> ${PACCONF}; \
+	echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive_pkgs/frugalware-i686/" >> ${PACCONF}; \
+>>>>>>> fwlive-0.8rc1
+ * version bump at rc1
+ * change packages repo at fwlive_pkgs
+ * remove unnecessary udev.diff
+ * add copy2ram and failsafe title to menu.lst:Makefile
 	if [ ${APPSGROUP} == "KDE4" ] ; then \
 	        echo "[playground]" >> ${PACCONF}; \
-	        echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686" >> ${PACCONF}; \
+	        echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686/" >> ${PACCONF}; \
 	fi
 	for i in `echo ${TREE}|sed 's/,/ /g'`; do \
 		repo=$$(eval "echo \$${$${i}_fdb/.fdb}"); \
