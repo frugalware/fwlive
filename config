@@ -24,15 +24,7 @@ FWLFONT = lat2-16.psfu.gz
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-<<<<<<< HEAD:config
-APPSGROUP = TEST
-=======
 APPSGROUP = MUSTHAVE
->>>>>>> fwlive-0.8rc1
- * version bump at rc1
- * change packages repo at fwlive_pkgs
- * remove unnecessary udev.diff
- * add copy2ram and failsafe title to menu.lst:config
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}

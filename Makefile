@@ -41,23 +41,8 @@ all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount inst
 check-tree:
 	source /etc/repoman.conf; \
 	grep -v Include /etc/pacman-g2.conf >${PACCONF}; \
-<<<<<<< HEAD:Makefile
-        echo "[janny]" >> ${PACCONF}; \
-        echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${PACCONF}; \
-	if [ ${APPSGROUP} == TEST ] ; then \
-	       echo "[xorg73]" >> ${PACCONF}; \
-	       echo "Server = http://ftp.frugalware.org/pub/other/people/krix/xorg73/frugalware-i686" >> ${PACCONF}; \
-	       echo "[playground]" >> ${PACCONF}; \
-	       echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686" >> ${PACCONF}; \
-	fi
-=======
         echo "[fwlive_pkgs]" >> ${PACCONF}; \
 	echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive_pkgs/frugalware-i686/" >> ${PACCONF}; \
->>>>>>> fwlive-0.8rc1
- * version bump at rc1
- * change packages repo at fwlive_pkgs
- * remove unnecessary udev.diff
- * add copy2ram and failsafe title to menu.lst:Makefile
 	if [ ${APPSGROUP} == "KDE4" ] ; then \
 	        echo "[playground]" >> ${PACCONF}; \
 	        echo "Server = http://ftp.frugalware.org/pub/other/people/crazy/playground/frugalware-i686/" >> ${PACCONF}; \
