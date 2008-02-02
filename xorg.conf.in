@@ -27,7 +27,6 @@ Section "Module"
 	Load  "xtrap"
 	Load  "freetype"
 	Load  "type1"
-	Load  "freetype"
 EndSection
 
 Section "InputDevice"
