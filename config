@@ -81,8 +81,8 @@ ifeq ($(CONFIG_SETUP),y)
 INST_MUSTHAVE_APPS += fwsetup
 endif
 INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap \
-	irssi dbus hal wireless_tools vim elinks links
-INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables fuseftp postfix bind \
+	irssi dbus hal wireless_tools vim elinks links bind iputils
+INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables fuseftp postfix \
 	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp \
 	dhcpcd lighttpd fcgi
 INST_X_APPS = xorg-server xorg-drivers fvwm mplayer alsa-utils
