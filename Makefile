@@ -284,6 +284,12 @@ hacking-kdmrc: checkroot
 		sed -i "s|FocusPasswd=false|FocusPasswd=true|" ${CHROOTDIR}/${TREE}/usr/share/config/kdm/kdmrc; \
 		sed -i 's/desktop=""/desktop="\/usr\/bin\/kdm -nodaemon"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop; \
 	fi
+	
+	if [ ${APPSGROUP} == "KDE4" ] ; then \
+		sed -i 's/desktop=""/desktop="\/usr\/bin\/kdm -nodaemon"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop; \
+		rm -rf ${CHROOTDIR}/${TREE}/etc/kde4/config/kdm/kdmrc; \
+		mv -f ${CHROOTDIR}/${TREE}/etc/kde4/config/kdm/kdmrc-live ${CHROOTDIR}/${TREE}/etc/kde4/config/kdm/kdmrc; \
+	fi
 
 create: chroot-mount create-iso chroot-umount
 	echo "./${ISONAME} created."
