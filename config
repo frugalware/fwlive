@@ -85,7 +85,7 @@ INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap \
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp iptables fuseftp postfix \
 	mysql libmysqlclient php php-cgi apache pure-ftpd phpmyadmin samba dhcp \
 	dhcpcd lighttpd fcgi
-INST_X_APPS = xorg-server xorg-drivers fvwm mplayer alsa-utils
+INST_X_APPS = xorg-server xorg-drivers xorg-fonts fvwm mplayer alsa-utils
 INST_EXTRA_APPS = gimp gwenview wireshark kaffeine kasablanca ktorrent
 INST_EXTRA_GTK_APPS = gimp wireshark gqview
 INST_LOCALE_APPS = firefox-hu firefox-de firefox-fr \
