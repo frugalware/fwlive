@@ -7,7 +7,7 @@
 
 TEXTDOMAIN=fwlive
 TEXTDOMAINDIR=/usr/share/locale
-deflang="FWLLLANG"
+deflang="@FWLLLANG@"
 
 lang=`grep lang /proc/cmdline|sed 's/.*lang=\([^ ]*\)\( .*\|$\)/\1/'`
 if [ -z "$lang" ]; then
@@ -45,14 +45,14 @@ gen_issue()
 printf '[H[J\n'
 printf '[1;32m =================================================================================================[0;39m\n'
 printf '[1;32m  '
-printf $"Welcome to FWLive %s by %s" "FWLREL" "VENDOR"
+printf $"Welcome to FWLive %s by %s" "@FWLREL@" "@VENDOR@"
 printf '                        \l    [0;39m\n'
 printf '[1;32m =================================================================================================[0;39m'
 printf '\n\n'
 printf ' [1;29m %s[0;29m\n\n  ' $"The system is up and running now."
-printf $"Login as '%s', with password '%s' or" "USERNAME" "USERPASS"
+printf $"Login as '%s', with password '%s' or" "@USERNAME@" "@USERPASS@"
 printf '\n    '
-printf $"login as 'root', with password '%s', both without quotes, lowercase." "ROOTPASS"
+printf $"login as 'root', with password '%s', both without quotes, lowercase." "@ROOTPASS@"
 printf '\n\n [1;29m %s[0;29m\n\n' $"After login, try the following commands:"
 printf '  %s\n' $"mc .... to start Midnight Commander (edit/copy/move/create/delete files)"
 printf '  %s \n' $"configsave/configrestore  - or use - service config save/restore ..."

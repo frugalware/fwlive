@@ -56,7 +56,7 @@ check-tree:
 	done
 
 parse_cmdline: parse_cmdline.in
-	sed 's/FWLLLANG/$(FWLLLANG)/' $@.in > $@
+	sed 's/@FWLLLANG@/$(FWLLLANG)/' $@.in > $@
 
 xorg.conf: xorg.conf.in
 	sed 's/@FWLSLANG@/$(FWLSLANG)/' $@.in > $@
@@ -203,12 +203,12 @@ create-users: checkroot
 		sed "s|root::$$rof|root:$$rootpass:$$rof|" -i ${CHROOTDIR}/${TREE}/etc/shadow; \
 		echo "${FWLUSER}    ALL=(ALL) NOPASSWD:ALL" >${CHROOTDIR}/${TREE}/etc/sudoers; \
 		rm -f ${CHROOTDIR}/${TREE}/etc/issue; \
-		sed "s|VENDOR|${VENDOR}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
-		sed "s|FWLREL|$(shell ${FWLREL}) (${FWLCODENAME})|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
-		sed "s|USERNAME|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
-		sed "s|USERPASS|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
-		sed "s|ROOTPASS|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
-		sed "s|SAVE_DIRS|${SAVEDIRS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/configsave; \
+		sed "s|@VENDOR@|${VENDOR}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
+		sed "s|@FWLREL@|$(shell ${FWLREL}) (${FWLCODENAME})|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
+		sed "s|@USERNAME@|${FWLUSER}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
+		sed "s|@USERPASS@|${FWUSERPASS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
+		sed "s|@ROOTPASS@|${FWROOTPASS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/parse_cmdline; \
+		sed "s|@SAVE_DIRS@|${SAVEDIRS}|" -i ${CHROOTDIR}/${TREE}/usr/local/bin/configsave; \
 	fi
 
 live-base: checkroot

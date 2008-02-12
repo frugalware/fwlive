@@ -17,7 +17,7 @@ fi
 FWCONF=fwliveconf.lzm
 MEMORY=/$MOUNTDIR/live/memory
 CHANGES=$MEMORY/changes
-SAVEDIRS=" SAVE_DIRS"
+SAVEDIRS=" @SAVE_DIRS@"
 
 CONFFILE=$1
 if [ "$CONFFILE" = "" ]; then printf $"usage: %s /media/sda?/%s\n" $0 $FWCONF; exit 1; fi
