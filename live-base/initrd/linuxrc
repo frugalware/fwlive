@@ -191,7 +191,7 @@ if [ -x sbin/init ]; then INIT=sbin/init; fi
 if [ "$INIT" = "" ]; then fatal "Can't find executable init command"; fi
 
 # time to end Linux Live scripts and start the distribution itself
-header "Starting the Frugalware Linux distribution"
+header "Starting Frugalware Linux"
 
 mount -n -o remount,ro aufs .
 pivot_root . $INITRAMDISK

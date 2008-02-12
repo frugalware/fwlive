@@ -7,7 +7,7 @@
 export PATH=.:/mnt/live:/usr/sbin:/usr/bin:/sbin:/bin
 . liblinuxlive
 
-header "starting Linux Live shutdown procedures..."
+header "Starting Linux Live shutdown procedures..."
 
 cd $INITRAMDISK
 pivot_root . $UNION < dev/console > dev/console 2>&1
