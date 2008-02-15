@@ -34,7 +34,7 @@ REMOVE_FILES = /etc/rc.d/rcS.d/S{19rc.bootclean,07rc.frugalware} \
 	   /etc/frugalware-release
 CC = cc
 
-all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-apps install-kernel cache-umount install-files patch-files remove-files create-symlinks create-files fix-files create-users live-base hacking-kdmrc kill-packages create
+all: checkroot check-tree checkfiles chroot-mkdirs create-pkgdb cache-mount install-base install-kernel install-apps cache-umount install-files patch-files remove-files create-symlinks create-files fix-files create-users live-base hacking-kdmrc kill-packages create
 	@echo "Finally, we do nothing more by now."
 	@echo "Now burn your iso and have fun!"
 
@@ -91,7 +91,7 @@ install-base: checkroot
 
 install-apps: checkroot
 	if [ "${INST_${APPSGROUP}_APPS}" ] ; then \
-		if (( $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
+		if (( $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Qs ${INST_${APPSGROUP}_APPS} &>/dev/null; echo $$?) < 1 )) ; then \
 			pacman-g2 -r ${CHROOTDIR}/${TREE} -Sf ${INST_${APPSGROUP}_APPS} --noconfirm --config ${PACCONF} ; \
 		fi ; \
 	fi

@@ -67,10 +67,10 @@ SAVEDIRS = etc home lib root usr var
 CONFIG_SETUP = y
 
 # additional packages to be installed by the profiles
-# no builded pkgs: rt2500-fwlive rt2400-fwlive acx100-fwlive
+# no builded pkgs: rt2500-fwlive rt2400-fwlive acx100-fwlive lirc-fwlive
 DRIVERS = ndiswrapper-fwlive ipw2200-firmware gspcav1-fwlive \
 	qc-usb-fwlive truecrypt-fwlive dazuko-fwlive \
-	busybox-fwlive lirc-fwlive acerhk-fwlive madwifi-fwlive \
+	busybox-fwlive acerhk-fwlive madwifi-fwlive \
 	wlan-ng-fwlive adm8211-fwlive ipw3945-fwlive kqemu-fwlive
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux grub-theme-fwlive \
 	sudo aufs squashfs cdrtools ntfs-3g
@@ -92,7 +92,7 @@ INST_LOCALE_APPS = firefox-hu firefox-de firefox-fr \
 	kde-i18n-hu kde-i18n-de kde-i18n-fr firefox-da kde-i18n-da openoffice.org-i18n-da \
 	openoffice.org-dict-hu 	openoffice.org-dict-fr openoffice.org-dict-de \
 	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr \
-	bibletime-i18n  k3b-i18n
+	bibletime-i18n k3b-i18n
 INST_LOCALE_GTK_APPS = firefox-hu firefox-de firefox-fr firefox-da openoffice.org-i18n-da \
 	openoffice.org-dict-hu  openoffice.org-dict-fr openoffice.org-dict-de \
 	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr
