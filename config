@@ -23,7 +23,10 @@ FWLFONT = lat2-16.psfu.gz
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = FULL
+APPSGROUP = MUSTHAVE
+
+# add supported locals
+LOCALE = en,de,fr,da,hu,cz
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
@@ -34,7 +37,7 @@ FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
 endif
 ifeq ($(findstring testing,$(TREE)),testing)
-FWVER = 0.8rc2
+FWVER = 0.8
 FWCODENAME = Kalgan
 endif
 FWVER ?= 0.7
@@ -86,14 +89,11 @@ INST_SERVER_APPS = ${INST_MIN_APPS} ncftp fuseftp postfix mysql libmysqlclient \
 INST_X_APPS = xorg-server xorg-drivers xorg-fonts fvwm mplayer alsa-utils
 INST_EXTRA_APPS = gimp gwenview wireshark kaffeine kasablanca ktorrent
 INST_EXTRA_GTK_APPS = gimp wireshark gqview
-INST_LOCALE_APPS = firefox-hu firefox-de firefox-fr \
-	kde-i18n-hu kde-i18n-de kde-i18n-fr firefox-da kde-i18n-da openoffice.org-i18n-da \
-	openoffice.org-dict-hu 	openoffice.org-dict-fr openoffice.org-dict-de \
-	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr \
-	bibletime-i18n k3b-i18n
-INST_LOCALE_GTK_APPS = firefox-hu firefox-de firefox-fr firefox-da openoffice.org-i18n-da \
-	openoffice.org-dict-hu  openoffice.org-dict-fr openoffice.org-dict-de \
-	openoffice.org-i18n-hu openoffice.org-i18n-de openoffice.org-i18n-fr
+INST_LOCALE_APPS = firefox-{${LOCALE}} 	kde-i18n-{${LOCALE}} \
+	openoffice.org-i18n-{${LOCALE}} bibletime-i18n k3b-i18n \
+	openoffice.org-dict-de openoffice.org-dict-hu
+INST_LOCALE_GTK_APPS = firefox-{${LOCALE}} openoffice.org-i18n-{${LOCALE}} \
+	openoffice.org-dict-hu  openoffice.org-dict-de
 INST_KDE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
 	flashplugin qtparted k3b
 INST_KDE4_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kde4
