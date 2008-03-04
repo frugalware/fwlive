@@ -69,9 +69,9 @@ SAVEDIRS = etc home lib root usr var
 CONFIG_SETUP = y
 
 # additional packages to be installed by the profiles
-# no builded pkgs: rt2500-fwlive rt2400-fwlive acx100-fwlive lirc-fwlive
+# no builded pkgs: rt2500-fwlive rt2400-fwlive acx100-fwlive lirc-fwlive truecrypt-fwlive
 DRIVERS = ndiswrapper-fwlive ipw2200-firmware gspcav1-fwlive \
-	qc-usb-fwlive truecrypt-fwlive dazuko-fwlive \
+	qc-usb-fwlive dazuko-fwlive \
 	busybox-fwlive acerhk-fwlive madwifi-fwlive \
 	wlan-ng-fwlive adm8211-fwlive ipw3945-fwlive kqemu-fwlive
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux-ng grub-theme-fwlive \
