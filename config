@@ -73,7 +73,7 @@ CONFIG_SETUP = y
 DRIVERS = ndiswrapper-fwlive ipw2200-firmware gspcav1-fwlive \
 	qc-usb-fwlive dazuko-fwlive \
 	busybox-fwlive acerhk-fwlive madwifi-fwlive \
-	wlan-ng-fwlive adm8211-fwlive ipw3945-fwlive kqemu-fwlive
+	wlan-ng-fwlive ipw3945-fwlive kqemu-fwlive
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux-ng grub-theme-fwlive \
 	sudo aufs squashfs cdrtools ntfs-3g
 ifneq ($(ARCH),x86_64)
