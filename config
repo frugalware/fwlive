@@ -26,7 +26,7 @@ FWLFONT = lat2-16.psfu.gz
 APPSGROUP = FULL
 
 # add supported locals
-LOCALE = en,de,fr,da,hu,cz
+LOCALE = en,de,fr,da,hu,cs
 
 # grub title part 1
 FWLSREL = FWLive-${APPSGROUP}
