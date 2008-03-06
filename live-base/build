@@ -58,6 +58,19 @@ done
 find $ROOT/usr/share/i18n/locales -maxdepth 1 -type f $lo -exec rm -fr {} \;
 find $ROOT/usr/share/locale -maxdepth 1 -type d $lo -exec rm -fr {} \;
 
+echo "Deleting docs files which are not needed in Live mode.."
+
+find $ROOT/usr/share/doc ! -name "README*" ! -name "COPYING*" ! -name "AUTHORS*" -exec rm -rf {} \;
+
+# strip usr/{bin,sbin} bin and sbin
+
+echo "Stripping all files in /usr/{bin,sbin} /bin , /sbin .."
+
+strip $ROOT/usr/bin/* -s 2>/dev/null
+strip $ROOT/usr/sbin/* -s 2>/dev/null
+strip $ROOT/bin/* -s 2>/dev/null
+strip $ROOT/sbin/* -s 2>/dev/null
+
 echo "Creating compressed images..."
 
 for dir in $MKMOD; do
