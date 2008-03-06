@@ -23,7 +23,7 @@ FWLFONT = lat2-16.psfu.gz
 # * SERVER
 # * MIN - comfortable console workstation
 # * MUSTHAVE - minimalistic one, base of all profiles
-APPSGROUP = FULL 
+APPSGROUP = FULL
 
 # add supported locals
 LOCALE = en,de,fr,da,hu,cz
