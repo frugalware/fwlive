@@ -71,8 +71,7 @@ CONFIG_SETUP = y
 # additional packages to be installed by the profiles
 # no builded pkgs: truecrypt-fwlive acx100-fwlive
 DRIVERS = gspcav1-fwlive qc-usb-fwlive dazuko-fwlive busybox-fwlive lirc-fwlive \
-	  acerhk-fwlive redirfs-fwlive fglrx-fwlive nvidia-96xx-fwlive \
-	  nvidia-fwlive madwifi-fwlive wlan-ng-fwlive busybox-fwlive \
+	  acerhk-fwlive redirfs-fwlive madwifi-fwlive wlan-ng-fwlive busybox-fwlive \
 	  ndiswrapper-fwlive kqemu-fwlive
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux-ng grub-theme-fwlive \
 	sudo aufs squashfs cdrtools ntfs-3g
