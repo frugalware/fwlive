@@ -275,6 +275,7 @@ endif
 	sed -i "s|linuxcd|${FWLHOST}|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	sed -i "s|Live|$(shell ${FWLREL}) (${FWLCODENAME})|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	echo "LOCALE=${LOCALE}" >> ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 
 hacking-kdmrc: checkroot
 	if [ ${APPSGROUP} == "KDE" ] || [ ${APPSGROUP} == "FULL" ] ; then \
