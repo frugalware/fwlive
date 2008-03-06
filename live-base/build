@@ -50,6 +50,13 @@ cd ..
 cp initrd/initrd.gz $CDDATA/boot/initrd.gz
 rm initrd/initrd.gz
 
+echo "Deleting unused languages..."
+
+for i in $(echo $LOCALE | sed -r "s/\,/ /g"); do
+        lo="! -name \"$i*\" "$lo
+done
+find /usr/share/locale -maxdepth 1 -type d $lo -ecec rm -fr {} \;
+
 echo "Creating compressed images..."
 
 for dir in $MKMOD; do
