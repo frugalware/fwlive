@@ -53,23 +53,16 @@ rm initrd/initrd.gz
 echo "Deleting unused languages..."
 
 for i in $(echo $LOCALE | sed -r "s/\,/ /g"); do
-        lo="! -name \"$i*\" "$lo
+	lo="-a ! -name \"$i*\" "$lo
 done
-find $ROOT/usr/share/i18n/locales -maxdepth 1 -type f $lo -exec rm -fr {} \;
-find $ROOT/usr/share/locale -maxdepth 1 -type d $lo -exec rm -fr {} \;
+eval "find $ROOT/usr/share/i18n/locales/* -maxdepth 0 -type f ! -name \"C\" $lo -exec rm -f {} \;"
+eval "find $ROOT/usr/share/locale/* -maxdepth 0 -type d ! -name \"l10n*\" -a ! -name \"C\" $lo -exec rm -fr {} \;"
+eval "find $ROOT/usr/share/locale/l10n/* -maxdepth 0 -type d ! -name \"C\" $lo -exec rm -fr {} \;"
 
-echo "Deleting docs files which are not needed in Live mode.."
+echo "Deleting docs files which are not needed in Live mode..."
 
-find $ROOT/usr/share/doc ! -name "README*" ! -name "COPYING*" ! -name "AUTHORS*" -exec rm -rf {} \;
-
-# strip usr/{bin,sbin} bin and sbin
-
-echo "Stripping all files in /usr/{bin,sbin} /bin , /sbin .."
-
-strip $ROOT/usr/bin/* -s 2>/dev/null
-strip $ROOT/usr/sbin/* -s 2>/dev/null
-strip $ROOT/bin/* -s 2>/dev/null
-strip $ROOT/sbin/* -s 2>/dev/null
+find $ROOT/usr/share/doc/ -type f ! -name "README*" -a ! -name "COPYING*" -a ! -name "AUTHORS*" -exec rm -f {} \;
+find $ROOT/usr/share/doc/ -type d -empty -exec rmdir -p --ignore-fail-on-non-empty {} \; 2>/dev/null
 
 echo "Creating compressed images..."
 
