@@ -20,9 +20,9 @@ endif
 # needed files (files that we can't live without)
 NEED_FILES = fstab-update parse_cmdline.in xorg.conf.in rc.fsupd \
 	crypt.c	rc.fwlive rc.config configsave fileswap reboot.diff services.diff rc.S.diff \
-	rc.parse_cmdline parse_cmdline xstart xorg.conf menu.lst 
+	rc.parse_cmdline parse_cmdline xstart xorg.conf menu.lst fwliverc 
 INST_FILES_755 = /etc/rc.d/rc.fwlive /etc/rc.d/rc.config /etc/rc.d/rc.fsupd /usr/local/bin/configsave \
-	/usr/local/bin/fileswap /usr/local/bin/fstab-update /usr/local/bin/xstart \
+	/usr/local/bin/fileswap /usr/local/bin/fstab-update /usr/local/bin/xstart /usr/local/bin/fwliverc \
 	/usr/local/bin/parse_cmdline /etc/rc.d/rc.parse_cmdline /tmp/live-base/tools/fpm2lzm
 INST_FILES_644 = /etc/X11/xorg.conf /boot/grub/menu.lst
 PWD = $(shell pwd)
@@ -276,6 +276,7 @@ endif
 	sed -i "s|Live|$(shell ${FWLREL}) (${FWLCODENAME})|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/linux/make_iso.sh
 	sed -i "s|KERNEL=.*|KERNEL=\"$(shell ${KERNVER})\"|" ${CHROOTDIR}/${TREE}/tmp/live-base/.config
 	echo "LOCALE=${LOCALE},en" >> ${CHROOTDIR}/${TREE}/tmp/live-base/.config
+	echo "/usr/local/bin/fwliverc" >> ${CHROOTDIR}/${TREE}/etc/rc.d/rc.local
 
 hacking-kdmrc: checkroot
 	if [ ${APPSGROUP} == "KDE" ] || [ ${APPSGROUP} == "FULL" ] ; then \
