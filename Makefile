@@ -57,7 +57,8 @@ check-tree:
 		repo=$$(eval "echo \$${$${i}_fdb/.fdb}"); \
 		[ -z "$$repo" ] && repo="$$i"; \
 		[ ${TREE} == testing ] && echo "[frugalware-current]" >> ${PACCONF}; \
-		[ ${TREE} == current ] || [ ${TREE} == stable ] && echo "[frugalware-$$repo]" >> ${PACCONF}; \
+		[ ${TREE} == current ] && echo "[frugalware-current]" >> ${PACCONF}; \
+		[ ${TREE} == stable ] && echo "[frugalware]" >> ${PACCONF}; \
 		echo "Server = http://ftp.frugalware.org/pub/frugalware/frugalware-$$repo/frugalware-i686" >> ${PACCONF}; \
 	done
 
