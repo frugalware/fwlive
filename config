@@ -6,7 +6,7 @@
 # repos to be included in the chroot. probably you want "current" or "stable".
 # use a come-separated list if you want to list multiple repos. the first one
 # takes precedence
-TREE = testing
+TREE = stable
 
 # default language, in an xx_YY form
 FWLLLANG = en_US
