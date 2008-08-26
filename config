@@ -6,7 +6,7 @@
 # repos to be included in the chroot. probably you want "current" or "stable".
 # use a come-separated list if you want to list multiple repos. the first one
 # takes precedence
-TREE = stable
+TREE = testing
 
 # default language, in an xx_YY form
 FWLLLANG = en_US
@@ -37,8 +37,8 @@ FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
 endif
 ifeq ($(findstring testing,$(TREE)),testing)
-FWVER = 0.8
-FWCODENAME = Kalgan
+FWVER = 0.9rc2
+FWCODENAME = Solaria
 endif
 FWVER ?= 0.8
 FWCODENAME ?= Kalgan
@@ -48,7 +48,7 @@ FWREL = ${FWVER} (${FWCODENAME})
 ISONAME = ${FWLHOST}-${FWVER}-$(shell uname -m)-$(shell echo ${APPSGROUP}|tr [A-Z] [a-z]).iso
 
 # codename of the livecd, used in /etc/issue and /etc/fwlive-release
-FWLCODENAME = Voyager
+FWLCODENAME = Tibet
 
 # Vendor name (used in /etc/issue only)
 VENDOR = Frugalware
@@ -69,9 +69,9 @@ SAVEDIRS = etc home lib root usr var
 CONFIG_SETUP = y
 
 # additional packages to be installed by the profiles
-# no builded pkgs: truecrypt-fwlive
-DRIVERS = gspcav1-fwlive qc-usb-fwlive dazuko-fwlive busybox-fwlive lirc-fwlive \
-	  acerhk-fwlive redirfs-fwlive madwifi-fwlive wlan-ng-fwlive busybox-fwlive \
+# no builded pkgs: truecrypt-fwlive acerhk-fwlive lirc-fwlive
+DRIVERS = gspcav1-fwlive qc-usb-fwlive dazuko-fwlive busybox-fwlive \
+	  redirfs-fwlive madwifi-fwlive wlan-ng-fwlive busybox-fwlive \
 	  ndiswrapper-fwlive kqemu-fwlive acx100-fwlive
 INST_MUSTHAVE_APPS = busybox-fwlive util-linux-ng grub-theme-fwlive \
 	sudo aufs squashfs cdrtools ntfs-3g

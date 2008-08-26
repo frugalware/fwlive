@@ -219,9 +219,9 @@ create-users: checkroot
 	fi
 
 live-base: checkroot
-	echo "Include = /etc/pacman.d/janny" >> ${CHROOTDIR}/${TREE}/etc/pacman-g2.conf; \
-	echo "[janny]" > ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
-	echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${CHROOTDIR}/${TREE}/etc/pacman.d/janny; \
+	echo "Include = /etc/pacman-g2/repos/janny" >> ${CHROOTDIR}/${TREE}/etc/pacman-g2.conf; \
+	echo "[janny]" > ${CHROOTDIR}/${TREE}/etc/pacman-g2/repos/janny; \
+	echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${CHROOTDIR}/${TREE}/etc/pacman-g2/repos/janny; \
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
 	mkdir -p ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/{lib,bin,etc}
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
@@ -260,7 +260,7 @@ ifeq ($(CONFIG_SETUP),y)
 	cp ${SETUPKERNEL} ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
 	cp ${SETUPINITRD} ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/
 endif
-	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-pc/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
+	cp ${CHROOTDIR}/${TREE}/usr/lib/grub/i386-frugalware/stage2_eltorito ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	cp ${CHROOTDIR}/${TREE}/boot/grub/message-fwlive ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/message
 	cp menu.lst ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/
 	sed -i "s|@GRUBTITLE@|${FWLSREL} ${FWREL}|" ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub/menu.lst
