@@ -7,7 +7,7 @@ ARCH = $(shell uname -m)
 CHROOTDIR = $(shell source /etc/makepkg.conf; echo $$CHROOTDIR)/fwlive
 PACCONF := $(shell mktemp)
 FWLSLANG = $(shell echo $(FWLLLANG)|sed 's/_.*//')
-KERNVER = pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive|cut -d ' ' -f2|sed 's/-/-fw/'
+KERNVER = pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel|cut -d ' ' -f2|sed 's/-/-fw/'
 GLIBCVER = pacman-g2 -r ${CHROOTDIR}/${TREE} -Q glibc|sed 's/.* \(.*\)-.*/\1/'
 FWLREL = pacman-g2 -r ${CHROOTDIR}/${TREE} -Q frugalware |sed 's/.* \(.*\)-.*/\1/'
 ifeq ($(CONFIG_SETUP),y)
@@ -98,8 +98,8 @@ install-apps: checkroot
 	fi
 
 install-kernel: checkroot
-	if (( $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel-fwlive &>/dev/null; echo $$?) > 0 )) ; then \
-		pacman-g2 -r ${CHROOTDIR}/${TREE} -Sf kernel-fwlive --noconfirm --config ${PACCONF} ; \
+	if (( $(shell pacman-g2 -r ${CHROOTDIR}/${TREE} -Q kernel &>/dev/null; echo $$?) > 0 )) ; then \
+		pacman-g2 -r ${CHROOTDIR}/${TREE} -Sf kernel --noconfirm --config ${PACCONF} ; \
 	fi
 
 install-files: checkroot
