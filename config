@@ -37,11 +37,11 @@ FWVER = $(shell date +%Y%m%d)
 FWCODENAME = -current
 endif
 ifeq ($(findstring testing,$(TREE)),testing)
-FWVER = 0.9rc2
-FWCODENAME = Solaria
+FWVER = 1.6pre1
+FWCODENAME = Fermus
 endif
-FWVER ?= 0.8
-FWCODENAME ?= Kalgan
+FWVER ?= 1.5
+FWCODENAME ?= Mores
 FWREL = ${FWVER} (${FWCODENAME})
 
 # filename of the is
@@ -86,22 +86,20 @@ INST_MIN_APPS = ${INST_MUSTHAVE_APPS} ${DRIVERS} openssh mc wget lynx nmap \
 INST_SERVER_APPS = ${INST_MIN_APPS} ncftp fuseftp postfix mysql libmysqlclient \
 	php php-cgi apache pure-ftpd phpmyadmin samba dhcp dhcpcd lighttpd fcgi
 INST_X_APPS = xorg-server xorg-drivers xorg-fonts fvwm mplayer alsa-utils
-INST_EXTRA_APPS = gimp gwenview wireshark kaffeine kasablanca ktorrent
-INST_EXTRA_GTK_APPS = gimp wireshark gqview
-INST_LOCALE_APPS = firefox-{${LOCALE}} 	kde-i18n-{${LOCALE}} \
-	openoffice.org-i18n-{${LOCALE}} bibletime-i18n k3b-i18n \
-	openoffice.org-dict-de openoffice.org-dict-hu
-INST_LOCALE_GTK_APPS = firefox-{${LOCALE}} openoffice.org-i18n-{${LOCALE}} \
-	openoffice.org-dict-hu  openoffice.org-dict-de
-INST_KDE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kdebase openoffice.org-kde firefox kmplayer \
+INST_EXTRA_APPS = gimp geeqie wireshark kaffeine kasablanca ktorrent
+INST_EXTRA_GTK_APPS = gimp wireshark gqview transmission
+INST_LOCALE_APPS = firefox-{${LOCALE}} 	kde-l10-{${LOCALE}} \
+	libreoffice-l10n-{${LOCALE}} k3b
+INST_LOCALE_GTK_APPS = firefox-{${LOCALE}} libreoffice-l10-{${LOCALE}}
+INST_KDE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kdebase libreoffice-kde firefox kmplayer \
 	flashplugin qtparted k3b
 INST_KDE4_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kde4
 INST_XFCE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} gtk-xfce-engine libexo libxfce4mcs libxfce4util \
 	libxfcegui4 orage terminal thunar thunar-volman xfce-frugalware xsetroot \
-	xfce-mcs-manager xfce-mcs-plugins xfce-utils xfce4-appfinder \
+	xfce-mcs-manager xfce-mcs-plugins xfce-utils xfce4-appfinder xfce4-volumed xfce4-notifyd \
 	xfce4-dev-tools xfce4-icon-theme xfce4-mixer xfce4-panel xfce4-session \
 	xfdesktop xfprint xfwm4 xfwm4-themes firefox \
-	openoffice.org flashplugin mplayer
+	libreoffice flashplugin mplayer
 INST_FULL_APPS = ${INST_MIN_APPS} ${INST_KDE_APPS} ${INST_EXTRA_APPS} ${INST_LOCALE_APPS}
 INST_FULL_GTK_APPS = ${INST_XFCE_APPS} ${INST_EXTRA_GTK_APPS} ${INST_LOCALE_GTK_APPS}
 
