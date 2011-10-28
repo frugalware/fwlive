@@ -16,9 +16,9 @@ FWLFONT = lat2-16.psfu.gz
 # select FWLive profile, the following ones are available:
 # * FULL_GTK - for all gtk && xfce packages installed
 # * FULL - for all packages installed
-# * KDE
-# * KDE4
-# * XFCE
+# * KDE - KDE4
+# * GNOME - GNOME3
+# * XFCE - XFCE4
 # * X - minimal graphical environment with fvwm
 # * SERVER
 # * MIN - comfortable console workstation
@@ -93,7 +93,8 @@ INST_LOCALE_APPS = firefox-{${LOCALE}} 	kde-l10-{${LOCALE}} \
 INST_LOCALE_GTK_APPS = firefox-{${LOCALE}} libreoffice-l10-{${LOCALE}}
 INST_KDE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kdebase libreoffice-kde firefox kmplayer \
 	flashplugin qtparted k3b
-INST_KDE4_APPS = ${INST_MIN_APPS} ${INST_X_APPS} kde4
+INST_GNOME_APPS = ${INST_MIN_APPS} ${INST_X_APPS} gnome libreoffice-gnome firefox gparted \
+	flashplugin brasero
 INST_XFCE_APPS = ${INST_MIN_APPS} ${INST_X_APPS} gtk-xfce-engine libexo libxfce4mcs libxfce4util \
 	libxfcegui4 orage terminal thunar thunar-volman xfce-frugalware xsetroot \
 	xfce-mcs-manager xfce-mcs-plugins xfce-utils xfce4-appfinder xfce4-volumed xfce4-notifyd \
