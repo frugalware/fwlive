@@ -42,8 +42,6 @@ check-tree:
 	if [ -e /etc/repoman.conf ]; then \
 		source /etc/repoman.conf; \
 		grep -v Include /etc/pacman-g2.conf >${PACCONF}; \
-        	echo "[fwlive_pkgs]" >> ${PACCONF}; \
-		echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive_pkgs/frugalware-i686/" >> ${PACCONF}; \
 	else \
 		@echo "Error: Cannot find repoman.conf , is pacman-tools installed ?"; \
 		exit 1; \
@@ -215,9 +213,6 @@ create-users: checkroot
 	fi
 
 live-base: checkroot
-	echo "Include = /etc/pacman-g2/repos/janny" >> ${CHROOTDIR}/${TREE}/etc/pacman-g2.conf; \
-	echo "[janny]" > ${CHROOTDIR}/${TREE}/etc/pacman-g2/repos/janny; \
-	echo "Server = http://ftp.frugalware.org/pub/other/people/janny/fwlive/frugalware-i686/" >> ${CHROOTDIR}/${TREE}/etc/pacman-g2/repos/janny; \
 	cp -a live-base ${CHROOTDIR}/${TREE}/tmp/
 	mkdir -p ${CHROOTDIR}/${TREE}/tmp/live-base/cd-root/boot/grub ${CHROOTDIR}/${TREE}/tmp/live-base/initrd/rootfs/{lib,bin,etc}
 	ln -sf configsave ${CHROOTDIR}/${TREE}/usr/local/bin/configrestore
