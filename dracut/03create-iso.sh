@@ -2,16 +2,18 @@
 
 rm -rf iso
 #Create Iso with grub
-#TODO: add frugalware gfx
+#TODO: add fwlive gfx
 mkdir -p iso/boot/grub
+cp -v rootfs/boot/grub/message iso/boot/grub/
 cp -v rootfs/boot/vmlinuz iso/boot/
 cp -v rootfs/boot/initrd.img.xz iso/boot/
 cp -v rootfs/usr/lib/grub/i386-frugalware/stage2_eltorito iso/boot/grub/
 cat >iso/boot/grub/menu.lst <<EOF
 default=0
 timeout=5
+gfxmenu /boot/grub/message
 
-title FwLive (Fermus) - 3.1-fw1
+title FwLive (Dalek)
 	kernel /boot/vmlinuz root=live:CDLABEL=fwlive rd.driver.pre=loop rd.plymouth=0
 	initrd /boot/initrd.img.xz
 EOF
