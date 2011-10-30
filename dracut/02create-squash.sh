@@ -7,7 +7,14 @@ if [ "`id -u`" != 0 ]; then
 	exit 1
 fi
 
+## Password root
 chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'
+## file /etc/profile.d/lang.sh
+echo "export LANG=$FWLIVELANG" >$CHROOTDIR/etc/profile.d/lang.sh
+echo "export LC_ALL=\$LANG" >> $CHROOTDIR/etc/profile.d/lang.sh
+#missing charset
+chmod +x $CHROOTDIR/etc/profile.d/lang.sh
+
 rm -f $TREE/rootfs.img
 dd if=/dev/zero of=$TREE/rootfs.img bs=1M count=1024
 mkfs.ext4 -F $TREE/rootfs.img
