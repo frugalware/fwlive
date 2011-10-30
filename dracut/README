@@ -1,0 +1,21 @@
+This is a prototype of a vanilla-kernel-based livecd rework. The idea is that
+instead of aufs (which has design problems, and probably won't be integrated to
+the vanilla kernel ever), we can use dmsetup to do the "cd is read-only, but
+make it writeble in the memory" trick.
+
+In fact dracut has full support for this, so a few lines of shell-script can do
+all the Frugalware-specific part.
+
+WARNING: Any file or directory in this subdirectory may be overwritten or deleted
+during creating the livecd, except the .sh files!
+
+To try it yourself, run each script after each other, the last one will boot up
+the result in qemu.
+
+TODO:
+- make bootable iso
+- merge with parent dir, that will fix bugs like:
+	- missing config files (/etc/profile.d/lang.sh, fstab, /etc/sysconfig/keymap)
+	- dhcp is not the default
+- silence pointless warnings
+- avoid pointless hardwired strings
