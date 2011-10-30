@@ -1,0 +1,13 @@
+# Arch for Fwlive
+ARCH=`uname -m`
+
+# Tree of Frugalware (current or stable)
+# for the moment one choice (current)
+# choice stable after 1.6
+TREE="current"
+
+# Chroot dir
+CHROOTDIR="$PWD/$TREE/rootfs"
+
+# Default language
+FWLIVELANG="fr_FR"

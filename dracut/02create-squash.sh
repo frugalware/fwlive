@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-CHROOTDIR="$PWD/rootfs"
+. $PWD/config 
 
 if [ "`id -u`" != 0 ]; then
 	echo "Not root"
@@ -8,11 +8,11 @@ if [ "`id -u`" != 0 ]; then
 fi
 
 chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'
-rm -f rootfs.img
-dd if=/dev/zero of=rootfs.img bs=1M count=1024
-mkfs.ext4 -F rootfs.img
+rm -f $TREE/rootfs.img
+dd if=/dev/zero of=$TREE/rootfs.img bs=1M count=1024
+mkfs.ext4 -F $TREE/rootfs.img
 loop=$(mktemp -d)
-mount -o loop rootfs.img $loop
+mount -o loop $TREE/rootfs.img $loop
 cp -a $CHROOTDIR/* $loop
 df -h $loop
 umount $loop
@@ -22,8 +22,8 @@ rmdir $loop
 #e2fsck -f rootfs.img
 #resize2fs rootfs.img -M
 
-mkdir -p squashfs-root/LiveOS
-mv rootfs.img squashfs-root/LiveOS
+mkdir -p $TREE/squashfs-root/LiveOS
+mv $TREE/rootfs.img $TREE/squashfs-root/LiveOS
 # TODO can be xz
-rm -f squashfs.img
-mksquashfs squashfs-root squashfs.img -comp gzip
+rm -f $TREE/squashfs.img
+mksquashfs $TREE/squashfs-root $TREE/squashfs.img -comp gzip

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . /etc/makepkg.conf
+. $PWD/config 
 
 chroot_umount() {
 	echo "Attempting to umount chroot directories..."
@@ -26,9 +27,6 @@ chroot_mount() {
 	echo "Successfully mounted chroot directories."
 }
 
-
-CHROOTDIR="$PWD/rootfs"
-
 # Create the chroot environment.
 if [ "`id -u`" != 0 ]; then
 	echo "Building the chroot as an unprivileged user is not possible."
@@ -42,10 +40,11 @@ chroot_mount
 
 echo "Building chroot environment"
 
-cat >pacman-g2.conf <<EOF
-[options]
-Include = /etc/pacman-g2/repos/frugalware-current
-EOF
+[ -e pacman-g2.conf ] && rm -f pacman-g2.conf;
+[ $TREE == "current" ] && echo "[frugalware-current]" > pacman-g2.conf
+[ $TREE == "stable" ] && echo "[frugalware]" > pacman-g2.conf
+echo "Server = http://ftp.frugalware.org/pub/frugalware/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
+
 pacman -Sy base -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 
 if [ "$?" != "0" ]; then
