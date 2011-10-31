@@ -179,11 +179,7 @@ create-files: checkroot
 	sed -i "s|dev.cdrom.lock=0|dev.cdrom.lock=1|" ${CHROOTDIR}/${TREE}/etc/sysctl.conf
 	sed -i "s|/sbin/fsck|true|" ${CHROOTDIR}/${TREE}/etc/rc.d/rc.fsck
 
-# FIXME: do we need this esd check at all?
 fix-files: checkroot
-	if [ -f ${CHROOTDIR}/${TREE}/etc/esd.conf ]; then \
-		sed -i 's|terminate|no&|' ${CHROOTDIR}/${TREE}/etc/esd.conf; \
-	fi
 ifeq ($(APPSGROUP),XFCE)
 	sed -i 's/desktop=""/desktop="startxfce4"/' ${CHROOTDIR}/${TREE}/etc/sysconfig/desktop
 endif
