@@ -10,4 +10,4 @@ TREE="current"
 CHROOTDIR="$PWD/$TREE/rootfs"
 
 # Default language
-FWLIVELANG="fr_FR"
+FWLIVELANG="$LANG"
