@@ -10,7 +10,7 @@ fi
 ## Password root
 chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'
 ## file /etc/profile.d/lang.sh
-#TODO:Make /etc/profile.d/less.sh, /etc/locale.conf and finish export charset
+## TODO:Make /etc/profile.d/less.sh, /etc/locale.conf and finish export charset
 echo "export LANG=$FWLIVELANG" >$CHROOTDIR/etc/profile.d/lang.sh
 echo "export LC_ALL=\$LANG" >> $CHROOTDIR/etc/profile.d/lang.sh
 if [ "`echo $FWLIVELANG|sed 's/.*\.\(.*\).*/\1/'`" == utf8 ]; then
@@ -26,6 +26,16 @@ else
 		esac
 fi
 chmod +x $CHROOTDIR/etc/profile.d/lang.sh
+## file /etc/sysconfig/keymap
+## TODO:To improve the function ( ex : for french keymap=fr-latin1 )
+case $FWLIVELANG in
+	en_*)
+		keymap=us ;;
+	*)
+		keymap=`echo $FWLIVELANG |sed 's/_.*//'` ;;
+esac
+echo "keymap=$keymap" > $CHROOTDIR/etc/sysconfig/keymap
+
 
 rm -f $TREE/rootfs.img
 dd if=/dev/zero of=$TREE/rootfs.img bs=1M count=1024
