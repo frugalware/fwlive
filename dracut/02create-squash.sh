@@ -10,9 +10,21 @@ fi
 ## Password root
 chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'
 ## file /etc/profile.d/lang.sh
+#TODO:Make /etc/profile.d/less.sh, /etc/locale.conf and finish export charset
 echo "export LANG=$FWLIVELANG" >$CHROOTDIR/etc/profile.d/lang.sh
 echo "export LC_ALL=\$LANG" >> $CHROOTDIR/etc/profile.d/lang.sh
-#missing charset
+if [ "`echo $FWLIVELANG|sed 's/.*\.\(.*\).*/\1/'`" == utf8 ]; then
+	echo "export CHARSET=utf-8" >> $CHROOTDIR/etc/profile.d/lang.sh
+else
+	case $FWLIVELANG in
+		en_US)
+			echo "export CHARSET=iso-8859-1" >> $CHROOTDIR/etc/profile.d/lang.sh ;;
+		fr_FR)
+			echo "export CHARSET=iso-8859-15" >> $CHROOTDIR/etc/profile.d/lang.sh;;
+		*)	
+			echo "export CHARSET=iso-8859-15" >> $CHROOTDIR/etc/profile.d/lang.sh;;
+		esac
+fi
 chmod +x $CHROOTDIR/etc/profile.d/lang.sh
 
 rm -f $TREE/rootfs.img
