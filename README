@@ -7,13 +7,9 @@ To build the livecd:
 
 	$ sudo make
 
-To clean up compiled code in the source dir:
+To clean up:
 
 	$ sudo make clean
-
-To remove the building chroot:
-
-	$ sudo make distclean
 
 From scratch
 ------------
