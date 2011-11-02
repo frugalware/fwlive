@@ -3,8 +3,10 @@ Csécsy, László (boobaa) <boobaa@ajrg.hu>
 Habermehl, Marcus (BMH1980) <bmh1980de@yahoo.de>
 	* author of the first chrooted build code
 Kovács, János (janny) <janny@frugalware.org>
-	* current maintainer
+	* was the maintainer of the slax-based code
 Vajna, Miklós (vmiklos) <vmiklos@frugalware.org>
-	* random hacks
+	* author of the dracut-based code
 Vasas, Krisztián (IroNiQ) <iron@frugalware.org>
 	* maintainer from March 2006 till April 2006
+Vincent, Sébastien (Baste) <baste@frugalware.org>
+	* maintainer of the dracut-based code

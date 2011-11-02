@@ -1,8 +1,0 @@
-configsave.sh
-fileswap.sh
-fpm2lzm.sh
-rc.config.sh
-rc.fsupd.sh
-rc.fwlive.sh
-rc.parse_cmdline.sh
-parse_cmdline.sh
