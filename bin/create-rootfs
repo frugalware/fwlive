@@ -61,8 +61,6 @@ EOF
 # file /etc/sysconfig/network/default
 echo "[eth0]" >$CHROOTDIR/etc/sysconfig/network/default
 echo "options = dhcp" >>$CHROOTDIR/etc/sysconfig/network/default
-## file /etc/hostname
-echo $FWLHOST > $CHROOTDIR/etc/hostname
 
 # Build it
 echo "Building chroot environment"
@@ -82,6 +80,8 @@ pacman -Sy base -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'
 # silence warning about missing /etc/sysconfig/desktop
 ln -sf /lib/systemd/system/multi-user.target $CHROOTDIR/etc/systemd/system/default.target
+## file /etc/hostname
+echo $FWLHOST > $CHROOTDIR/etc/hostname
 
 # Umount chroot
 echo "Attempting to umount chroot directories..."
