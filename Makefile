@@ -2,27 +2,22 @@
 # Makefile for livecd creation
 #
 
-all: create-iso
+all: create-iso.stamp
 	@echo "Now burn your iso and have fun!"
 
-.PHONY: create-rootfs create-squash create-iso boot clean
-
-create-rootfs: create-rootfs.stamp
 create-rootfs.stamp:
 	bin/create-rootfs
 	touch $@
 
-create-squash: create-squash.stamp create-rootfs
-create-squash.stamp:
+create-squash.stamp: create-rootfs.stamp
 	bin/create-squash
 	touch $@
 
-create-iso: create-iso.stamp create-squash
-create-iso.stamp:
+create-iso.stamp: create-squash.stamp
 	bin/create-iso
 	touch $@
 
-boot: create-iso
+boot: create-iso.stamp
 	bin/boot-qemu
 
 clean:
