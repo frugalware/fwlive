@@ -14,5 +14,4 @@ the result in qemu.
 
 TODO:
 - make bootable iso
-- silence pointless warnings
 - avoid pointless hardwired strings

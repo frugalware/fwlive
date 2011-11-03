@@ -78,6 +78,8 @@ pacman -Sy base -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 
 # Post-install tweaks
 chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'
+# silence warning about missing /etc/sysconfig/desktop
+ln -sf /lib/systemd/system/multi-user.target $CHROOTDIR/etc/systemd/system/default.target
 
 # Umount chroot
 echo "Attempting to umount chroot directories..."
