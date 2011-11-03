@@ -73,7 +73,7 @@ fi
 if [ $TREE == "stable" ]; then
 	echo "[frugalware]" > pacman-g2.conf
 fi
-echo "Server = http://ftp.frugalware.org/pub/frugalware/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
+echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
 pacman -Sy base -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 
 # Post-install tweaks
