@@ -15,7 +15,6 @@ the result in qemu.
 TODO:
 - make bootable iso
 - merge with parent dir, that will fix bugs like:
-	- missing config files (/etc/profile.d/lang.sh, fstab, /etc/sysconfig/keymap)
 	- dhcp is not the default
 - silence pointless warnings
 - avoid pointless hardwired strings

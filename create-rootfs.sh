@@ -50,6 +50,14 @@ case $FWLIVELANG in
 		keymap=`echo $FWLIVELANG |sed 's/_.*//'` ;;
 esac
 echo "keymap=$keymap" > $CHROOTDIR/etc/sysconfig/keymap
+# file /etc/fstab - just to make systemd-remount-api-vfs.service happy
+cat >$CHROOTDIR/etc/fstab <<EOF
+none             /proc            proc        defaults         0   0
+none             /sys             sysfs       defaults         0   0
+devpts           /dev/pts         devpts      gid=5,mode=620   0   0
+usbfs            /proc/bus/usb    usbfs       devgid=23,devmode=664 0   0
+tmpfs            /dev/shm         tmpfs       defaults         0   0
+EOF
 
 # Build it
 echo "Building chroot environment"
