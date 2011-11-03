@@ -24,7 +24,7 @@ mount -o bind /var/cache/pacman-g2 $CHROOTDIR/var/cache/pacman-g2 >/dev/null
 echo "Successfully mounted chroot directories."
 
 # Pre-install tweaks
-mkdir -p $CHROOTDIR/etc/{profile.d,sysconfig}
+mkdir -p $CHROOTDIR/etc/{profile.d,sysconfig/network}
 ## file /etc/profile.d/lang.sh
 echo "export LANG=$FWLIVELANG" >$CHROOTDIR/etc/profile.d/lang.sh
 echo "export LC_ALL=\$LANG" >> $CHROOTDIR/etc/profile.d/lang.sh
@@ -58,6 +58,9 @@ devpts           /dev/pts         devpts      gid=5,mode=620   0   0
 usbfs            /proc/bus/usb    usbfs       devgid=23,devmode=664 0   0
 tmpfs            /dev/shm         tmpfs       defaults         0   0
 EOF
+# file /etc/sysconfig/network/default
+echo "[eth0]" >$CHROOTDIR/etc/sysconfig/network/default
+echo "options = dhcp" >>$CHROOTDIR/etc/sysconfig/network/default
 
 # Build it
 echo "Building chroot environment"
