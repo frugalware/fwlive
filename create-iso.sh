@@ -6,10 +6,13 @@ rm -rf $TREE/iso
 #Create Iso with grub
 #TODO: add fwlive gfx
 mkdir -p $TREE/iso/boot/grub
+mkdir -p $TREE/rootfs
+mount $TREE/squashfs-root/LiveOS/rootfs.img -o loop $TREE/rootfs
 cp -v $TREE/rootfs/boot/grub/message $TREE/iso/boot/grub/
 cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/
 cp -v $TREE/rootfs/boot/initrd.img.xz $TREE/iso/boot/
 cp -v $TREE/rootfs/usr/lib/grub/i386-frugalware/stage2_eltorito $TREE/iso/boot/grub/
+umount $TREE/rootfs
 cat >$TREE/iso/boot/grub/menu.lst <<EOF
 default=0
 timeout=5
