@@ -13,5 +13,4 @@ To try it yourself, run each script after each other, the last one will boot up
 the result in qemu.
 
 TODO:
-- make bootable iso
 - avoid pointless hardwired strings

@@ -3,25 +3,33 @@
 . $PWD/config
 
 rm -rf $TREE/iso
-#Create Iso with grub
-#TODO: add fwlive gfx
-mkdir -p $TREE/iso/boot/grub
+mkdir -p $TREE/iso/boot/syslinux
 mkdir -p $TREE/rootfs
 mount $TREE/squashfs-root/LiveOS/rootfs.img -o loop $TREE/rootfs
-cp -v $TREE/rootfs/boot/grub/message $TREE/iso/boot/grub/
-cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/
-cp -v $TREE/rootfs/boot/initrd.img.xz $TREE/iso/boot/
-cp -v $TREE/rootfs/usr/lib/grub/i386-frugalware/stage2_eltorito $TREE/iso/boot/grub/
+cd $TREE/iso/boot/syslinux
+wget $MIRROR/frugalware-$TREE/boot/syslinux/isolinux.bin
+wget $MIRROR/frugalware-$TREE/boot/syslinux/splash.png
+wget $MIRROR/frugalware-$TREE/boot/syslinux/vesamenu.c32
+cd -
+cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/vmlinuz
+cp -v $TREE/rootfs/boot/initrd.img.xz $TREE/iso/boot/initrd
 umount $TREE/rootfs
-cat >$TREE/iso/boot/grub/menu.lst <<EOF
-default=0
-timeout=5
-gfxmenu /boot/grub/message
+cat >$TREE/iso/boot/syslinux/syslinux.cfg <<EOF
+timeout 100
+ui vesamenu.c32
+menu title Frugalware Live
 
-title FwLive-$TREE (Dalek)
-	kernel /boot/vmlinuz root=live:CDLABEL=fwlive rd.driver.pre=loop rd.plymouth=0
-	initrd /boot/initrd.img.xz
+menu background splash.png
+menu vshift 8
+menu margin 0
+
+label frugalware
+        menu label Frugalware-$TREE Live
+        linux /boot/vmlinuz
+        initrd /boot/initrd
+        append root=live:CDLABEL=fwlive rd.driver.pre=loop rd.plymouth=0
 EOF
 mkdir -p $TREE/iso/LiveOS
 cp -v $TREE/squashfs.img $TREE/iso/LiveOS/squashfs.img
-mkisofs -R -J -V fwlive -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$TREE.iso $TREE/iso
+mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$TREE.iso $TREE/iso
+isohybrid fwlive-$TREE.iso
