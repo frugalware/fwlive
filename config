@@ -11,3 +11,6 @@ CHROOTDIR="$PWD/$TREE/rootfs"
 
 # Default language
 FWLIVELANG="$LANG"
+
+#Hostname
+FWLHOST="Fwlive"

@@ -61,6 +61,8 @@ EOF
 # file /etc/sysconfig/network/default
 echo "[eth0]" >$CHROOTDIR/etc/sysconfig/network/default
 echo "options = dhcp" >>$CHROOTDIR/etc/sysconfig/network/default
+## file /etc/hostname
+echo $FWLHOST > $CHROOTDIR/etc/hostname
 
 # Build it
 echo "Building chroot environment"
