@@ -11,7 +11,7 @@ fi
 # Mount loop
 mkdir -p $CHROOTDIR
 rm -f $TREE/rootfs.img
-dd if=/dev/zero of=$TREE/rootfs.img bs=1M count=1024
+dd if=/dev/zero of=$TREE/rootfs.img bs=1 count=0 seek=1G
 mkfs.ext4 -F $TREE/rootfs.img
 mount -o loop $TREE/rootfs.img $CHROOTDIR
 mkdir -p $CHROOTDIR/{etc,proc,sys,var/cache/pacman-g2,var/tmp/fst,tmp,var/log}
