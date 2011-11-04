@@ -17,3 +17,10 @@ FWLIVELANG="$LANG"
 
 #Hostname
 FWLHOST="fwlive"
+
+# Compression type recognized by mksquashfs
+# - xz needs a 2.6.38+ kernel
+# - gzip works with all kernels
+# - lzo needs a 2.6.36+ kernel
+# - lzma needs custom kernel
+COMPRESS="gzip"

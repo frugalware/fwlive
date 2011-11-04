@@ -11,4 +11,4 @@ mkdir -p $TREE/squashfs-root/LiveOS
 mv $TREE/rootfs.img $TREE/squashfs-root/LiveOS
 # TODO can be xz
 rm -f $TREE/squashfs.img
-mksquashfs $TREE/squashfs-root $TREE/squashfs.img -comp gzip
+mksquashfs $TREE/squashfs-root $TREE/squashfs.img -comp $COMPRESS
