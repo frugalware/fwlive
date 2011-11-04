@@ -16,4 +16,4 @@ CHROOTDIR="$PWD/$TREE/rootfs"
 FWLIVELANG="$LANG"
 
 #Hostname
-FWLHOST="Fwlive"
+FWLHOST="fwlive"
