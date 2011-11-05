@@ -6,6 +6,11 @@ all: create-iso.stamp
 	@echo "Now burn your iso and have fun!"
 
 create-rootfs.stamp:
+ifeq ($(CONFIG),)
+	ln -sf config.dev config
+else
+	ln -sf config.$(CONFIG) config
+endif
 	bin/create-rootfs
 	touch $@
 
