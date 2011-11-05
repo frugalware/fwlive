@@ -94,6 +94,3 @@ echo "Successfully umounted chroot directories."
 df -h $CHROOTDIR
 umount $CHROOTDIR
 rmdir $CHROOTDIR
-# TODO see later if this reduces size
-#e2fsck -f rootfs.img
-#resize2fs rootfs.img -M
