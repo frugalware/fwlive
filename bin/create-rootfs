@@ -77,7 +77,10 @@ echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
 pacman -Sy $TARGETS -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 
 # Post-install tweaks
-chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'
+chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
+if [ -n "$USERNAME" -a -n "$USERPASS" ]; then
+	yes ''|chroot $CHROOTDIR /usr/sbin/adduser "$USERNAME" "Fwlive User" "$USERPASS" "/home/$USERNAME"
+fi
 # silence warning about missing /etc/sysconfig/desktop
 ln -sf /lib/systemd/system/multi-user.target $CHROOTDIR/etc/systemd/system/default.target
 ## file /etc/hostname

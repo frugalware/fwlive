@@ -1,3 +1,11 @@
+#!/bin/bash -xe
+
 source ./config
 
-qemu-system-x86_64 -enable-kvm -m 512 -cdrom fwlive-$TREE.iso
+QEMU="qemu"
+
+if [ "$ARCH" = "x86_64" ]; then
+	QEMU="qemu-system-x86_64"
+fi
+
+$QEMU -enable-kvm -m $QEMUMEM -cdrom fwlive-$TREE.iso

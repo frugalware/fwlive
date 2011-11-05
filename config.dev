@@ -30,3 +30,15 @@ FWLHOST="fwlive"
 # - lzo needs a 2.6.36+ kernel
 # - lzma needs custom kernel
 COMPRESS="gzip"
+
+# Amount of memory qemu should get on 'make boot' (in MB)
+QEMUMEM="1024"
+
+# Password of the root user
+ROOTPASS="fwlive"
+
+# Normal user name
+USERNAME="fwlive"
+
+# Normal user password
+USERPASS="fwlive"
