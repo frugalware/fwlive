@@ -11,7 +11,7 @@ fi
 # Mount loop
 mkdir -p $CHROOTDIR
 rm -f $TREE/rootfs.img
-dd if=/dev/zero of=$TREE/rootfs.img bs=1 count=0 seek=1G
+dd if=/dev/zero of=$TREE/rootfs.img bs=1 count=0 seek=$SIZE
 mkfs.ext4 -F $TREE/rootfs.img
 mount -o loop $TREE/rootfs.img $CHROOTDIR
 mkdir -p $CHROOTDIR/{etc,proc,sys,var/cache/pacman-g2,var/tmp/fst,tmp,var/log}
@@ -74,7 +74,7 @@ if [ $TREE == "stable" ]; then
 	echo "[frugalware]" > pacman-g2.conf
 fi
 echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
-pacman -Sy base -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
+pacman -Sy $TARGETS -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 
 # Post-install tweaks
 chroot $CHROOTDIR sh -c 'echo "root:fwlive" | chpasswd'

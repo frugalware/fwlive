@@ -6,6 +6,12 @@ ARCH=`uname -m`
 # choice stable after 1.6
 TREE="current"
 
+# Space-separated list of packages or groups.
+TARGETS="base"
+
+# root filesystem size (compressed free space is cheap!)
+SIZE="1G"
+
 # Mirror to use
 MIRROR="http://ftp.frugalware.org/pub/frugalware"
 
