@@ -85,6 +85,10 @@ fi
 ln -sf /lib/systemd/system/multi-user.target $CHROOTDIR/etc/systemd/system/default.target
 ## file /etc/hostname
 echo $FWLHOST > $CHROOTDIR/etc/hostname
+## file /etc/issue
+sed -i -e 's/Frugalware/Frugalware Livecd based on Frugalware/g' $CHROOTDIR/etc/issue
+## file /etc/issue.net
+sed 's/Frugalware/Frugalware Livecd/g' $CHROOTDIR/etc/issue.net
 
 # Umount chroot
 echo "Attempting to umount chroot directories..."
