@@ -1,5 +1,7 @@
 This is the source of the Frugalware LiveCD, FWLive.
 
+Install squashfs with pacman before start.
+
 Building
 --------
 
