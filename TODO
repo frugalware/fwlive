@@ -1,2 +1,24 @@
 - drop rd.driver.pre=loop after next kernel pkg
 - detect version in boot menu after next frugalware pkg
+- copy fwife icons respectively into /usr/share/pixmaps/$size/
+- copy fwife.desktop to /home/fwlive/Desktop/
+- translate fwife.desktop in several languages
+
+
+- add needed apps depending of the Desktop Environment:
+
+Apps Type   	|	GNOME		|		KDE		|	XFCE	|
+Web Brower	    |	Epiphany	|	Konqueror	|	Mirori	|
+Text Editor		|	Gedit		|	Kate		|	Mousepad|
+Terminal		|Gnome-terminal | konsole		| Terminal  |
+File brower		| Nautilus      |  Konqueror    |  Thunar   |
+Archive Manager | File-roller   |  Ark  		| xarchiver |
+CD Burning		| Brasero  		|    K3B		|  xfburn	|
+Office suite	|Libreoffice-gnome|Libreoffice-kde|Abiword,Gnumeric|
+Image viwer		| Gthumb		|	Gwenview	| 	ristreto|
+Image editor	| Gimp			|	Krita		| 	Gimp	|
+Photos			|	Shotwell	|	Digikam		|	Geequie |
+IRC				|	Xchat		|	Konversation|	Xchat	|
+E-mail			|	Evolution	|  Kmail		| Thunderbird|
+Audio Player	|	Rhythmbox	|  Amarok		| Exaile	|
+Video Player	|	Totem		|	DragonPlayer|	Parole	|
