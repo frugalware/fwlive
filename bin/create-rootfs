@@ -7,6 +7,11 @@ if [ "`id -u`" != 0 ]; then
 	echo "Building the chroot as an unprivileged user is not possible."
 	exit 1
 fi
+## Check package needs for build
+if [ "`pacman-g2 -Q squashfs &>/dev/null;echo $?`" != 0 ]; then
+	echo "Installing Squashfs"
+	pacman-g2 -S squashfs  --noconfirm
+fi
 
 # Mount loop
 mkdir -p $CHROOTDIR
