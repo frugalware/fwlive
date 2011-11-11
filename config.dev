@@ -7,8 +7,10 @@ ARCH=`uname -m`
 TREE="current"
 
 # Select FWLive profile, the following ones are available:
-# * MIN (Group Base)
-# * GNOME ( Group Gnome + Base )
+# * MIN (Group Base + fwife)
+# * GNOME ( Group Gnome + Base + fwife )
+# * KDE ( Group KDE + Base + fwife )
+# * XFCE ( Group XFCE + Base + fwife + some recommended apps )
 APPSGROUP="GNOME"
 
 # root filesystem size (compressed free space is cheap!)
@@ -46,5 +48,8 @@ USERNAME="fwlive"
 USERPASS="fwlive"
 
 # Additional packages to be installed by the profiles
-INST_MIN_APPS="base"
+INST_MIN_APPS="base fwife"
 INST_GNOME_APPS="$INST_MIN_APPS gnome nano"
+INST_KDE_APPS="$INST_MIN_APPS kde"
+INST_XFCE_APPS="$INST_MIN_APPS xfce4 xfburn xarchiver geequie xchat \
+	thunderbird exaile parole transmission abiword gnumeric gimp"
