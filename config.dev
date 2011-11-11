@@ -51,5 +51,5 @@ USERPASS="fwlive"
 INST_MIN_APPS="base fwife"
 INST_GNOME_APPS="$INST_MIN_APPS gnome nano"
 INST_KDE_APPS="$INST_MIN_APPS kde"
-INST_XFCE_APPS="$INST_MIN_APPS xfce4 xfburn xarchiver geequie xchat \
+INST_XFCE_APPS="$INST_MIN_APPS xfce4 xfburn xarchiver geeqie xchat \
 	thunderbird exaile parole transmission abiword gnumeric gimp"
