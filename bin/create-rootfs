@@ -79,7 +79,8 @@ if [ $TREE == "stable" ]; then
 	echo "[frugalware]" > pacman-g2.conf
 fi
 echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
-pacman -Sy $TARGETS -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
+eval PACKAGES=\$INST_${APPSGROUP}_APPS
+pacman -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 
 # Post-install tweaks
 chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
