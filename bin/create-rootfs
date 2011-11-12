@@ -87,8 +87,10 @@ chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
 if [ -n "$USERNAME" -a -n "$USERPASS" ]; then
 	yes ''|chroot $CHROOTDIR /usr/sbin/adduser "$USERNAME" "Fwlive User" "$USERPASS" "/home/$USERNAME"
 fi
-# silence warning about missing /etc/sysconfig/desktop
-ln -sf /lib/systemd/system/multi-user.target $CHROOTDIR/etc/systemd/system/default.target
+if [ $APPSGROUP == "MIN" ]; then
+	# silence warning about missing /etc/sysconfig/desktop
+	ln -sf /lib/systemd/system/multi-user.target $CHROOTDIR/etc/systemd/system/default.target
+fi
 ## file /etc/hostname
 echo $FWLHOST > $CHROOTDIR/etc/hostname
 ## file /etc/issue

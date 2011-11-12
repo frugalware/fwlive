@@ -11,25 +11,26 @@ wget $MIRROR/frugalware-$TREE/boot/syslinux/isolinux.bin
 wget $MIRROR/frugalware-$TREE/boot/syslinux/splash.png
 wget $MIRROR/frugalware-$TREE/boot/syslinux/vesamenu.c32
 cd -
-cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/vmlinuz
+##Bug: Occasionally, the link vmlinuz is not present in /boot
+cp -v $TREE/rootfs/boot/vmlinuz* $TREE/iso/boot/vmlinuz
 cp -v $TREE/rootfs/boot/initrd.img.xz $TREE/iso/boot/initrd
 umount $TREE/rootfs
 cat >$TREE/iso/boot/syslinux/syslinux.cfg <<EOF
 timeout 100
 ui vesamenu.c32
-menu title Frugalware Live
+menu title Frugalware Live $APPSGROUP
 
 menu background splash.png
 menu vshift 8
 menu margin 0
 
 label frugalware
-        menu label Frugalware-$TREE Live
+        menu label Frugalware-$APPSGROUP Live
         linux /boot/vmlinuz
         initrd /boot/initrd
         append root=live:CDLABEL=fwlive rd.driver.pre=loop rd.plymouth=0
 EOF
 mkdir -p $TREE/iso/LiveOS
 cp -v $TREE/squashfs.img $TREE/iso/LiveOS/squashfs.img
-mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$TREE.iso $TREE/iso
-isohybrid fwlive-$TREE.iso
+mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$APPSGROUP.iso $TREE/iso
+isohybrid fwlive-$APPSGROUP.iso
