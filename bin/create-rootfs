@@ -12,6 +12,11 @@ if [ "`pacman-g2 -Q squashfs &>/dev/null;echo $?`" != 0 ]; then
 	echo "Installing Squashfs"
 	pacman-g2 -S squashfs  --noconfirm
 fi
+if [ "`pacman-g2 -Q syslinux &>/dev/null;echo $?`" != 0 ]; then
+        echo "Installing Syslinux"
+        pacman-g2 -S syslinux --noconfirm
+fi
+
 
 # Mount loop
 mkdir -p $CHROOTDIR
