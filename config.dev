@@ -11,7 +11,7 @@ TREE="current"
 # * GNOME ( Group Gnome + Base + fwife )
 # * KDE ( Group KDE + Base + fwife )
 # * XFCE ( Group XFCE + Base + fwife + some recommended apps )
-APPSGROUP="GNOME"
+APPSGROUP="MIN"
 
 # root filesystem size (compressed free space is cheap!)
 SIZE="1G"
@@ -48,7 +48,7 @@ USERNAME="fwlive"
 USERPASS="fwlive"
 
 # Additional packages to be installed by the profiles
-INST_MIN_APPS="base fwife"
+INST_MIN_APPS="base"
 INST_GNOME_APPS="$INST_MIN_APPS gnome nano"
 INST_KDE_APPS="$INST_MIN_APPS kde"
 INST_XFCE_APPS="$INST_MIN_APPS xfce4 xfburn xarchiver geeqie xchat \
