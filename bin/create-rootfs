@@ -10,13 +10,12 @@ fi
 ## Check package needs for build
 if [ "`pacman-g2 -Q squashfs &>/dev/null;echo $?`" != 0 ]; then
 	echo "Installing Squashfs"
-	pacman-g2 -S squashfs  --noconfirm
+	pacman-g2 -S squashfs --noconfirm
 fi
 if [ "`pacman-g2 -Q syslinux &>/dev/null;echo $?`" != 0 ]; then
         echo "Installing Syslinux"
         pacman-g2 -S syslinux --noconfirm
 fi
-
 
 # Mount loop
 mkdir -p $CHROOTDIR
@@ -86,6 +85,8 @@ fi
 echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
 eval PACKAGES=\$INST_${APPSGROUP}_APPS
 pacman -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
+## Solve problem with kernel
+pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 
 # Post-install tweaks
 chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"

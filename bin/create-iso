@@ -11,12 +11,7 @@ wget $MIRROR/frugalware-$TREE/boot/syslinux/isolinux.bin
 wget $MIRROR/frugalware-$TREE/boot/syslinux/splash.png
 wget $MIRROR/frugalware-$TREE/boot/syslinux/vesamenu.c32
 cd -
-##Bug: Occasionally, the link vmlinuz is not present in /boot
-if [ -e $TREE/rootfs/boot/vmlinuz ]; then
-	cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/vmlinuz
-else
-	cp -v $TREE/rootfs/boot/vmlinuz* $TREE/iso/boot/vmlinuz
-fi
+cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/vmlinuz
 cp -v $TREE/rootfs/boot/initrd.img.xz $TREE/iso/boot/initrd
 umount $TREE/rootfs
 cat >$TREE/iso/boot/syslinux/syslinux.cfg <<EOF
