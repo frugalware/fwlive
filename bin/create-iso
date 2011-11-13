@@ -14,22 +14,26 @@ cd -
 cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/vmlinuz
 cp -v $TREE/rootfs/boot/initrd.img.xz $TREE/iso/boot/initrd
 umount $TREE/rootfs
+## lowercase APPSGROUP ( ex: GNOME to Gnome )
+GROUP=`echo $(echo $APPSGROUP | cut -c1)$(echo $APPSGROUP | cut -c2- | tr [A-Z] [a-z])`
+## Real lowercase
+GROUPLOW=`echo $APPSGROUP | tr [A-Z] [a-z]`
 cat >$TREE/iso/boot/syslinux/syslinux.cfg <<EOF
 timeout 100
 ui vesamenu.c32
-menu title Frugalware Live $APPSGROUP
+menu title Frugalware Live $GROUP
 
 menu background splash.png
 menu vshift 8
 menu margin 0
 
 label frugalware
-        menu label Frugalware-$APPSGROUP Live
+        menu label Frugalware-$GROUP Live
         linux /boot/vmlinuz
         initrd /boot/initrd
         append root=live:CDLABEL=fwlive rd.driver.pre=loop rd.plymouth=0
 EOF
 mkdir -p $TREE/iso/LiveOS
 cp -v $TREE/squashfs.img $TREE/iso/LiveOS/squashfs.img
-mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$APPSGROUP.iso $TREE/iso
-isohybrid fwlive-$APPSGROUP.iso
+mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$GROUPLOW.iso $TREE/iso
+isohybrid fwlive-$GROUPLOW.iso
