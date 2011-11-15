@@ -83,6 +83,11 @@ if [ $TREE == "stable" ]; then
 	echo "[frugalware]" > pacman-g2.conf
 fi
 echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
+## For Tree Gnometesting
+if [ $TREE == "gnometesting"]; then
+	echo "[gnometesting]" > pacman-g2.conf
+	echo "Server = http://ftp.frugalware.org/pub/other/people/bouleetbil/$TREE/frugalware-$ARCH" >> pacman-g2.conf
+fi
 eval PACKAGES=\$INST_${APPSGROUP}_APPS
 pacman -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
 ## Solve problem with kernel

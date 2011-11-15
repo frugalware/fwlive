@@ -1,16 +1,16 @@
 # Arch for Fwlive
 ARCH=`uname -m`
 
-# Tree of Frugalware (current or stable)
-# for the moment one choice (current)
+# Tree of Frugalware (current or stable or gnometesting)
+# for the moment one choice (current, gnometesting)
 # choice stable after 1.6
 TREE="current"
 
 # Select FWLive profile, the following ones are available:
 # * MIN (Group Base + fwife)
 # * GNOME ( Group Gnome + Base + fwife )
-# * KDE ( Group KDE + Base + fwife )
-# * XFCE ( Group XFCE + Base + fwife + some recommended apps )
+# * KDE ( Group KDE + Base + fwife ) ( Not available for tree Gnometesting)
+# * XFCE ( Group XFCE + Base + fwife + some recommended apps ) ( Not available for tree Gnometesting)
 APPSGROUP="MIN"
 
 # root filesystem size (compressed free space is cheap!)
