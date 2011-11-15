@@ -84,9 +84,11 @@ if [ $TREE == "stable" ]; then
 fi
 echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
 ## For Tree Gnometesting
-if [ $TREE == "gnometesting"]; then
+if [ $TREE == "gnometesting" ]; then
 	echo "[gnometesting]" > pacman-g2.conf
 	echo "Server = http://ftp.frugalware.org/pub/other/people/bouleetbil/$TREE/frugalware-$ARCH" >> pacman-g2.conf
+	echo "[frugalware-current]" >> pacman-g2.conf
+	echo "Server = $MIRROR/frugalware-current/frugalware-$ARCH" >> pacman-g2.conf
 fi
 eval PACKAGES=\$INST_${APPSGROUP}_APPS
 pacman -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
