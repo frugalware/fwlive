@@ -25,6 +25,11 @@ CHROOTDIR="$PWD/$TREE/rootfs"
 # Default language
 FWLIVELANG="$LANG"
 
+# Add supported locals
+# if empty the livecd is full default language
+# LOCALE="de,fr,da,hu,cs"
+LOCALE=""
+
 #Hostname
 FWLHOST="fwlive"
 
