@@ -111,7 +111,12 @@ sed -i -e 's/Frugalware/Frugalware Livecd based on Frugalware/g' $CHROOTDIR/etc/
 ## file /etc/issue.net
 sed 's/Frugalware/Frugalware Livecd/g' $CHROOTDIR/etc/issue.net
 
-## Remove Doc
+## Remove Locales
+lang=`echo $FWLIVELANG |sed 's/\..*//'`
+localang="-a ! -name `echo $lang | sed 's/_.*//'` -a ! -name $lang"
+find $CHROOTDIR/usr/share/locale/* -maxdepth 0 -type d ! -name "en" -a ! -name "en_US" $localang -exec rm -fr {} \;
+
+## Remove Docs
 echo "Deleting docs files which are not needed in Live mode..."
 rm -rf $CHROOTDIR/usr/share/doc/*
 rm -rf $CHROOTDIR/usr/share/gtk-doc/*
