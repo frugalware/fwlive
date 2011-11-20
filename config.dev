@@ -11,6 +11,7 @@ TREE="current"
 # * GNOME ( Group Gnome + Base + fwife )
 # * KDE ( Group KDE + Base + fwife ) ( Not available for tree Gnometesting)
 # * XFCE ( Group XFCE + Base + fwife + some recommended apps ) ( Not available for tree Gnometesting)
+# * LXDE ( Group lxde-desktop + fwife + some recommended apps )
 APPSGROUP="MIN"
 
 # root filesystem size (compressed free space is cheap!)
@@ -54,7 +55,8 @@ USERPASS="fwlive"
 
 # Additional packages to be installed by the profiles
 INST_MIN_APPS="base fwife"
-INST_X11_APPS="xmessage xsetroot xinit xorg-server xf86-input-synaptics"
+INST_X11_APPS="xmessage xsetroot xinit xorg-server xorg-drivers"
 INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS gnome nano"
 INST_KDE_APPS="$INST_MIN_APPS $INST_X11_APPS kde"
 INST_XFCE_APPS="$INST_MIN_APPS $INST_X11_APPS xfce4 xfburn xarchiver geeqie xchat thunderbird exaile parole transmission abiword gnumeric gimp epdfview"
+INST_LXDE_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop firefox thunderbird leafpad abiword gnumeric gimp xchat transmission epdfview vlc pidgin wicd"
