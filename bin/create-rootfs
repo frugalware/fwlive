@@ -111,6 +111,11 @@ sed -i -e 's/Frugalware/Frugalware Livecd based on Frugalware/g' $CHROOTDIR/etc/
 ## file /etc/issue.net
 sed 's/Frugalware/Frugalware Livecd/g' $CHROOTDIR/etc/issue.net
 
+## Remove Doc
+echo "Deleting docs files which are not needed in Live mode..."
+rm -rf $CHROOTDIR/usr/share/doc/*
+rm -rf $CHROOTDIR/usr/share/gtk-doc/*
+
 # Umount chroot
 echo "Attempting to umount chroot directories..."
 umount $CHROOTDIR/proc >/dev/null
