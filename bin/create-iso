@@ -34,7 +34,7 @@ label frugalware
         menu label Frugalware-$GROUP Live
         linux /boot/vmlinuz
         initrd /boot/initrd
-        append root=live:CDLABEL=fwlive rd.driver.pre=loop rd.plymouth=0
+        append root=live:CDLABEL=fwlive rd.plymouth=0
 EOF
 mkdir -p $TREE/iso/LiveOS
 cp -v $TREE/squashfs.img $TREE/iso/LiveOS/squashfs.img
