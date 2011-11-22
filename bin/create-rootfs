@@ -129,6 +129,13 @@ umount $CHROOTDIR/var/cache/pacman-g2 >/dev/null
 echo "Successfully umounted chroot directories."
 
 # Umount loop
-df -h $CHROOTDIR
+SIZEROOTFS=`df -m $CHROOTDIR|tr -s ' ' |cut -d' ' -f3|tail -n1`
 umount $CHROOTDIR
 rmdir $CHROOTDIR
+
+## Resize rootfs.img
+REALSIZE=$(( $SIZEROOTFS+300))
+echo $REALSIZE
+e2fsck -f $TREE/rootfs.img
+resize2fs $TREE/rootfs.img $REALSIZE"M"
+e2fsck -f $TREE/rootfs.img
