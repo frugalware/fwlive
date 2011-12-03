@@ -7,6 +7,14 @@ if [ "`id -u`" != 0 ]; then
 	echo "Building the chroot as an unprivileged user is not possible."
 	exit 1
 fi
+
+if [ `mount|grep -o $CHROOTDIR/var/cache/pacman-g2` ]; then
+	umount -f $CHROOTDIR/proc
+	umount -f $CHROOTDIR/sys
+	umount -f $CHROOTDIR/var/cache/pacman-g2
+	umount -f $CHROOTDIR
+fi
+
 ## Check package needs for build
 if [ "`pacman-g2 -Q squashfs &>/dev/null;echo $?`" != 0 ]; then
 	echo "Installing Squashfs"
