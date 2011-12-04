@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 . /etc/makepkg.conf
-. $PWD/config 
+. $PWD/config
 
 if [ "`id -u`" != 0 ]; then
 	echo "Building the chroot as an unprivileged user is not possible."
@@ -79,8 +79,24 @@ EOF
 echo "[eth0]" >$CHROOTDIR/etc/sysconfig/network/default
 echo "options = dhcp" >>$CHROOTDIR/etc/sysconfig/network/default
 
+## For x86_64 ask question for what ARCH to build iso
+if [ $ARCH == "x86_64" ]; then
+	echo "Do you want Fwlive for i686 or x86_64 ? ( default : x86_64 )"	
+	read archbuild
+	case $archbuild in 
+		i686|I686)
+			ARCH="i686"
+			EXTRAOPTS="--noarch" 
+			echo "ARCHBUILD=i686" > config.tmp ;;
+		*)
+			ARCH="x86_64"
+			echo "ARCHBUILD=x86_64" > config.tmp ;;			
+	esac
+else
+	echo "ARCHBUILD=i686" > config.tmp
+fi
 # Build it
-echo "Building chroot environment"
+echo "Building chroot environment" 
 if [ -e pacman-g2.conf ]; then
 	rm -f pacman-g2.conf
 fi
@@ -99,9 +115,9 @@ if [ $TREE == "gnometesting" ]; then
 	echo "Server = $MIRROR/frugalware-current/frugalware-$ARCH" >> pacman-g2.conf
 fi
 eval PACKAGES=\$INST_${APPSGROUP}_APPS
-pacman -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
+pacman-g2 -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 ## Solve problem with kernel
-pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf
+pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 
 # Post-install tweaks
 chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
