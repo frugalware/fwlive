@@ -1,6 +1,7 @@
 #!/bin/bash -xe
 
 . $PWD/config
+. $PWD/config.tmp
 
 rm -rf $TREE/iso
 mkdir -p $TREE/iso/boot/syslinux
@@ -38,5 +39,5 @@ label frugalware
 EOF
 mkdir -p $TREE/iso/LiveOS
 cp -v $TREE/squashfs.img $TREE/iso/LiveOS/squashfs.img
-mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$GROUPLOW.iso $TREE/iso
-isohybrid fwlive-$GROUPLOW.iso
+mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$GROUPLOW-$ARCHBUILD.iso $TREE/iso
+isohybrid fwlive-$GROUPLOW-$ARCHBUILD.iso
