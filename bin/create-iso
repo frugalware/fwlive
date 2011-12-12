@@ -5,8 +5,6 @@
 
 rm -rf $TREE/iso
 mkdir -p $TREE/iso/boot/syslinux
-mkdir -p $TREE/rootfs
-mount $TREE/squashfs-root/LiveOS/rootfs.img -o loop $TREE/rootfs
 cd $TREE/iso/boot/syslinux
 ## For the moment , replace $TREE by current
 ## because only current have boot/syslinux
@@ -15,9 +13,8 @@ wget $MIRROR/frugalware-current/boot/syslinux/isolinux.bin
 wget $MIRROR/frugalware-current/boot/syslinux/splash.png
 wget $MIRROR/frugalware-current/boot/syslinux/vesamenu.c32
 cd -
-cp -v $TREE/rootfs/boot/vmlinuz $TREE/iso/boot/vmlinuz
-cp -v $TREE/rootfs/boot/initrd.img.xz $TREE/iso/boot/initrd
-umount $TREE/rootfs
+cp -vf $TREE/vmlinuz $TREE/iso/boot/vmlinuz
+cp -vf $TREE/initrd.img.xz $TREE/iso/boot/initrd
 ## lowercase APPSGROUP ( ex: GNOME to Gnome )
 GROUP=`echo $(echo $APPSGROUP | cut -c1)$(echo $APPSGROUP | cut -c2- | tr [A-Z] [a-z])`
 ## Real lowercase
