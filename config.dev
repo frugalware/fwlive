@@ -15,7 +15,7 @@ TREE="current"
 APPSGROUP="MIN"
 
 # root filesystem size (compressed free space is cheap!)
-SIZE="1G"
+SIZE="4G"
 
 # Mirror to use
 MIRROR="http://ftp.frugalware.org/pub/frugalware"
