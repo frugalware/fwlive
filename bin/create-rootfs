@@ -155,6 +155,7 @@ rm -rf $CHROOTDIR/usr/share/man/*
 
 ## Remove Static libraries and header 
 echo "Deleting Static libraries and header which are not needed in Live mode..."
+rm -rf $CHROOTDIR/usr/include/*
 find $CHROOTDIR/ -name "*.[ha]" -delete
 
 ## Remove /boot contents, but backup kernel and initrd
