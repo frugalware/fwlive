@@ -136,8 +136,15 @@ sed -i -e 's/Frugalware/Frugalware Livecd based on Frugalware/g' $CHROOTDIR/etc/
 sed 's/Frugalware/Frugalware Livecd/g' $CHROOTDIR/etc/issue.net
 
 ## Remove Locales
-lang=`echo $FWLIVELANG |sed 's/\..*//'`
-localang="-a ! -name `echo $lang | sed 's/_.*//'` -a ! -name $lang"
+if [ -z $LOCALE ]; then
+	lang=`echo $FWLIVELANG |sed 's/\..*//'`
+	localang="-a ! -name `echo $lang | sed 's/_.*//'` -a ! -name $lang"
+	
+else 
+	for i in $(echo $LOCALE | sed -r "s/\,/ /g"); do
+	        localang="-a ! -name $i* "$localang
+	done
+fi
 find $CHROOTDIR/usr/share/locale/* -maxdepth 0 -type d ! -name "en" -a ! -name "en_US" $localang -exec rm -fr {} \;
 
 ## Remove Docs
