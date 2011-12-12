@@ -151,11 +151,11 @@ find $CHROOTDIR/usr/share/locale/* -maxdepth 0 -type d ! -name "en" -a ! -name "
 echo "Deleting docs files which are not needed in Live mode..."
 rm -rf $CHROOTDIR/usr/share/doc/*
 rm -rf $CHROOTDIR/usr/share/gtk-doc/*
+rm -rf $CHROOTDIR/usr/share/man/*
 
 ## Remove Static libraries and header 
 echo "Deleting Static libraries and header which are not needed in Live mode..."
-rm -rf $CHROOTDIR/usr/include/*
-find $CHROOTDIR/ -name *.a -exec rm -f {} \;
+find $CHROOTDIR/ -name "*.h" -or -name "*.a" -exec rm -f '{}' \;
 
 # Umount chroot
 echo "Attempting to umount chroot directories..."
