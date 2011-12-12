@@ -152,6 +152,12 @@ echo "Deleting docs files which are not needed in Live mode..."
 rm -rf $CHROOTDIR/usr/share/doc/*
 rm -rf $CHROOTDIR/usr/share/gtk-doc/*
 
+## Remove Static libraries and header 
+echo "Deleting Static libraries and header which are not needed in Live mode..."
+rm -rf $CHROOTDIR/usr/include/*
+find $CHROOTDIR/ -name *.a -exec rm -f {} \;
+read -p ""
+
 # Umount chroot
 echo "Attempting to umount chroot directories..."
 umount $CHROOTDIR/proc >/dev/null
