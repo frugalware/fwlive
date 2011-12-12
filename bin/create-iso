@@ -36,6 +36,12 @@ label frugalware
         linux /boot/vmlinuz
         initrd /boot/initrd
         append root=live:CDLABEL=fwlive rd.plymouth=0
+
+label frugalwareinram
+	menu label Frugalware-$GROUP Live ( Copy to RAM )
+	linux /boot/vmlinuz
+        initrd /boot/initrd
+        append root=live:CDLABEL=fwlive rd.plymouth=0 rd.live.ram=1
 EOF
 mkdir -p $TREE/iso/LiveOS
 cp -v $TREE/squashfs.img $TREE/iso/LiveOS/squashfs.img
