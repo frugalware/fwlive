@@ -157,6 +157,12 @@ rm -rf $CHROOTDIR/usr/share/man/*
 echo "Deleting Static libraries and header which are not needed in Live mode..."
 find $CHROOTDIR/ -name "*.h" -or -name "*.a" -exec rm -f '{}' \;
 
+## Remove /boot contents, but backup kernel and initrd
+echo "Removing boot files which are not needed in Live mode..."
+cp -vf $CHROOTDIR/boot/vmlinuz $TREE/vmlinuz
+cp -vf $CHROOTDIR/boot/initrd.img.xz $TREE/initrd.img.xz
+rm -rf $CHROOTDIR/boot/*
+
 # Umount chroot
 echo "Attempting to umount chroot directories..."
 umount $CHROOTDIR/proc >/dev/null
