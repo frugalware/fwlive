@@ -28,7 +28,7 @@ FWLIVELANG="$LANG"
 
 # Add supported locals
 # if empty the livecd is full default language
-# LOCALE="de,fr,da,hu,cs"
+# LOCALE="de,fr,it,hu"
 LOCALE=""
 
 #Hostname
@@ -56,7 +56,7 @@ USERPASS="fwlive"
 # Additional packages to be installed by the profiles
 INST_MIN_APPS="base"
 INST_X11_APPS="fwife xmessage xsetroot xinit xorg-server xorg-drivers frugalware-menus xdg-user-dirs"
-INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS gnome nano"
+INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS gnome"
 INST_KDE_APPS="$INST_MIN_APPS $INST_X11_APPS kde-minimal libreoffice-kde krita konversation kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd"
 INST_XFCE_APPS="$INST_MIN_APPS $INST_X11_APPS xfce4 midori xfburn xarchiver geeqie xchat thunderbird exaile parole transmission abiword gnumeric gimp epdfview pidgin wicd"
 INST_LXDE_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop firefox thunderbird leafpad abiword gnumeric gimp xchat transmission epdfview vlc pidgin wicd"
