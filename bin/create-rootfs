@@ -135,6 +135,28 @@ sed -i -e 's/Frugalware/Frugalware Livecd based on Frugalware/g' $CHROOTDIR/etc/
 ## file /etc/issue.net
 sed 's/Frugalware/Frugalware Livecd/g' $CHROOTDIR/etc/issue.net
 
+## For Appsgroup Gnome
+if [ $APPSGROUP == "GNOME" ]; then
+	##Autologin
+cat >$CHROOTDIR/etc/gdm/custom.conf <<EOF
+[daemon]
+TimedLoginEnable=false
+TimedLogin=fwlive
+TimedLoginDelay=15
+AutomaticLoginEnable=true
+AutomaticLogin=fwlive
+[security]
+[xdmcp]
+[greeter]
+[chooser]
+[debug]
+EOF
+	## Enable Networkmanager
+	#chroot $CHROOTDIR systemctl enable NetworkManager.service
+	ln -s $CHROOTDIR/lib/systemd/system/NetworkManager.service $CHROOTDIR/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
+	ln -s $CHROOTDIR/lib/systemd/system/NetworkManager.service $CHROOTDIR/etc/systemd/system/multi-user.target.wants/NetworkManager.service
+fi
+
 ## Remove Locales
 if [ -z $LOCALE ]; then
 	lang=`echo $FWLIVELANG |sed 's/\..*//'`
