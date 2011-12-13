@@ -138,18 +138,10 @@ sed 's/Frugalware/Frugalware Livecd/g' $CHROOTDIR/etc/issue.net
 ## For Appsgroup Gnome
 if [ $APPSGROUP == "GNOME" ]; then
 	##Autologin
-cat >$CHROOTDIR/etc/gdm/custom.conf <<EOF
+	cat >>$CHROOTDIR/etc/gdm/custom.conf <<EOF
 [daemon]
-TimedLoginEnable=false
-TimedLogin=fwlive
-TimedLoginDelay=15
 AutomaticLoginEnable=true
 AutomaticLogin=fwlive
-[security]
-[xdmcp]
-[greeter]
-[chooser]
-[debug]
 EOF
 	## Enable Networkmanager
 	#chroot $CHROOTDIR systemctl enable NetworkManager.service
