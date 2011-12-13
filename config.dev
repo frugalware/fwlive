@@ -54,7 +54,7 @@ USERNAME="fwlive"
 USERPASS="fwlive"
 
 # Additional packages to be installed by the profiles
-INST_MIN_APPS="base"
+INST_MIN_APPS="base openssh"
 INST_X11_APPS="fwife xmessage xsetroot xinit xorg-server xorg-drivers frugalware-menus xdg-user-dirs"
 INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS gnome"
 INST_KDE_APPS="$INST_MIN_APPS $INST_X11_APPS kde-minimal libreoffice-kde krita konversation kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd"
