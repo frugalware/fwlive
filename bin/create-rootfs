@@ -149,6 +149,19 @@ EOF
 	ln -s $CHROOTDIR/lib/systemd/system/NetworkManager.service $CHROOTDIR/etc/systemd/system/multi-user.target.wants/NetworkManager.service
 fi
 
+## For Appsgroup Xfce
+if [ $APPSGROUP == "XFCE" ]; then
+	##Autologin
+	cat >>$CHROOTDIR/etc/slim.conf <<EOF
+default_user        fwlive
+auto_login          yes
+EOF
+fi
+
+## For fwife
+mkdir -p $CHROOTDIR/home/fwlive/Desktop/
+cp $CHROOTDIR/usr/share/applications/fwife.desktop $CHROOTDIR/home/fwlive/Desktop/
+
 ## Remove Locales
 if [ -z $LOCALE ]; then
 	lang=`echo $FWLIVELANG |sed 's/\..*//'`
