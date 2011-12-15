@@ -190,9 +190,8 @@ echo "Deleting Static libraries and header which are not needed in Live mode..."
 #rm -rf $CHROOTDIR/usr/include/*
 find $CHROOTDIR/usr/include/* -maxdepth 0 ! -name "python2.7" -exec rm -r {} \;
 #find $CHROOTDIR/ -name "*.[ha]" -delete
-read -p "TOTO"
-find $CHROOTDIR/ -path '$CHROOTDIR/usr/include/python2.7/*' -prune -o -name "*.[ha]" -exec rm -f {} \;
-read -p "TEST"
+find $CHROOTDIR/ -path $CHROOTDIR/usr/include/python2.7 -prune -o -name "*.[ha]" -exec rm -f {} \;
+
 ## Remove /boot contents, but backup kernel and initrd
 echo "Removing boot files which are not needed in Live mode..."
 cp -vf $CHROOTDIR/boot/vmlinuz $TREE/vmlinuz
