@@ -57,12 +57,42 @@ USERPASS="fwlive"
 
 # Additional packages to be installed by the profiles
 INST_MIN_APPS="base memtest86+ openssh ntfs-3g testdisk net-tools partimage zd1211-firmware bluez-firmware b43-fwcutter"
-INST_X11_APPS="fwife xmessage xsetroot xinit xorg-server xorg-drivers frugalware-menus xdg-user-dirs corefonts font-bh-ttf font-bh-type1 ttf-bitstream-vera dejavu-ttf sdl_ttf artwiz-fonts liberation-fonts "
-INST_CODECS="gst-plugins-ugly-x264 gst-plugins-base-vorbis gst-plugins-base-ogg gst-plugins-base-alsa gst-plugins-bad-xvid gst-plugins-ugly-dvdread gst-plugins-ugly-lame gst-ffmpeg gst-plugins-ugly-mad"
+
+# Xorg 
+INST_X11_APPS="fwife xmessage xsetroot xinit xorg-server xorg-drivers frugalware-menus xdg-user-dirs corefonts font-bh-ttf"
+INST_X11_APPS="$INST_X11_APPS font-bh-type1 ttf-bitstream-vera dejavu-ttf sdl_ttf artwiz-fonts liberation-fonts"
+
+# Codecs
+INST_CODECS="gst-plugins-ugly-x264 gst-plugins-base-vorbis gst-plugins-base-ogg gst-plugins-base-alsa gst-plugins-bad-xvid"
+INST_CODECS="$INST_CODECS gst-plugins-ugly-dvdread gst-plugins-ugly-lame gst-ffmpeg gst-plugins-ugly-mad"
+
+# Archive
 INST_ARCHIVE_APPS="zip unzip 7zip unrar lxsplit unarj"
+
+# Gnome
 INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS gnome gimp shotwell xchat transmission"
-INST_KDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS kde-minimal libreoffice-kde krita konversation kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd yakuake"
-INST_XFCE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS xfce4 midori xfburn xarchiver geeqie xchat thunderbird exaile parole transmission abiword gnumeric gimp epdfview pidgin wicd xfce4-power-manager"
-INST_LXDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS lxde-desktop firefox thunderbird leafpad abiword gnumeric gimp xchat transmission epdfview vlc pidgin wicd"
-INST_GAMES_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop wicd pidgin pidgin-gfire xchat flightgear armagetronad angband assaultcube atanks barrage bsnes bygfoot bzflag dangerdeep egoboo scourge extreme-tuxracer supertuxkart supertux fgx fillets-ng fillets-ng-data bsnes desmume fceux foobillardplus freedroid freedroidrpg frestonfire frozen-bubble gl-117 lgeneral lincity-ng netpanzer openastromenace opencity pingus plee-the-bear pokerth sar2 scorched3d sdlmame smc smc-music snes9x-gtk teeworlds tremmulous violetland warzone2100 scummvm scummvm-tools hedgewars warmux naev naev-data megaglest megaglest-data wesnoth zaz xmoto lbreakout2 ltris neverball openttd widelands openarena"
-INST_EDUCATION_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop wicd firefox gcompris childsplay tuxpaint tuxmath stellarium solfege gelemental chemtool gnumch gbrainy gourmet gramps tuxtyping avogadro"
+
+# Kde
+INST_KDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS kde-minimal libreoffice-kde krita konversation"
+INST_KDE_APPS="$INST_KDE_APPS kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd yakuake"
+
+# Xfce
+INST_XFCE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS xfce4 midori xfburn xarchiver geeqie xchat"
+INST_XFCE_APPS="$INST_XFCE_APPS thunderbird exaile parole transmission abiword gnumeric gimp epdfview pidgin wicd xfce4-power-manager"
+
+# Lxde
+INST_LXDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS lxde-desktop firefox thunderbird leafpad abiword"
+INST_LXDE_APPS="$INST_LXDE_APPS gnumeric gimp xchat transmission epdfview vlc pidgin wicd"
+
+# Games
+INST_GAMES_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop wicd pidgin pidgin-gfire xchat flightgear armagetronad angband assaultcube"
+INST_GAMES_APPS="$INST_GAMES_APPS atanks barrage bsnes bygfoot bzflag dangerdeep egoboo scourge extreme-tuxracer supertuxkart supertux"
+INST_GAMES_APPS="$INST_GAMES_APPS fgx fillets-ng fillets-ng-data bsnes desmume fceux foobillardplus freedroid freedroidrpg frestonfire"
+INST_GAMES_APPS="$INST_GAMES_APPS frozen-bubble gl-117 lgeneral lincity-ng netpanzer openastromenace opencity pingus plee-the-bear"
+INST_GAMES_APPS="$INST_GAMES_APPS pokerth sar2 scorched3d sdlmame smc smc-music snes9x-gtk teeworlds tremmulous violetland warzone2100"
+INST_GAMES_APPS="$INST_GAMES_APPS scummvm scummvm-tools hedgewars warmux naev naev-data megaglest megaglest-data wesnoth zaz xmoto"
+INST_GAMES_APPS="$INST_GAMES_APPS lbreakout2 ltris neverball openttd widelands openarena"
+
+# Education
+INST_EDUCATION_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop wicd firefox gcompris childsplay tuxpaint tuxmath stellarium solfege"
+INST_EDUCATION_APPS="$INST_EDUCATION_APPS gelemental chemtool gnumch gbrainy gourmet gramps tuxtyping avogadro"
