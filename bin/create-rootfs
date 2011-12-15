@@ -182,10 +182,13 @@ rm -rf $CHROOTDIR/usr/share/man/*
 rm -rf $CHROOTDIR/usr/man/*
 rm -rf $CHROOTDIR/usr/share/info/*
 
-## Remove Static libraries and header 
+## Remove Static libraries and header
+## Need /usr/include/python2.7/* for somes progs
 echo "Deleting Static libraries and header which are not needed in Live mode..."
-rm -rf $CHROOTDIR/usr/include/*
-find $CHROOTDIR/ -name "*.[ha]" -delete
+#rm -rf $CHROOTDIR/usr/include/*
+find $CHROOTDIR/usr/include/* -maxdepth 0 ! -name "python2.7" -exec rm -r {} \;
+#find $CHROOTDIR/ -name "*.[ha]" -delete
+find $CHROOTDIR/ -path '$CHROOTDIR/usr/include*' -prune -o -name "*.[ha]" -exec rm -rf {} \;
 
 ## Remove /boot contents, but backup kernel and initrd
 echo "Removing boot files which are not needed in Live mode..."
