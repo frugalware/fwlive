@@ -159,8 +159,10 @@ EOF
 fi
 
 ## For fwife
-mkdir -p $CHROOTDIR/home/fwlive/Desktop/
-cp $CHROOTDIR/usr/share/applications/fwife.desktop $CHROOTDIR/home/fwlive/Desktop/
+if [ $APPSGROUP != "MIN" ]; then
+	mkdir -p $CHROOTDIR/home/fwlive/Desktop/
+	cp $CHROOTDIR/usr/share/applications/fwife.desktop $CHROOTDIR/home/fwlive/Desktop/
+fi
 
 ## Remove Locales
 if [ -z $LOCALE ]; then
@@ -188,8 +190,9 @@ echo "Deleting Static libraries and header which are not needed in Live mode..."
 #rm -rf $CHROOTDIR/usr/include/*
 find $CHROOTDIR/usr/include/* -maxdepth 0 ! -name "python2.7" -exec rm -r {} \;
 #find $CHROOTDIR/ -name "*.[ha]" -delete
-find $CHROOTDIR/ -path '$CHROOTDIR/usr/include*' -prune -o -name "*.[ha]" -exec rm -rf {} \;
-
+read -p "TOTO"
+find $CHROOTDIR/ -path '$CHROOTDIR/usr/include/python2.7/*' -prune -o -name "*.[ha]" -exec rm -f {} \;
+read -p "TEST"
 ## Remove /boot contents, but backup kernel and initrd
 echo "Removing boot files which are not needed in Live mode..."
 cp -vf $CHROOTDIR/boot/vmlinuz $TREE/vmlinuz
