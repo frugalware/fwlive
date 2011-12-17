@@ -1,7 +1,10 @@
 - detect version in boot menu after next frugalware pkg
-- make a symlink of fwife.desktop in to /home/fwlive/Desktop/
-
+- make a symlink of /usr/share/applications/fwife.desktop in /home/fwlive/Desktop/
+- make a symlink of /usr/share/applications/Frugalware-Homepage.desktop in /home/fwlive/Desktop/
+- make a symlink of /usr/share/applications/Frugalware-Forums.desktop in /home/fwlive/Desktop/
+- make a symlink of /usr/share/applications/Frugalware-Donations.desktop in /home/fwlive/Desktop/
+- make a symlink of /usr/share/applications/Frugalware-Documentation.desktop in /home/fwlive/Desktop/
 
 IDEAS
 - create a language selector in boot menu
-- add memtest86+ as default needed package
+
