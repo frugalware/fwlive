@@ -147,6 +147,9 @@ EOF
 	#chroot $CHROOTDIR systemctl enable NetworkManager.service
 	ln -s $CHROOTDIR/lib/systemd/system/NetworkManager.service $CHROOTDIR/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
 	ln -s $CHROOTDIR/lib/systemd/system/NetworkManager.service $CHROOTDIR/etc/systemd/system/multi-user.target.wants/NetworkManager.service
+	## Enable Show-desktop-icons
+   	sed -i -e 's/false/true/g' $CHROOTDIR/usr/share/glib-2.0/schemas/org.gnome.desktop.background.gschema.xml
+	chroot $CHROOTDIR glib-compile-schemas usr/share/glib-2.0/schemas
 fi
 
 ## For Appsgroup Xfce
@@ -160,8 +163,10 @@ fi
 
 ## For fwife
 if [ $APPSGROUP != "MIN" ]; then
-	mkdir -p $CHROOTDIR/home/fwlive/Desktop/
-	cp $CHROOTDIR/usr/share/applications/fwife.desktop $CHROOTDIR/home/fwlive/Desktop/
+   mkdir -p $CHROOTDIR/home/fwlive/Desktop/
+   cp $CHROOTDIR/usr/share/applications/fwife.desktop $CHROOTDIR/home/fwlive/Desktop/
+   chroot $CHROOTDIR chown fwlive:users -R home/fwlive/Desktop
+   chroot $CHROOTDIR chmod 755 /home/fwlive/Desktop/fwife.desktop
 fi
 
 ## Remove Locales
