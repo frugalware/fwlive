@@ -4,6 +4,8 @@
 - make a symlink of /usr/share/applications/Frugalware-Forums.desktop in /home/fwlive/Desktop/
 - make a symlink of /usr/share/applications/Frugalware-Donations.desktop in /home/fwlive/Desktop/
 - make a symlink of /usr/share/applications/Frugalware-Documentation.desktop in /home/fwlive/Desktop/
+- enable autologin for lxde and kde
+- for gnome : enable some extensions for gnome-shell
 
 IDEAS
 - create a language selector in boot menu
