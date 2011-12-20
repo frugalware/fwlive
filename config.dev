@@ -87,9 +87,9 @@ INST_LXDE_APPS="$INST_LXDE_APPS gnumeric gimp xchat transmission epdfview vlc pi
 # Games
 INST_GAMES_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop wicd pidgin pidgin-gfire xchat flightgear armagetronad angband assaultcube"
 INST_GAMES_APPS="$INST_GAMES_APPS atanks barrage bsnes bygfoot bzflag dangerdeep egoboo scourge extreme-tuxracer supertuxkart supertux"
-INST_GAMES_APPS="$INST_GAMES_APPS fgx fillets-ng fillets-ng-data bsnes desmume fceux foobillardplus freedroid freedroidrpg frestonfire"
+INST_GAMES_APPS="$INST_GAMES_APPS fgx fillets-ng fillets-ng-data bsnes desmume fceux foobillardplus freedroid freedroidrpg fretsonfire"
 INST_GAMES_APPS="$INST_GAMES_APPS frozen-bubble gl-117 lgeneral lincity-ng netpanzer openastromenace opencity pingus plee-the-bear"
-INST_GAMES_APPS="$INST_GAMES_APPS pokerth sar2 scorched3d sdlmame smc smc-music snes9x-gtk teeworlds tremmulous violetland warzone2100"
+INST_GAMES_APPS="$INST_GAMES_APPS pokerth sar2 scorched3d sdlmame smc smc-music snes9x-gtk teeworlds tremulous violetland warzone2100"
 INST_GAMES_APPS="$INST_GAMES_APPS scummvm scummvm-tools hedgewars warmux naev naev-data megaglest megaglest-data wesnoth zaz xmoto"
 INST_GAMES_APPS="$INST_GAMES_APPS lbreakout2 ltris neverball openttd widelands openarena"
 
