@@ -6,6 +6,9 @@
 - make a symlink of /usr/share/applications/Frugalware-Documentation.desktop in /home/fwlive/Desktop/
 - enable autologin for lxde and kde
 - for gnome : enable some extensions for gnome-shell
+- Remove ftp,polkituser,partitionmanager... account from LXDM
+- Debug fwife install, users reporting "not booting from hard disk", we must check that with Elentir
+- Testing the Gamer and Educative Editions
 
 IDEAS
 - create a language selector in boot menu
