@@ -1,4 +1,3 @@
-- detect version in boot menu after next frugalware pkg
 - make a symlink of /usr/share/applications/fwife.desktop in /home/fwlive/Desktop/
 - make a symlink of /usr/share/applications/Frugalware-Homepage.desktop in /home/fwlive/Desktop/
 - make a symlink of /usr/share/applications/Frugalware-Forums.desktop in /home/fwlive/Desktop/

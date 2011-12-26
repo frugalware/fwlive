@@ -113,6 +113,7 @@ pacman-g2 -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXT
 pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 
 # Post-install tweaks
+chroot $CHROOTDIR sh /etc/pacman-g2/hooks/update-frugalware-version post_sysupgrade # update /etc/frugalware-release
 chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
 if [ -n "$USERNAME" -a -n "$USERPASS" ]; then
 	yes ''|chroot $CHROOTDIR /usr/sbin/adduser "$USERNAME" "Fwlive User" "$USERPASS" "/home/$USERNAME"
@@ -195,6 +196,9 @@ echo "Removing boot files which are not needed in Live mode..."
 cp -vf $CHROOTDIR/boot/vmlinuz $TREE/vmlinuz
 cp -vf $CHROOTDIR/boot/initrd.img.xz $TREE/initrd.img.xz
 rm -rf $CHROOTDIR/boot/*
+
+# Save version
+sed "s/.* \(.*\) (.*/\1/" $CHROOTDIR/etc/frugalware-release > $TREE/rootfs.version
 
 # Umount chroot
 echo "Attempting to umount chroot directories..."
