@@ -8,4 +8,4 @@ if [ "$ARCH" = "x86_64" ]; then
 	QEMU="qemu-system-x86_64"
 fi
 
-$QEMU -enable-kvm -m $QEMUMEM -cdrom fwlive-${APPSGROUP,,}.iso
+$QEMU -enable-kvm -m $QEMUMEM -cdrom fwlive-${APPSGROUP,,}-$ARCHBUILD.iso
