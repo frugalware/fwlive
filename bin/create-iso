@@ -22,25 +22,25 @@ VERSION=$(cat $TREE/rootfs.version)
 cat >$TREE/iso/boot/syslinux/syslinux.cfg <<EOF
 timeout 100
 ui vesamenu.c32
-menu title Frugalware $VERSION Live $GROUP
+menu title Frugalware $VERSION $ARCHBUILD Live $GROUP
 
 menu background splash.png
 menu vshift 8
 menu margin 0
 
 label frugalware
-        menu label Frugalware $VERSION $GROUP Live
+        menu label Frugalware $VERSION $ARCHBUILD Live $GROUP
         linux /boot/vmlinuz
         initrd /boot/initrd
         append root=live:CDLABEL=fwlive rd.plymouth=0
 
 label frugalwareinram
-	menu label Frugalware $VERSION $GROUP Live ( Copy to RAM )
+	menu label Frugalware $VERSION $ARCHBUILD Live $GROUP (Copy to RAM)
 	linux /boot/vmlinuz
         initrd /boot/initrd
         append root=live:CDLABEL=fwlive rd.plymouth=0 rd.live.ram=1
 EOF
 mkdir -p $TREE/iso/LiveOS
 cp -v $TREE/squashfs.img $TREE/iso/LiveOS/squashfs.img
-mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$VERSION-$GROUPLOW-$ARCHBUILD.iso $TREE/iso
-isohybrid fwlive-$VERSION-$GROUPLOW-$ARCHBUILD.iso
+mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive-$VERSION-$ARCHBUILD-$GROUPLOW.iso $TREE/iso
+isohybrid fwlive-$VERSION-$ARCHBUILD-$GROUPLOW.iso
