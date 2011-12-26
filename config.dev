@@ -83,10 +83,10 @@ INST_XFCE_APPS="gksu-frugalware"
 
 # Lxde
 INST_LXDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS lxde-desktop firefox thunderbird leafpad abiword"
-INST_LXDE_APPS="$INST_LXDE_APPS gnumeric gimp xchat transmission epdfview vlc pidgin wicd"
+INST_LXDE_APPS="$INST_LXDE_APPS gnumeric gimp xchat transmission epdfview vlc pidgin wicd gksu-frugalware"
 
 # Games
-INST_GAMES_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop wicd pidgin pidgin-gfire xchat flightgear armagetronad angband assaultcube"
+INST_GAMES_APPS="$INST_XFCE_APPS wicd pidgin pidgin-gfire xchat flightgear armagetronad angband assaultcube"
 INST_GAMES_APPS="$INST_GAMES_APPS atanks barrage bsnes bygfoot bzflag dangerdeep egoboo scourge extreme-tuxracer supertuxkart supertux"
 INST_GAMES_APPS="$INST_GAMES_APPS fgx fillets-ng fillets-ng-data bsnes desmume fceux foobillardplus freedroid freedroidrpg fretsonfire"
 INST_GAMES_APPS="$INST_GAMES_APPS frozen-bubble gl-117 lgeneral lincity-ng netpanzer openastromenace opencity pingus plee-the-bear"
