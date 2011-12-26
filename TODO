@@ -13,3 +13,5 @@
 IDEAS
 - create a language selector in boot menu
 - For gnome : Change color of text on desktop ( See Devil505)
+- Bouleetbil can write a systemd script to ask the language, once the user put his language, le system continue to
+boot with the correct locale and keymap
