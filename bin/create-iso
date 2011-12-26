@@ -1,7 +1,6 @@
 #!/bin/bash -xe
 
 . $PWD/config
-. $PWD/config.tmp
 
 rm -rf $TREE/iso
 mkdir -p $TREE/iso/boot/syslinux

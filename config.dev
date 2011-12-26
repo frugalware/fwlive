@@ -55,6 +55,9 @@ USERNAME="fwlive"
 # Normal user password
 USERPASS="fwlive"
 
+# Host architecure (in autoconf terms): building an i686 livecd on x86_64 is supported
+ARCHBUILD="$(uname -m)"
+
 # Additional packages to be installed by the profiles
 INST_MIN_APPS="base memtest86+ openssh ntfs-3g testdisk net-tools partimage zd1211-firmware bluez-firmware b43-fwcutter"
 

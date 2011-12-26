@@ -79,22 +79,15 @@ EOF
 echo "[eth0]" >$CHROOTDIR/etc/sysconfig/network/default
 echo "options = dhcp" >>$CHROOTDIR/etc/sysconfig/network/default
 
-## For x86_64 ask question for what ARCH to build iso
-if [ $ARCH == "x86_64" ]; then
-	echo "Do you want Fwlive for i686 or x86_64 ? ( default : x86_64 )"	
-	read archbuild
-	case $archbuild in 
-		i686|I686)
-			ARCH="i686"
-			EXTRAOPTS="--noarch" 
-			echo "ARCHBUILD=i686" > config.tmp ;;
-		*)
-			ARCH="x86_64"
-			echo "ARCHBUILD=x86_64" > config.tmp ;;			
-	esac
-else
-	echo "ARCHBUILD=i686" > config.tmp
-fi
+case $ARCHBUILD in 
+	i686|I686)
+		ARCH="i686"
+		EXTRAOPTS="--noarch" 
+		;;
+	*)
+		ARCH="x86_64"
+		;;
+esac
 # Build it
 echo "Building chroot environment" 
 if [ -e pacman-g2.conf ]; then
