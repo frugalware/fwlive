@@ -77,7 +77,7 @@ INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS g
 
 # Kde
 INST_KDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS kde-minimal libreoffice-kde krita konversation"
-INST_KDE_APPS="$INST_KDE_APPS kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd yakuake"
+INST_KDE_APPS="$INST_KDE_APPS kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd-kde yakuake"
 
 # Xfce
 INST_XFCE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS xfce4 midori xfburn xarchiver geeqie xchat"
