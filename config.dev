@@ -99,4 +99,4 @@ INST_GAMES_APPS="$INST_GAMES_APPS lbreakout2 ltris neverball openttd widelands o
 
 # Education
 INST_EDUCATION_APPS="$INST_MIN_APPS $INST_X11_APPS lxde-desktop wicd firefox gcompris childsplay tuxpaint tuxmath stellarium solfege"
-INST_EDUCATION_APPS="$INST_EDUCATION_APPS gelemental chemtool gnumch gbrainy gourmet gramps tuxtyping avogadro"
+INST_EDUCATION_APPS="$INST_EDUCATION_APPS gelemental chemtool gnumch gbrainy gourmet gramps tuxtyping avogadro ri-li"
