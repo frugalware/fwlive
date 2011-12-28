@@ -8,6 +8,7 @@
 - Remove ftp,polkituser,partitionmanager... account from LXDM
 - Debug fwife install, users reporting "not booting from hard disk", we must check that with Elentir
 - Testing the Gamer and Educative Editions
+- KDE need locales packages: kde-l10-fr..etc
 
 IDEAS
 - create a language selector in boot menu
