@@ -155,10 +155,6 @@ auto_login          yes
 EOF
 fi
 
-## Use XferCommand to fix some freeze during package download, see #4305
-sed -i 's/#XferCommand/XferCommand/' $CHROOTDIR/etc/pacman-g2.conf
-sed -i 's/YOUR_OPTIONS//' $CHROOTDIR/etc/pacman-g2.conf
-
 ## For fwife
 if [ $APPSGROUP != "MIN" ]; then
    mkdir -p $CHROOTDIR/home/fwlive/Desktop/
