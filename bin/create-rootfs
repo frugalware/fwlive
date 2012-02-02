@@ -158,13 +158,14 @@ fi
 ## For fwife
 if [ $APPSGROUP != "MIN" ]; then
    mkdir -p $CHROOTDIR/home/fwlive/Desktop/
-if [ $APPSGROUP == "KDE" ]; then
-   cp $CHROOTDIR/usr/share/applications/fwife-kde.desktop $CHROOTDIR/home/fwlive/Desktop/
-else
-   cp $CHROOTDIR/usr/share/applications/fwife.desktop $CHROOTDIR/home/fwlive/Desktop/
-fi
    chroot $CHROOTDIR chown fwlive:users -R home/fwlive/Desktop
-   chroot $CHROOTDIR chmod 755 /home/fwlive/Desktop/fwife.desktop
+   if [ $APPSGROUP == "KDE" ]; then
+     cp $CHROOTDIR/usr/share/applications/fwife-kde.desktop $CHROOTDIR/home/fwlive/Desktop/
+     chroot $CHROOTDIR chmod 755 /home/fwlive/Desktop/fwife-kde.desktop
+   else
+     cp $CHROOTDIR/usr/share/applications/fwife.desktop $CHROOTDIR/home/fwlive/Desktop/
+     chroot $CHROOTDIR chmod 755 /home/fwlive/Desktop/fwife.desktop
+   fi
 fi
 
 ## Remove Locales
