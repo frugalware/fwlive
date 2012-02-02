@@ -73,20 +73,20 @@ INST_CODECS="$INST_CODECS gst-plugins-ugly-dvdread gst-plugins-ugly-lame gst-ffm
 INST_ARCHIVE_APPS="zip unzip 7zip unrar lxsplit unarj"
 
 # Gnome
-INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS gnome gimp shotwell xchat transmission"
+INST_GNOME_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS gnome gimp shotwell xchat transmission flashplugin"
 
 # Kde
 INST_KDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS kde-minimal libreoffice-kde krita konversation"
-INST_KDE_APPS="$INST_KDE_APPS kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd-kde yakuake"
+INST_KDE_APPS="$INST_KDE_APPS kmail amarok ktorrent k3b kdebase-workspace-solid-wicd wicd-kde yakuake flashplugin-kde"
 
 # Xfce
 INST_XFCE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS xfce4 midori xfburn xarchiver geeqie xchat"
 INST_XFCE_APPS="$INST_XFCE_APPS thunderbird exaile parole transmission abiword gnumeric gimp epdfview pidgin wicd xfce4-power-manager"
-INST_XFCE_APPS="gksu-frugalware"
+INST_XFCE_APPS="gksu-frugalware flashplugin"
 
 # Lxde
 INST_LXDE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS lxde-desktop firefox thunderbird leafpad abiword"
-INST_LXDE_APPS="$INST_LXDE_APPS gnumeric gimp xchat transmission epdfview vlc pidgin wicd gksu-frugalware"
+INST_LXDE_APPS="$INST_LXDE_APPS gnumeric gimp xchat transmission epdfview vlc pidgin wicd gksu-frugalware flashplugin"
 
 # Games
 INST_GAMES_APPS="$INST_XFCE_APPS wicd pidgin pidgin-gfire xchat flightgear armagetronad angband assaultcube"
