@@ -81,7 +81,7 @@ INST_KDE_APPS="$INST_KDE_APPS kmail amarok ktorrent k3b kdebase-workspace-solid-
 
 # Xfce
 INST_XFCE_APPS="$INST_MIN_APPS $INST_X11_APPS $INST_ARCHIVE_APPS $INST_CODECS xfce4 midori xfburn xarchiver geeqie xchat"
-INST_XFCE_APPS="$INST_XFCE_APPS thunderbird exaile parole transmission abiword gnumeric gimp epdfview pidgin wicd xfce4-power-manager"
+INST_XFCE_APPS="$INST_XFCE_APPS thunderbird quodlibet parole transmission abiword gnumeric gimp epdfview pidgin wicd xfce4-power-manager"
 INST_XFCE_APPS="$INST_XFCE_APPS gksu-frugalware flashplugin"
 
 # Lxde
