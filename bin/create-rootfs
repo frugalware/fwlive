@@ -96,7 +96,7 @@ fi
 if [ $TREE == "current" ]; then
 	echo "[frugalware-current]" > pacman-g2.conf
 fi
-if [ $TREE == "stable" ]; then
+if [ $TREE == "stable" ] || echo $TREE |egrep -q '[0-9]+\.[0-9]+'; then
 	echo "[frugalware]" > pacman-g2.conf
 fi
 echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
