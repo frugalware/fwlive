@@ -100,7 +100,7 @@ if [ $TREE == "stable" ] || echo $TREE |egrep -q '[0-9]+\.[0-9]+'; then
 	echo "[frugalware]" > pacman-g2.conf
 fi
 echo "Server = $MIRROR/frugalware-$TREE/frugalware-$ARCH" >> pacman-g2.conf
-## For Tree Gnometesting
+## TODO:For Tree Gnometesting
 if [ $TREE == "gnometesting" ]; then
 	echo "[gnometesting]" > pacman-g2.conf
 	echo "Server = http://ftp.frugalware.org/pub/other/people/bouleetbil/$TREE/frugalware-$ARCH" >> pacman-g2.conf
@@ -109,10 +109,36 @@ if [ $TREE == "gnometesting" ]; then
 fi
 eval PACKAGES=\$INST_${APPSGROUP}_APPS
 pacman-g2 -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
+
+## Install somes locale packages
+if [ "`echo $FWLIVELANG |sed 's/_.*//'`" == fr ]; then
+	pacman -Syf man-pages-extras-fr man-pages-fr -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
+fi
+if [ $APPSGROUP == "GNOME" ]; then
+	if [ -z $LOCALE ]; then
+		localelang=`echo $FWLIVELANG |sed 's/\_.*//'`
+		pkglocale=aspell-$localelang
+	else 
+		for i in $(echo $LOCALE | sed -r "s/\,/ /g"); do
+			#TODO : check for another language
+			if [ $i == "de" ] || [ $i == "hu" ] || [ $i == "it" ]; then
+				pkglocale="aspell6-$i "$pkglocale
+			else
+				pkglocale="aspell-$i "$pkglocale
+			fi
+		done
+	fi
+	read -p "TOTO"
+	pacman -Syf $pkglocale -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
+fi 
 ## Solve problem with kernel
 pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 
-# Post-install tweaks
+## Post-install tweaks
+#Add utf-8 in /etc/profile.d/less.sh
+if [ "`echo $FWLIVELANG|sed 's/.*\.\(.*\).*/\1/'`" == utf8 ]; then
+	sed -i -e 's/iso8859/utf-8/g' $CHROOTDIR/etc/profile.d/less.sh
+fi
 chroot $CHROOTDIR sh /etc/pacman-g2/hooks/update-frugalware-version post_sysupgrade # update /etc/frugalware-release
 chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
 if [ -n "$USERNAME" -a -n "$USERPASS" ]; then
