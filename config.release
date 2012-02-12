@@ -3,3 +3,6 @@ source ./config.dev
 FWLIVELANG="en_US"
 
 COMPRESS="xz"
+
+TREE="stable"
+CHROOTDIR="$PWD/$TREE/rootfs"
