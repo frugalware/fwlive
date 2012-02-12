@@ -112,7 +112,7 @@ pacman-g2 -Sy $PACKAGES -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXT
 
 ## Install somes locale packages
 if [ "`echo $FWLIVELANG |sed 's/_.*//'`" == fr ]; then
-	pacman -Syf man-pages-extras-fr man-pages-fr -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
+	pacman -Sy man-pages-extras-fr man-pages-fr -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 fi
 if [ $APPSGROUP == "GNOME" ]; then
 	if [ -z $LOCALE ]; then
@@ -128,8 +128,7 @@ if [ $APPSGROUP == "GNOME" ]; then
 			fi
 		done
 	fi
-	read -p "TOTO"
-	pacman -Syf $pkglocale -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
+	pacman -Sy $pkglocale -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 fi 
 ## Solve problem with kernel
 pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
