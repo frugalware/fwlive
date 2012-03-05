@@ -60,6 +60,7 @@ ARCHBUILD="$(uname -m)"
 
 # Additional packages to be installed by the profiles
 INST_MIN_APPS="base memtest86+ openssh ntfs-3g testdisk net-tools partimage zd1211-firmware bluez-firmware b43-fwcutter curl"
+INST_MIN_APPS="$INST_MIN_APPS man-pages man-pages-fr"
 
 # Xorg 
 INST_X11_APPS="fwife xmessage xsetroot xinit xorg-server xorg-drivers frugalware-menus xdg-user-dirs corefonts font-bh-ttf"
