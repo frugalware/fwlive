@@ -223,8 +223,8 @@ find $CHROOTDIR/ -path $CHROOTDIR/usr/include/python2.7 -prune -o -name "*.[ha]"
 
 ## Remove /boot contents, but backup kernel and initrd
 echo "Removing boot files which are not needed in Live mode..."
-cp -vf $CHROOTDIR/boot/vmlinuz $TREE/vmlinuz
-cp -vf $CHROOTDIR/boot/initrd.img.xz $TREE/initrd.img.xz
+cp -vf $CHROOTDIR/boot/vmlinuz $TREE/
+cp -vf $CHROOTDIR/boot/initrd $TREE/
 rm -rf $CHROOTDIR/boot/*
 
 # Save version

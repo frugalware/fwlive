@@ -12,8 +12,8 @@ wget $MIRROR/frugalware-current/boot/syslinux/isolinux.bin
 wget $MIRROR/frugalware-current/boot/syslinux/splash.png
 wget $MIRROR/frugalware-current/boot/syslinux/vesamenu.c32
 cd -
-cp -vf $TREE/vmlinuz $TREE/iso/boot/vmlinuz
-cp -vf $TREE/initrd.img.xz $TREE/iso/boot/initrd
+cp -vf $TREE/vmlinuz $TREE/iso/boot/
+cp -vf $TREE/initrd $TREE/iso/boot/
 ## lowercase APPSGROUP ( ex: GNOME to Gnome )
 GROUP=`echo $(echo $APPSGROUP | cut -c1)$(echo $APPSGROUP | cut -c2- | tr [A-Z] [a-z])`
 ## Real lowercase
