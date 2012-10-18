@@ -303,10 +303,13 @@ extern struct device *device_open(const char *path)
     goto bail;
   }
 
-  if(S_ISBLK(st.st_mode) && (ioctl(fd,BLKGETSIZE64,&size) == -1 || ioctl(fd,BLKSSZGET,&sectorsize) == -1))
+  if(S_ISBLK(st.st_mode))
   {
-    error(strerror(errno));
-    goto bail;
+    if(ioctl(fd,BLKGETSIZE64,&size) == -1 || ioctl(fd,BLKSSZGET,&sectorsize) == -1)
+    {
+      error(strerror(errno));
+      goto bail;
+    }
   }
   else if(S_ISREG(st.st_mode))
   {
