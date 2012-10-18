@@ -227,6 +227,9 @@ cp -vf $CHROOTDIR/boot/vmlinuz $TREE/
 cp -vf $CHROOTDIR/boot/initrd $TREE/
 rm -rf $CHROOTDIR/boot/*
 
+# Install fwsetup
+cp src/fwsetup $CHROOTDIR/sbin/fwsetup
+
 # Save version
 sed "s/.* \(.*\) (.*/\1/" $CHROOTDIR/etc/frugalware-release > $TREE/rootfs.version
 
