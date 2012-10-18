@@ -16,8 +16,8 @@
 #include <limits.h>
 #include "text.h"
 
-#define LOGFILE "fwsetup.log"
-#define INSTALL_ROOT "/home/vniklos/fwsetup-ng/root"
+#define LOGFILE "/var/log/fwsetup.log"
+#define INSTALL_ROOT "/mnt/install"
 #define KIBIBYTE (1LL << 10LL)
 #define MEBIBYTE (1LL << 20LL)
 #define GIBIBYTE (1LL << 30LL)

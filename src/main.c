@@ -6,7 +6,7 @@ extern int main(int argc,char **argv)
 {
   int code = 0;
 
-  logfile = fopen("fwsetup.log","w");
+  logfile = fopen(LOGFILE,"w");
 
   if(logfile == 0)
   {
