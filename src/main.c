@@ -6,13 +6,20 @@ extern int main(int argc,char **argv)
 {
   int code = 0;
 
+  if(geteuid() != 0)
+  {
+    printf("You must run this as root.\n");
+
+    return EXIT_FAILURE;
+  }
+
   logfile = fopen(LOGFILE,"w");
 
   if(logfile == 0)
   {
     perror("main");
 
-    return 1;
+    return EXIT_FAILURE;
   }
 
   setbuf(logfile,0);
