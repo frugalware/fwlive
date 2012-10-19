@@ -11,6 +11,7 @@ ifeq ($(CONFIG),)
 else
 	ln -sf config.$(CONFIG) config
 endif
+	scons -C src
 	bin/create-rootfs
 	touch $@
 
