@@ -141,6 +141,9 @@ static bool format_run(void)
   if(!format_setup())
     return false;
 
+  if(!ui_window_format(targets))
+    return false;
+
   return true;
 }
 
