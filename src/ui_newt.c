@@ -488,7 +488,7 @@ extern bool ui_window_format(struct format **targets)
   for( p = targets ; *p != 0 ; ++p )
   {
     struct format *target = *p;
-    char text[NEWT_WIDTH] = {0};
+    char text[NEWT_WIDTH + 1] = {0};
     
     snprintf(text,NEWT_WIDTH,"%11s %s %s",target->devicepath,target->size,target->filesystem);
     
@@ -515,11 +515,42 @@ extern bool ui_window_format(struct format **targets)
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
     {
-      continue;
+      bool swap = false;
+      bool root = false;
+
+      for( p = targets ; *p != 0 ; ++p )
+      {
+        struct format *target = *p;
+        
+        if(strcmp(target->newfilesystem,"swap") == 0)
+        {
+          swap = true;
+          continue;
+        }
+        
+        if(strcmp(target->mountpath,"/") == 0)
+        {
+          root = true;
+          continue;
+        }
+      }
+      
+      if(!swap && !ui_dialog_yesno(NO_SWAP_TITLE,NO_SWAP_TEXT,true))
+        continue;
+      
+      if(!root)
+      {
+        ui_dialog_text(NO_ROOT_TITLE,NO_ROOT_TEXT);
+        continue;
+      }
+       
+      break;
     }
-    
-    break;
   }
+  
+  newtFormDestroy(form);
+  
+  newtPopWindow();
   
   return true;
 }
