@@ -258,7 +258,7 @@ extern struct device **device_probe_all(bool disk)
     flags |= GLOB_APPEND;
   }
   
-  devices = malloc(ge.gl_pathc * sizeof(struct device *));
+  devices = malloc0(ge.gl_pathc * sizeof(struct device *));
   
   for( ; i < ge.gl_pathc ; ++i )
   {

@@ -129,9 +129,11 @@ static bool format_setup(void)
     device_close(device);
   }
 
+  add_target(0,&n,&size);
+
   free(devices);
 
-  targets = realloc(targets,(n + 1) * sizeof(struct format *));
+  targets = realloc(targets,n * sizeof(struct format *));
 
   return true;
 }
