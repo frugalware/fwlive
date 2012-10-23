@@ -119,6 +119,7 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   }
   
   if(target->newfilesystem != 0)
+  {
     for( p = filesystems ; *p != 0 ; ++p )
     {
       if(strcmp(*p,target->newfilesystem) == 0)
@@ -127,8 +128,11 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
         break;
       }
     }
+  }
   else
+  {
     newtListboxSetCurrentByKey(listbox,(void *) filesystems[0]);
+  }
   
   ok = newtButton(NEWT_WIDTH-ok_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
   
@@ -503,6 +507,10 @@ extern bool ui_window_format(struct format **targets)
     
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == listbox)
     {
+      struct format *target = newtListboxGetCurrent(listbox);
+      
+      ui_dialog_format(targets,target);
+      
       continue;
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
