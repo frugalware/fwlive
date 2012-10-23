@@ -4,6 +4,179 @@
 #define NEWT_WIDTH 70
 #define NEWT_HEIGHT 21
 
+static inline bool find_path(struct format **targets,struct format *target,const char *path)
+{
+  struct format **p = targets;
+  
+  for( ; *p != 0 ; ++p )
+  {
+    struct format *t = *p;
+    
+    if(t == target)
+      continue;
+	
+    if(strcmp(t->mountpath,path) == 0)
+      return true;
+  }
+  
+  return false;
+}
+
+static bool ui_dialog_format(struct format **targets,struct format *target)
+{
+  int textbox_width = 0;
+  int textbox_height = 0;
+  int entry1_width = 0;
+  int entry1_height = 0;
+  int label1_width = 0;
+  int label1_height = 0;
+  int entry2_width = 0;
+  int entry2_height = 0;
+  int label2_width = 0;
+  int label2_height = 0;
+  int listbox_width = 0;
+  int listbox_height = 0;
+  int ok_width = 0;
+  int ok_height = 0;
+  int entry_left = 0;
+  newtComponent textbox = 0;
+  newtComponent label1 = 0;
+  newtComponent label2 = 0;
+  newtComponent entry1 = 0;
+  newtComponent entry2 = 0;
+  newtComponent listbox = 0;
+  newtComponent ok = 0;
+  const char *path = 0;
+  const char *parameters = 0;
+  static const char *filesystems[] =
+  {
+    "noformat",
+    "ext2",
+    "ext3",
+    "ext4",
+    "reiserfs",
+    "jfs",
+    "xfs",
+    "btrfs",
+    "swap",
+    0
+  };
+  const char **p = 0;
+  newtComponent form = 0;
+  struct newtExitStruct es = {0};
+  
+  if(!get_text_screen_size(FORMAT_DIALOG_TEXT,&textbox_width,&textbox_height))
+    return false;
+  
+  if(!get_label_screen_size(FORMAT_MOUNT_ENTRY_TEXT,&label1_width,&label1_height))
+    return false;
+  
+  if(!get_label_screen_size(FORMAT_PARAMETERS_ENTRY_TEXT,&label2_width,&label2_height))
+    return false;
+  
+  if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
+    return false;
+  
+  entry_left = max(label1_width,label2_width) + 1;
+  
+  entry1_width = NEWT_WIDTH - entry_left;
+  
+  entry1_height = 1;
+  
+  entry2_width = NEWT_WIDTH - entry_left;
+  
+  entry2_height = 1;
+  
+  listbox_width = NEWT_WIDTH;
+
+  listbox_height = NEWT_HEIGHT - textbox_height - entry1_height - entry2_height - ok_height - 8;
+
+  if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,FORMAT_TITLE) != 0)
+  {
+    eprintf("Failed to open a NEWT window.\n");
+    return false;
+  }
+  
+  textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
+  
+  newtTextboxSetText(textbox,FORMAT_DIALOG_TEXT);
+  
+  label1 = newtLabel(0,textbox_height+1,FORMAT_MOUNT_ENTRY_TEXT);
+  
+  entry1 = newtEntry(entry_left,textbox_height+1,(target->mountpath != 0) ? target->mountpath : "/",entry1_width,&path,0);
+  
+  label2 = newtLabel(0,textbox_height+label1_height+2,FORMAT_PARAMETERS_ENTRY_TEXT);
+  
+  entry2 = newtEntry(entry_left,textbox_height+label1_height+2,(target->options != 0) ? target->options : "",entry2_width,&parameters,0);
+  
+  listbox = newtListbox(0,textbox_height+label1_height+label2_height+3,listbox_height,NEWT_FLAG_SCROLL);
+  
+  newtListboxSetWidth(listbox,listbox_width);
+
+  for( p = filesystems ; *p != 0 ; ++p )
+  {
+    newtListboxAppendEntry(listbox,*p,*p);
+  }
+  
+  if(target->newfilesystem != 0)
+    for( p = filesystems ; *p != 0 ; ++p )
+    {
+      if(strcmp(*p,target->newfilesystem) == 0)
+      {
+        newtListboxSetCurrentByKey(listbox,(void *) *p);
+        break;
+      }
+    }
+  else
+    newtListboxSetCurrentByKey(listbox,(void *) filesystems[0]);
+  
+  ok = newtButton(NEWT_WIDTH-ok_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
+  
+  form = newtForm(0,0,NEWT_FLAG_NOF12);
+  
+  newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,listbox,ok,(void *) 0);
+
+  newtFormSetCurrent(form,entry1);
+  
+  while(true)
+  {
+    newtFormRun(form,&es);
+    
+    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
+    {
+      const char *filesystem = newtListboxGetCurrent(listbox);
+    
+      if(strcmp(filesystem,"swap") != 0 && (*path != '/' || find_path(targets,target,path)))
+      {
+        ui_dialog_text(FORMAT_PATH_TITLE,FORMAT_PATH_TEXT);
+        continue;
+      }
+      
+      free(target->newfilesystem);
+      
+      free(target->options);
+      
+      free(target->mountpath);
+      
+      target->format = (strcmp(filesystem,"noformat") != 0);
+      
+      target->newfilesystem = strdup( (target->format) ? filesystem : target->filesystem );
+      
+      target->options = strdup(parameters);
+            
+      target->mountpath = strdup(path);
+      
+      break;
+    }
+  }
+  
+  newtFormDestroy(form);
+  
+  newtPopWindow();
+  
+  return true;
+}
+
 extern int ui_main(int argc,char **argv)
 {
   int w = 0;
