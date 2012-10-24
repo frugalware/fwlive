@@ -178,6 +178,35 @@ static void format_filter_devices(void)
   targets = realloc(targets,j * sizeof(struct format *));
 }
 
+static bool format_sort_devices(void)
+{
+  struct format **p = targets;
+  struct format *t = 0;
+  
+  for( ; *p != 0 ; ++p )
+  {
+    struct format *target = *p;
+    
+    if(strcmp(target->newfilesystem,"swap") != 0 && strcmp(target->mountpath,"/") == 0)
+      break;
+  }
+  
+  if(*p == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+  
+  t = targets[0];
+  
+  targets[0] = *p;
+  
+  *p = t;
+  
+  return true;
+}
+
 static bool format_run(void)
 {
   if(!format_setup())
@@ -187,6 +216,9 @@ static bool format_run(void)
     return false;
 
   format_filter_devices();
+
+  if(!format_sort_devices())
+    return false;
 
   return true;
 }
