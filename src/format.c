@@ -207,6 +207,101 @@ static bool format_sort_devices(void)
   return true;
 }
 
+static bool format_process_devices(void)
+{
+  int i = 0;
+  int j = 0;
+  int padding = 0;
+  char text[256] = {0};
+  int percent = 0;
+  const char *program = 0;
+  char command[_POSIX_ARG_MAX] = {0};
+  char path[PATH_MAX] = {0};
+  
+  for( ; targets[j] != 0 ; ++j )
+    ;
+
+  if(j < 10)
+    padding = 1;
+  else if(j < 100)
+    padding = 2;
+  else if(j < 1000)
+    padding = 3;
+  else if(j < 10000)
+    padding = 4;
+
+  for( ; i < j ; ++i )
+  {
+    struct format *target = targets[i];
+    
+    snprintf(text,256,"(%*d/%d) - %s - %s",padding,i+1,j,target->devicepath,target->newfilesystem);
+    
+    percent = (float) (i+1) / j * 100;
+    
+    ui_dialog_progress(_("Formatting"),text,percent);
+    
+    if(target->format)
+    {
+      if(strcmp(target->newfilesystem,"ext2") == 0)
+        program = "mkfs.ext2";
+      else if(strcmp(target->newfilesystem,"ext3") == 0)
+        program = "mkfs.ext3";
+      else if(strcmp(target->newfilesystem,"ext4") == 0)
+        program = "mkfs.ext4";
+      else if(strcmp(target->newfilesystem,"reiserfs") == 0)
+        program = "mkfs.reiserfs";
+      else if(strcmp(target->newfilesystem,"jfs") == 0)
+        program = "mkfs.jfs";
+      else if(strcmp(target->newfilesystem,"xfs") == 0)
+        program = "mkfs.xfs";
+      else if(strcmp(target->newfilesystem,"btrfs") == 0)
+        program = "mkfs.btrfs";
+      else if(strcmp(target->newfilesystem,"swap") == 0)
+        program = "mkswap";
+        
+      snprintf(command,_POSIX_ARG_MAX,"%s %s %s",program,target->options,target->devicepath);
+      
+      if(!execute(command,"/",0))
+      {
+        ui_dialog_progress(0,0,-1);
+        return false;
+      }
+    }
+    
+    if(strcmp(target->newfilesystem,"swap") == 0)
+    {
+      snprintf(command,_POSIX_ARG_MAX,"swapon %s",target->devicepath);
+      
+      if(!execute(command,"/",0))
+      {
+        ui_dialog_progress(0,0,-1);
+        return false;
+      }
+    }
+    else
+    {
+      snprintf(path,PATH_MAX,"%s%s",INSTALL_ROOT,target->mountpath);
+   
+      if(!mkdir_recurse(path))
+      {
+        ui_dialog_progress(0,0,-1);
+        return false;
+      }
+      
+      if(mount(target->devicepath,path,target->newfilesystem,0,0) == -1)
+      {
+        error(strerror(errno));
+        ui_dialog_progress(0,0,-1);
+        return false;
+      }
+    }
+  }
+  
+  ui_dialog_progress(0,0,-1);
+  
+  return true;
+}
+
 static bool format_run(void)
 {
   if(!format_setup())
