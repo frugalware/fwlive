@@ -3,6 +3,23 @@
 
 static struct format **targets = 0;
 
+static inline void free_target(struct format *p)
+{
+  free(p->devicepath);
+  
+  free(p->size);
+  
+  free(p->filesystem);
+  
+  free(p->newfilesystem);
+  
+  free(p->options);
+  
+  free(p->mountpath);
+
+  free(p);
+}
+
 static inline void add_target(struct format *p,int *n,int *size)
 {
   if(*n == *size)
@@ -138,6 +155,29 @@ static bool format_setup(void)
   return true;
 }
 
+static void format_filter_devices(void)
+{
+  size_t i = 0;
+  size_t j = 0;
+
+  for( ; targets[i] != 0 ; ++i )
+  {
+    struct format *p = targets[i];
+    
+    if(p->newfilesystem == 0 && p->options == 0 && p->mountpath == 0)
+    {
+      free_target(p);
+      continue;
+    }
+    
+    targets[j++] = p;
+  }
+
+  targets[j++] = 0;
+  
+  targets = realloc(targets,j * sizeof(struct format *));
+}
+
 static bool format_run(void)
 {
   if(!format_setup())
@@ -145,6 +185,8 @@ static bool format_run(void)
 
   if(!ui_window_format(targets))
     return false;
+
+  format_filter_devices();
 
   return true;
 }
