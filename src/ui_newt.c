@@ -4,7 +4,7 @@
 #define NEWT_WIDTH 70
 #define NEWT_HEIGHT 21
 
-static inline bool find_path(struct format **targets,struct format *target,const char *path)
+static inline bool findpath(struct format **targets,struct format *target,const char *path)
 {
   struct format **p = targets;
   
@@ -150,7 +150,7 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
     {
       const char *filesystem = newtListboxGetCurrent(listbox);
     
-      if(strcmp(filesystem,"swap") != 0 && (*path != '/' || find_path(targets,target,path)))
+      if(strcmp(filesystem,"swap") != 0 && (!isrootpath(path) || findpath(targets,target,path)))
       {
         ui_dialog_text(FORMAT_PATH_TITLE,FORMAT_PATH_TEXT);
         continue;
