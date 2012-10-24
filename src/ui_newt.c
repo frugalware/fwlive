@@ -521,6 +521,9 @@ extern bool ui_window_format(struct format **targets)
       for( p = targets ; *p != 0 ; ++p )
       {
         struct format *target = *p;
+
+        if(target->newfilesytem == 0 && target->options == 0 && target->mountpath == 0)
+          continue;
         
         if(strcmp(target->newfilesystem,"swap") == 0)
         {
