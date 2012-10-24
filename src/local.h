@@ -14,6 +14,8 @@
 #include <wchar.h>
 #include <errno.h>
 #include <limits.h>
+#include <glob.h>
+#include <regex.h>
 #include "text.h"
 
 #define LOGFILE "/var/log/fwsetup.log"
@@ -69,6 +71,7 @@ struct module
   const char *name;
 };
 
+extern bool isrootpath(const char *path);
 extern bool mkdir_recurse(const char *path);
 extern bool size_to_string(char *s,size_t n,long long size,bool pad);
 extern int get_text_length(const char *s);

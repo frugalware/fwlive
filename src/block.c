@@ -1,6 +1,5 @@
 #include <linux/major.h>
 #include <blkid.h>
-#include <glob.h>
 #include "local.h"
 
 #define EMPTY_PARTITION &(struct partition) {0}
