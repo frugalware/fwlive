@@ -73,10 +73,10 @@ static inline void probe_filesystem(struct format *target)
 
 bail:
 
+  target->filesystem = strdup(filesystem);
+
   if(probe != 0)
     blkid_free_probe(probe);
-
-  target->filesystem = strdup(filesystem);
 }
 
 static bool format_setup(void)
@@ -234,7 +234,7 @@ static bool format_process_devices(void)
   {
     struct format *target = targets[i];
     
-    snprintf(text,256,"(%*d/%d) - %s - %s",padding,i+1,j,target->devicepath,target->newfilesystem);
+    snprintf(text,256,"(%*d/%d) - %-8s - %-8s",padding,i+1,j,target->devicepath,target->newfilesystem);
     
     percent = (float) (i+1) / j * 100;
     
@@ -249,11 +249,11 @@ static bool format_process_devices(void)
       else if(strcmp(target->newfilesystem,"ext4") == 0)
         program = "mkfs.ext4";
       else if(strcmp(target->newfilesystem,"reiserfs") == 0)
-        program = "mkfs.reiserfs";
+        program = "mkfs.reiserfs -q";
       else if(strcmp(target->newfilesystem,"jfs") == 0)
-        program = "mkfs.jfs";
+        program = "mkfs.jfs -q";
       else if(strcmp(target->newfilesystem,"xfs") == 0)
-        program = "mkfs.xfs";
+        program = "mkfs.xfs -f";
       else if(strcmp(target->newfilesystem,"btrfs") == 0)
         program = "mkfs.btrfs";
       else if(strcmp(target->newfilesystem,"swap") == 0)
@@ -313,6 +313,9 @@ static bool format_run(void)
   format_filter_devices();
 
   if(!format_sort_devices())
+    return false;
+
+  if(!format_process_devices())
     return false;
 
   return true;

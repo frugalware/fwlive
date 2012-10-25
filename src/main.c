@@ -13,7 +13,7 @@ extern int main(int argc,char **argv)
     return EXIT_FAILURE;
   }
 
-  logfile = fopen(LOGFILE,"w");
+  logfile = fopen(LOGFILE,"a");
 
   if(logfile == 0)
   {
@@ -21,8 +21,6 @@ extern int main(int argc,char **argv)
 
     return EXIT_FAILURE;
   }
-
-  setbuf(logfile,0);
 
   code = ui_main(argc,argv);
 
