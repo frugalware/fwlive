@@ -508,7 +508,7 @@ extern bool ui_window_format(struct format **targets)
   {
     struct format *target = *p;
     
-    snprintf(text,NEWT_WIDTH+1,"%11s %11s %11s",target->devicepath,target->size,target->filesystem);
+    snprintf(text,NEWT_WIDTH+1,"%-11s %-11s %-11s",target->devicepath,target->size,target->filesystem);
     
     newtListboxAppendEntry(listbox,text,target);
   }
@@ -533,7 +533,7 @@ extern bool ui_window_format(struct format **targets)
       
       if(target->newfilesystem != 0 && target->options != 0 && target->mountpath != 0)
       {
-        snprintf(text,NEWT_WIDTH+1,"%11s %11s %11s %11s",target->devicepath,target->size,target->newfilesystem,target->mountpath);
+        snprintf(text,NEWT_WIDTH+1,"%-11s %-11s %-11s %-11s",target->devicepath,target->size,target->newfilesystem,(strcmp(target->newfilesystem,"swap") == 0) ? "active" : target->mountpath);
         
         newtListboxInsertEntry(listbox,text,target,target);
         
