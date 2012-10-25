@@ -17,6 +17,9 @@ static inline bool findpath(struct format **targets,struct format *target,const 
     
     if(t->newfilesystem == 0 && t->options == 0 && t->mountpath == 0)
       continue; 
+
+    if(strcmp(t->newfilesystem,"swap") == 0)
+      continue;
 	
     if(strcmp(t->mountpath,path) == 0)
       return true;
@@ -127,7 +130,7 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
     newtListboxAppendEntry(listbox,*p,*p);
   }
   
-  if(target->newfilesystem != 0)
+  if(target->format && target->newfilesystem != 0)
   {
     for( p = filesystems ; *p != 0 ; ++p )
     {
