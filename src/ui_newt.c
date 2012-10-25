@@ -14,6 +14,9 @@ static inline bool findpath(struct format **targets,struct format *target,const 
     
     if(t == target)
       continue;
+    
+    if(t->newfilesystem == 0 && t->options == 0 && t->mountpath == 0)
+      continue; 
 	
     if(strcmp(t->mountpath,path) == 0)
       return true;
@@ -162,7 +165,10 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
     {
       const char *filesystem = newtListboxGetCurrent(listbox);
     
-      if(strcmp(filesystem,"swap") != 0 && (!isrootpath(path) || findpath(targets,target,path)))
+      if(
+        (strcmp(filesystem,"noformat") == 0 && strcmp(target->filesystem,"unknown") == 0)        ||
+        (strcmp(filesystem,"swap") != 0 && (!isrootpath(path) || findpath(targets,target,path)))
+      )
       {
         ui_dialog_text(FORMAT_PATH_TITLE,FORMAT_PATH_TEXT);
         continue;
