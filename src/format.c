@@ -320,6 +320,19 @@ static bool format_run(void)
 
 static void format_reset(void)
 {
+  struct format **p = 0;
+
+  if(targets != 0)
+  {
+    for( p = targets ; *p != 0 ; ++p )
+    {
+      free_target(*p);
+    }
+    
+    free(targets);
+    
+    targets = 0;
+  }
 }
 
 struct module format_module =
