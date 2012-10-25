@@ -36,10 +36,10 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   int label2_height = 0;
   int listbox_width = 0;
   int listbox_height = 0;
-  int ok_width = 0;
-  int ok_height = 0;
   int cancel_width = 0;
   int cancel_height = 0;
+  int ok_width = 0;
+  int ok_height = 0;
   int entry_left = 0;
   newtComponent textbox = 0;
   newtComponent label1 = 0;
@@ -47,8 +47,8 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   newtComponent entry1 = 0;
   newtComponent entry2 = 0;
   newtComponent listbox = 0;
-  newtComponent ok = 0;
   newtComponent cancel = 0;
+  newtComponent ok = 0;
   const char *path = 0;
   const char *parameters = 0;
   static const char *filesystems[] =
@@ -77,12 +77,12 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   if(!get_label_screen_size(FORMAT_PARAMETERS_ENTRY_TEXT,&label2_width,&label2_height))
     return false;
   
-  if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
-    return false;
-  
   if(!get_button_screen_size(CANCEL_BUTTON_TEXT,&cancel_width,&cancel_height))
     return false;
   
+  if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
+    return false;
+    
   entry_left = max(label1_width,label2_width) + 1;
   
   entry1_width = NEWT_WIDTH - entry_left;
@@ -140,21 +140,25 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
     newtListboxSetCurrentByKey(listbox,(void *) filesystems[0]);
   }
   
-  ok = newtButton(NEWT_WIDTH-ok_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
+  cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
   
-  cancel = newtButton(NEWT_WIDTH-ok_width-cancel_width,NEWT_HEIGHT-ok_height,CANCEL_BUTTON_TEXT);
+  ok = newtButton(NEWT_WIDTH-cancel_width-ok_width,NEWT_HEIGHT-cancel_height,OK_BUTTON_TEXT);
   
   form = newtForm(0,0,NEWT_FLAG_NOF12);
   
-  newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,listbox,ok,cancel,(void *) 0);
+  newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,listbox,cancel,ok,(void *) 0);
 
   newtFormSetCurrent(form,entry1);
   
   while(true)
   {
     newtFormRun(form,&es);
-    
-    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
+
+    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
+    {
+      break;
+    }    
+    else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
     {
       const char *filesystem = newtListboxGetCurrent(listbox);
     
@@ -178,10 +182,6 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
             
       target->mountpath = strdup(path);
       
-      break;
-    }
-    else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
-    {
       break;
     }
   }
