@@ -22,6 +22,8 @@ extern int main(int argc,char **argv)
     return EXIT_FAILURE;
   }
 
+  setbuf(logfile,0);
+
   code = ui_main(argc,argv);
 
   fclose(logfile);
