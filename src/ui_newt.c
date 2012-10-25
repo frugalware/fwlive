@@ -461,6 +461,7 @@ extern bool ui_window_format(struct format **targets)
   newtComponent next = 0;
   newtComponent listbox = 0;
   struct format **p = 0;
+  char text[NEWT_WIDTH+1] = {0};
   newtComponent form = 0;
   struct newtExitStruct es = {0};
   
@@ -500,9 +501,8 @@ extern bool ui_window_format(struct format **targets)
   for( p = targets ; *p != 0 ; ++p )
   {
     struct format *target = *p;
-    char text[NEWT_WIDTH + 1] = {0};
     
-    snprintf(text,NEWT_WIDTH,"%11s %s %s",target->devicepath,target->size,target->filesystem);
+    snprintf(text,NEWT_WIDTH+1,"%11s %s %8s",target->devicepath,target->size,target->filesystem);
     
     newtListboxAppendEntry(listbox,text,target);
   }
@@ -522,6 +522,15 @@ extern bool ui_window_format(struct format **targets)
       struct format *target = newtListboxGetCurrent(listbox);
       
       ui_dialog_format(targets,target);
+      
+      if(target->newfilesystem != 0 && target->options != 0 && target->mountpath != 0)
+      {
+        snprintf(text,NEWT_WIDTH+1,"%11s %s %8s %5s",target->devicepath,target->size,target->newfilesystem,target->mountpath);
+        
+        newtListboxInsertEntry(listbox,text,target,target);
+        
+        newtListboxDeleteEntry(listbox,target);        
+      }
       
       continue;
     }
