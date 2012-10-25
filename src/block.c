@@ -269,9 +269,9 @@ extern struct device **device_probe_all(bool disk)
     devices[n++] = device;
   }
   
-  devices[n] = 0;
-  
   devices = realloc(devices,(n + 1) * sizeof(struct device *));
+
+  devices[n] = 0;
   
   globfree(&ge);
   
