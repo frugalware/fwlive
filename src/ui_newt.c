@@ -38,6 +38,8 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   int listbox_height = 0;
   int ok_width = 0;
   int ok_height = 0;
+  int cancel_width = 0;
+  int cancel_height = 0;
   int entry_left = 0;
   newtComponent textbox = 0;
   newtComponent label1 = 0;
@@ -46,6 +48,7 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   newtComponent entry2 = 0;
   newtComponent listbox = 0;
   newtComponent ok = 0;
+  newtComponent cancel = 0;
   const char *path = 0;
   const char *parameters = 0;
   static const char *filesystems[] =
@@ -77,6 +80,9 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
     return false;
   
+  if(!get_button_screen_size(CANCEL_BUTTON_TEXT,&cancel_width,&cancel_height))
+    return false;
+  
   entry_left = max(label1_width,label2_width) + 1;
   
   entry1_width = NEWT_WIDTH - entry_left;
@@ -89,7 +95,7 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   
   listbox_width = NEWT_WIDTH;
 
-  listbox_height = NEWT_HEIGHT - textbox_height - entry1_height - entry2_height - ok_height - 8;
+  listbox_height = NEWT_HEIGHT - textbox_height - entry1_height - entry2_height - ok_height - 4;
 
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,FORMAT_TITLE) != 0)
   {
@@ -136,9 +142,11 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   
   ok = newtButton(NEWT_WIDTH-ok_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
   
+  cancel = newtButton(NEWT_WIDTH-ok_width-cancel_width,NEWT_HEIGHT-ok_height,CANCEL_BUTTON_TEXT);
+  
   form = newtForm(0,0,NEWT_FLAG_NOF12);
   
-  newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,listbox,ok,(void *) 0);
+  newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,listbox,ok,cancel,(void *) 0);
 
   newtFormSetCurrent(form,entry1);
   
@@ -170,6 +178,10 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
             
       target->mountpath = strdup(path);
       
+      break;
+    }
+    else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
+    {
       break;
     }
   }

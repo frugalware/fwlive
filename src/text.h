@@ -3,6 +3,7 @@
 #define _(S) S
 
 #define OK_BUTTON_TEXT _("Ok")
+#define CANCEL_BUTTON_TEXT _("Cancel")
 #define YES_BUTTON_TEXT _("Yes")
 #define NO_BUTTON_TEXT _("No")
 #define PREVIOUS_BUTTON_TEXT _("Previous")
