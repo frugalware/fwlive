@@ -40,6 +40,7 @@ env.Program('fwsetup',[
   'main.c',
   'utility.c',
   'block.c',
+  'partition.c',
   'format.c',
   'install.c',
   'postconfig.c',
