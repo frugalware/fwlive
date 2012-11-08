@@ -562,6 +562,27 @@ extern struct disk *disk_open_empty(struct device *device,const char *type)
   return memdup(&disk,sizeof(struct disk));
 }
 
+extern const char *disk_get_type(struct disk *disk)
+{
+  const char *type = 0;
+
+  if(disk == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return 0;
+  }
+  
+  if(disk->type == DISK_TYPE_DOS)
+    type = "dos";
+  else if(disk->type == DISK_TYPE_GPT)
+    type = "gpt";
+  else
+    type = "unknown";
+  
+  return type;
+}
+
 extern void disk_new_table(struct disk *disk,const char *type)
 {
   struct device *device = 0;

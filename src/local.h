@@ -111,6 +111,7 @@ extern const char *device_get_type(struct device *device);
 extern void device_close(struct device *device);
 extern struct disk *disk_open(struct device *device);
 extern struct disk *disk_open_empty(struct device *device,const char *type);
+extern const char *disk_get_type(struct disk *disk);
 extern void disk_new_table(struct disk *disk,const char *type);
 extern int disk_create_partition(struct disk *disk,long long size);
 extern int disk_create_extended_partition(struct disk *disk);
