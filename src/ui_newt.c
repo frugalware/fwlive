@@ -458,6 +458,30 @@ extern bool ui_dialog_progress(const char *title,const char *text,int percent)
   return true;
 }
 
+extern bool ui_window_partition(struct device **devices,struct disk **disks)
+{
+  int textbox_width = 0;
+  int textbox_height = 0;
+  int next_width = 0;
+  int next_height = 0;
+  int listbox_width = 0;
+  int listbox_height = 0;
+  newtComponent textbox = 0;
+  newtComponent next = 0;
+  newtComponent listbox = 0;
+  newtComponent form = 0;
+  struct newtExitStruct es = {0};
+
+  if(devices == 0 || disks == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+
+  return true;
+}
+
 extern bool ui_window_format(struct format **targets)
 {
   int textbox_width = 0;
