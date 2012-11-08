@@ -479,6 +479,42 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     return false;
   }
 
+  if(!get_text_screen_size(PARTITION_TEXT,&textbox_width,&textbox_height))
+    return false;
+
+  if(!get_button_screen_size(NEXT_BUTTON_TEXT,&next_width,&next_height))
+    return false;
+
+  listbox_width = NEWT_WIDTH;
+  
+  listbox_height = NEWT_HEIGHT - textbox_height - next_height - 2;
+  
+  if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,PARTITION_TITLE) != 0)
+  {
+    eprintf("Failed to open a NEWT window.\n");
+    return false;
+  }
+
+  textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
+  
+  newtTextboxSetText(textbox,PARTITION_TEXT);
+  
+  next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
+
+  listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_RETURNEXIT|NEWT_FLAG_SCROLL);
+
+  newtListboxSetWidth(listbox,listbox_width);
+
+  form = newtForm(0,0,NEWT_FLAG_NOF12);
+  
+  newtFormAddComponents(form,textbox,next,listbox,(void *) 0);
+
+  newtFormSetCurrent(form,listbox);
+
+  newtFormDestroy(form);
+
+  newtPopWindow();
+
   return true;
 }
 
