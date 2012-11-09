@@ -4,6 +4,19 @@
 #define NEWT_WIDTH 70
 #define NEWT_HEIGHT 21
 
+union partition_action
+{
+  struct
+  {
+    unsigned char device_number;
+    unsigned char partition_number;
+    bool disk : 1;
+    bool partition : 1;
+    bool space : 1;
+  };
+  uintptr_t data;
+};
+
 static inline bool findpath(struct format **targets,struct format *target,const char *path)
 {
   struct format **p = targets;
@@ -471,8 +484,13 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
   newtComponent listbox = 0;
   newtComponent form = 0;
   struct newtExitStruct es = {0};
+  int i = 0;
+  int j = 0;
+  int k = 0;
+  char size[10] = {0};
+  char text[NEWT_WIDTH + 1] = {0};
 
-  if(devices == 0 || disks == 0)
+  if(devices == 0 || disks == 0 || sizeof(union partition_action) != sizeof(uintptr_t))
   {
     errno = EINVAL;
     error(strerror(errno));
@@ -504,6 +522,61 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
   listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_RETURNEXIT|NEWT_FLAG_SCROLL);
 
   newtListboxSetWidth(listbox,listbox_width);
+
+  for( ; devices[i] != 0 ; ++i )
+  {
+    struct device *device = devices[i];
+    struct disk *disk = disks[i];
+    union partition_action action = {{0}};
+    long long freesize = 0;
+    
+    size_to_string(size,10,device_get_size(device),false);
+    
+    snprintf(text,NEWT_WIDTH+1,"%s %s %s label",device_get_path(device),size,(disk == 0) ? "unknown" : disk_get_type(disk));
+    
+    action.device_number = i;
+    
+    action.disk = true;
+    
+    newtListboxAppendEntry(listbox,text,(void *) action.data);
+    
+    if(disk != 0)
+    {
+      action.disk = false;
+    
+      action.partition = true;
+    
+      for( j = 0, k = disk_partition_get_count(disk) ; j < k ; ++j )
+      {
+        action.partition_number = j;
+      
+        size_to_string(size,10,disk_partition_get_size(disk,j),false);
+      
+        snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,j),size,(disk_partition_get_active(disk,j)) ? "active" : "inactive",disk_partition_get_purpose(disk,j));
+        
+        newtListboxAppendEntry(listbox,text,(void *) action.data);
+      }
+      
+      action.partition = false;
+      
+      action.partition_number = 0;
+
+      if((freesize = disk_get_free_size(disk)) > 0)
+      {
+        action.space = true;
+      
+        size_to_string(size,10,freesize,false);
+        
+        snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+        
+        newtListboxAppendEntry(listbox,text,(void *) action.data);
+      }
+    }
+    
+    newtListboxAppendEntry(listbox,"",0);
+  }
+
+  newtListboxSetCurrent(listbox,0);
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
   
