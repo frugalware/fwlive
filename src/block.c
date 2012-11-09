@@ -583,6 +583,27 @@ extern const char *disk_get_type(struct disk *disk)
   return type;
 }
 
+extern long long disk_get_free_size(struct disk *disk)
+{
+  long long size = 0;
+  
+  if(disk == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return 0;
+  }
+
+  size = disk->sectors;
+  
+  if(disk->size > 0)
+    size -= disk->table[disk->size].end;
+  
+  size *= disk->device->sectorsize;
+  
+  return size;
+}
+
 extern void disk_new_table(struct disk *disk,const char *type)
 {
   struct device *device = 0;
