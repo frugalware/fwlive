@@ -584,6 +584,30 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
   newtFormSetCurrent(form,listbox);
 
+  while(true)
+  { 
+    newtFormRun(form,&es);
+    
+    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == listbox)
+    {
+      union partition_action action = { .data = (uintptr_t) newtListboxGetCurrent(listbox) };
+      
+      if(action.disk)
+      {
+      }
+      else if(action.partition)
+      {
+      }
+      else if(action.space)
+      {
+      }
+    }
+    else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
+    {
+      break;
+    }
+  }
+
   newtFormDestroy(form);
 
   newtPopWindow();
