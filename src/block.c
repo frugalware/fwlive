@@ -573,9 +573,9 @@ extern const char *disk_get_type(struct disk *disk)
     return 0;
   }
   
-  if(disk->type == DISK_TYPE_DOS)
+  if(disk->type == DISKTYPE_DOS)
     type = "dos";
-  else if(disk->type == DISK_TYPE_GPT)
+  else if(disk->type == DISKTYPE_GPT)
     type = "gpt";
   else
     type = "unknown";
