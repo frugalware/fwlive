@@ -215,6 +215,104 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   return true;
 }
 
+static bool ui_dialog_partition_new_table(struct device *device,struct disk **data)
+{
+  int textbox_width = 0;
+  int textbox_height = 0;
+  int ok_width = 0;
+  int ok_height = 0;
+  int cancel_width = 0;
+  int cancel_height = 0;
+  int listbox_width = 0;
+  int listbox_height = 0;
+  newtComponent textbox = 0;
+  newtComponent ok = 0;
+  newtComponent cancel = 0;
+  newtComponent listbox = 0;
+  newtComponent form = 0;
+  struct newtExitStruct es = {0};
+  bool modified = false;
+
+  if(!get_text_screen_size(PARTITION_DIALOG_NEW_TABLE_TEXT,&textbox_width,&textbox_height))
+    return false;
+
+  if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
+    return false;
+
+  if(!get_button_screen_size(CANCEL_BUTTON_TEXT,&cancel_width,&cancel_height))
+    return false;
+
+  listbox_width = NEWT_WIDTH;
+  
+  listbox_height = NEWT_HEIGHT - textbox_height - ok_height - 2;
+
+  if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,PARTITION_DIALOG_NEW_TABLE_TITLE) != 0)
+  {
+    eprintf("Failed to open a NEWT window.\n");
+    return false;
+  }
+
+  textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
+
+  newtTextboxSetText(textbox,PARTITION_DIALOG_NEW_TABLE_TEXT);
+
+  ok = newtButton(NEWT_WIDTH-ok_width-cancel_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
+  
+  cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
+
+  listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_SCROLL);
+  
+  newtListboxSetWidth(listbox,listbox_width);
+
+  newtListboxAppendEntry(listbox,"dos","dos");
+  
+  newtListboxAppendEntry(listbox,"gpt","gpt");
+
+  newtListboxSetCurrent(listbox,0);
+
+  form = newtForm(0,0,NEWT_FLAG_NOF12);
+  
+  newtFormAddComponents(form,textbox,ok,cancel,listbox,(void *) 0);
+
+  newtFormSetCurrent(form,listbox);
+
+  while(true)
+  {
+    newtFormRun(form,&es);
+    
+    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
+    {
+      break;
+    }
+    else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
+    {
+      const char *type = newtListboxGetCurrent(listbox);
+      struct disk *disk = *data;
+      
+      if(disk == 0)
+      {
+        disk = disk_open_empty(device,type);
+      }
+      else
+      {
+        disk_new_table(disk,type);
+      }
+      
+      *data = disk;
+      
+      modified = true;
+      
+      break;
+    }
+  }
+
+  newtFormDestroy(form);
+
+  newtPopWindow();
+
+  return modified;
+}
+
 extern int ui_main(int argc,char **argv)
 {
   int w = 0;
