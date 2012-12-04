@@ -13,6 +13,13 @@ extern int main(int argc,char **argv)
     return EXIT_FAILURE;
   }
 
+  if(setlocale(LC_ALL,"") == 0)
+  {
+    perror("main");
+    
+    return EXIT_FAILURE;
+  }
+
   logfile = fopen(LOGFILE,"a");
 
   if(logfile == 0)

@@ -17,6 +17,7 @@
 #include <limits.h>
 #include <glob.h>
 #include <regex.h>
+#include <locale.h>
 #include "text.h"
 
 #define LOGFILE "/var/log/fwsetup.log"
