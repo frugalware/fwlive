@@ -460,6 +460,53 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   return modified;
 }
 
+static bool ui_dialog_partition_new_partition(struct disk *disk)
+{
+  int textbox_width = 0;
+  int textbox_height = 0;
+  int ok_width = 0;
+  int ok_height = 0;
+  int cancel_width = 0;
+  int cancel_height = 0;
+  int label_width = 0;
+  int label_height = 0;
+  int entry_width = 0;
+  int entry_height = 0;
+  int listbox_width = 0;
+  int listbox_height = 0;
+  newtComponent textbox = 0;
+  newtComponent ok = 0;
+  newtComponent cancel = 0;
+  newtComponent label = 0;
+  newtComponent entry = 0;
+  newtComponent listbox = 0;
+  newtComponent form = 0;
+  struct newtExitStruct es = {0};
+  bool modified = false;
+
+  if(!get_text_screen_size(PARTITION_DIALOG_NEW_PARTITION_TEXT,&textbox_width,&textbox_height))
+    return false;
+  
+  if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
+    return false;
+    
+  if(!get_button_screen_size(CANCEL_BUTTON_TEXT,&cancel_width,&cancel_height))
+    return false;
+  
+  if(!get_label_screen_size(PARTITION_DIALOG_NEW_SIZE_TEXT,&label_width,&label_height))
+    return false;
+
+  entry_width = NEWT_WIDTH - label_width - 1;
+
+  entry_height = 1;
+
+  listbox_width = NEWT_WIDTH;
+  
+  listbox_height = NEWT_HEIGHT - textbox_height - ok_height - label_height - 3;
+  
+  return modified;
+}
+
 extern int ui_main(int argc,char **argv)
 {
   int w = 0;
