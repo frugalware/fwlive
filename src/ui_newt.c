@@ -418,7 +418,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
   
-  newtFormAddComponents(form,textbox,ok,cancel,listbox,(void *) 0);
+  newtFormAddComponents(form,textbox,ok,cancel,checkbox,label,entry,listbox,(void *) 0);
 
   newtFormSetCurrent(form,listbox);
 
