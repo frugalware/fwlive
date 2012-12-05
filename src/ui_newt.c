@@ -397,8 +397,10 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   checkbox = newtCheckbox(0,textbox_height+label_height+2,PARTITION_DIALOG_MODIFY_PARTITION_ACTIVE_TEXT,active,0,&active);
 
   label = newtLabel(0,textbox_height+1,PARTITION_DIALOG_MODIFY_PARTITION_NAME_TEXT);
+
+  name = (strcmp(disk_get_type(disk),"gpt") == 0) ? disk_partition_get_name(disk,n) : "";
   
-  entry = newtEntry(label_width+1,textbox_height+1,"",entry_width,&name,0);
+  entry = newtEntry(label_width+1,textbox_height+1,name,entry_width,&name,0);
 
   listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_SCROLL);
   
