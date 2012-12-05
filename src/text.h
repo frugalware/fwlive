@@ -23,6 +23,8 @@
 #define PARTITION_DIALOG_MODIFY_PARTITION_TEXT _("Select a partition name, active status, and usage purpose.\nPartition name is only used if the disk partition table is GPT.\n")
 #define PARTITION_DIALOG_MODIFY_PARTITION_NAME_TEXT _("Partition Name")
 #define PARTITION_DIALOG_MODIFY_PARTITION_ACTIVE_TEXT _("Active")
+#define PARTITION_DIALOG_MODIFY_PARTITION_ERROR_TITLE _("Invalid Partition Parameters")
+#define PARTITION_DIALOG_MODIFY_PARTITION_ERROR_TEXT _("You have specified invalid parameters.\nPlease check that they meet the following requirements:\n\nPartition name must contain only ASCII characters.\nPartition name must be less than 37 characters.\nPartition's purpose can only be 'bios' on GPT label.\n")
 #define FORMAT_TITLE _("Device Setup")
 #define FORMAT_TEXT _("Select a device to setup from the list below.\n")
 #define FORMAT_DIALOG_TITLE _("Filesystem Setup")
