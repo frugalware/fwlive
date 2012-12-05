@@ -483,6 +483,8 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   newtComponent form = 0;
   struct newtExitStruct es = {0};
   bool modified = false;
+  char text[NEWT_WIDTH+1];
+  const char *size = 0;
 
   if(!get_text_screen_size(PARTITION_DIALOG_NEW_PARTITION_TEXT,&textbox_width,&textbox_height))
     return false;
@@ -503,6 +505,40 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   listbox_width = NEWT_WIDTH;
   
   listbox_height = NEWT_HEIGHT - textbox_height - ok_height - label_height - 3;
+
+  if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,PARTITION_DIALOG_NEW_PARTITION_TITLE) != 0)
+  {
+    eprintf("Failed to open a NEWT window.\n");
+    return false;
+  }
+
+  textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
+
+  newtTextboxSetText(textbox,PARTITION_DIALOG_NEW_PARTITION_TEXT);
+
+  ok = newtButton(NEWT_WIDTH-ok_width-cancel_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
+  
+  cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
+
+  label = newtLabel(0,textbox_height+1,PARTITION_DIALOG_NEW_SIZE_TEXT);
+
+  size_to_string(text,NEWT_WIDTH+1,disk_get_free_size(disk),false);
+
+  entry = newtEntry(label_width+1,textbox_height+1,text,entry_width,&size,0);
+
+  listbox = newtListbox(0,textbox_height+label_height+2,listbox_height,NEWT_FLAG_SCROLL);
+  
+  newtListboxSetWidth(listbox,listbox_width);
+
+  form = newtForm(0,0,NEWT_FLAG_NOF12);
+  
+  newtFormAddComponents(form,textbox,ok,cancel,label,entry,listbox,(void *) 0);
+
+  newtFormSetCurrent(form,entry);
+
+  newtFormDestroy(form);
+
+  newtPopWindow();
   
   return modified;
 }
