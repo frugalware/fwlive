@@ -74,6 +74,7 @@ struct module
 };
 
 extern bool isrootpath(const char *path);
+extern bool isasciistring(const char *s);
 extern bool mkdir_recurse(const char *path);
 extern bool size_to_string(char *s,size_t n,long long size,bool pad);
 extern int get_text_length(const char *s);

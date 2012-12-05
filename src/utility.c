@@ -25,6 +25,32 @@ extern bool isrootpath(const char *path)
   return match;
 }
 
+extern bool isasciistring(const char *s)
+{
+  const unsigned char *p = (unsigned char *) s;
+  bool ascii = true;
+
+  if(s == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+  
+  while(*p != 0)
+  {
+    if(*p > 0x7F)
+    {
+      ascii = false;
+      break;
+    }
+    
+    ++p;
+  }
+  
+  return ascii;
+}
+
 extern bool mkdir_recurse(const char *path)
 {
   char buf[PATH_MAX] = {0};
