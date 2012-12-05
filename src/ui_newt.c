@@ -420,7 +420,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   
   newtFormAddComponents(form,textbox,ok,cancel,checkbox,label,entry,listbox,(void *) 0);
 
-  newtFormSetCurrent(form,listbox);
+  newtFormSetCurrent(form,entry);
 
   while(true)
   {
@@ -431,7 +431,24 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
       break;
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
-    {        
+    {
+      purpose = newtListboxGetCurrent(listbox);
+    
+      if(!isasciistring(name) || strlen(name) > 36 || (strcmp(disk_get_type(disk),"gpt") != 0 && strcmp(purpose,"bios") == 0))
+      {
+        ui_dialog_text(PARTITION_DIALOG_MODIFY_PARTITION_ERROR_TITLE,PARTITION_DIALOG_MODIFY_PARTITION_ERROR_TEXT);
+        continue;
+      }
+
+      if(strcmp(disk_get_type(disk),"gpt") == 0)
+        disk_partition_set_name(disk,n,name);
+
+      disk_partition_set_active(disk,n,(active == '*'));
+
+      disk_partition_set_purpose(disk,n,purpose);
+
+      modified = true;
+
       break;
     }
   }
