@@ -867,6 +867,24 @@ extern void disk_partition_set_active(struct disk *disk,int n,bool active)
   disk->modified = true;
 }
 
+extern void disk_partition_set_name(struct disk *disk,int n,const char *name)
+{
+  struct partition *part = 0;
+
+  if(disk == 0 || n < 0 || n > disk->size || disk->type != DISKTYPE_GPT || name == 0 || strlen(name) > 36)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return;
+  }
+
+  part = &disk->table[n];
+
+  snprintf(part->gptname,37,"%s",name);
+
+  disk->modified = true;
+}
+
 extern int disk_partition_get_count(struct disk *disk)
 {
   return disk->size;
@@ -940,6 +958,22 @@ extern bool disk_partition_get_active(struct disk *disk,int n)
     active = (part->gptflags & GPT_BOOT_FLAG) != 0;
   
   return active;
+}
+
+extern const char *disk_partition_get_name(struct disk *disk,int n)
+{
+  struct partition *part = 0;
+  
+  if(disk == 0 || n < 0 || n > disk->size || disk->type != DISKTYPE_GPT)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return 0;
+  }
+  
+  part = &disk->table[n];
+
+  return part->gptname;
 }
 
 extern int disk_partition_get_number(struct disk *disk,int n)
