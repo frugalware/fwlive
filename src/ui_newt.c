@@ -353,6 +353,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
     "unknown",
     0
   };
+  const char *purpose = 0;
 
   if(!get_text_screen_size(PARTITION_DIALOG_MODIFY_PARTITION_TEXT,&textbox_width,&textbox_height))
     return false;
@@ -401,12 +402,15 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   
   newtListboxSetWidth(listbox,listbox_width);
 
+  purpose = disk_partition_get_purpose(disk,n);
+
   for( i = 0 ; purposes[i] != 0 ; ++i )
   {
     newtListboxAppendEntry(listbox,purposes[i],purposes[i]);
+    
+    if(strcmp(purposes[i],purpose) == 0)
+      newtListboxSetCurrentByKey(listbox,(void *) purposes[i]);
   }
-
-  newtListboxSetCurrent(listbox,0);
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
   
