@@ -341,6 +341,18 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   bool modified = false;
   char active = ' ';
   const char *name = 0;
+  int i = 0;
+  static const char *purposes[] =
+  {
+    "data",
+    "swap",
+    "raid",
+    "lvm",
+    "efi",
+    "bios",
+    "unknown",
+    0
+  };
 
   if(!get_text_screen_size(PARTITION_DIALOG_MODIFY_PARTITION_TEXT,&textbox_width,&textbox_height))
     return false;
@@ -388,6 +400,11 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_SCROLL);
   
   newtListboxSetWidth(listbox,listbox_width);
+
+  for( i = 0 ; purposes[i] != 0 ; ++i )
+  {
+    newtListboxAppendEntry(listbox,purposes[i],purposes[i]);
+  }
 
   newtListboxSetCurrent(listbox,0);
 
