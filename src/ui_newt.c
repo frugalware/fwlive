@@ -392,6 +392,8 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   
   cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
 
+  active = (disk_partition_get_active(disk,n)) ? '*' : ' ';
+
   checkbox = newtCheckbox(0,textbox_height+label_height+2,PARTITION_DIALOG_MODIFY_PARTITION_ACTIVE_TEXT,active,0,&active);
 
   label = newtLabel(0,textbox_height+1,PARTITION_DIALOG_MODIFY_PARTITION_NAME_TEXT);
