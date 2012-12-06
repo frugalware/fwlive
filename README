@@ -8,6 +8,10 @@ To build the livecd suitable for development:
 
 	$ sudo make
 
+or one suitable for testing:
+
+	$ sudo make CONFIG=testing
+
 or one suitable for release:
 
 	$ sudo make CONFIG=release

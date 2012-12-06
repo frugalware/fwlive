@@ -1,8 +1,4 @@
-source ./config.dev
-
-FWLIVELANG="en_US"
-
-COMPRESS="xz"
+source ./config.testing
 
 TREE="stable"
 CHROOTDIR="$PWD/$TREE/rootfs"
