@@ -640,6 +640,29 @@ extern void disk_new_table(struct disk *disk,const char *type)
   disk->modified = true;
 }
 
+extern bool disk_has_extended_partition(struct disk *disk)
+{
+  int i = 0;
+
+  if(disk == 0 || disk->size < 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+
+  if(disk->type != DISKTYPE_DOS)
+    return false;
+
+  for( ; i < disk->size ; ++i )
+  {
+    if(disk->table[i].dostype == DOS_EXTENDED)
+      return true;
+  }
+  
+  return false;
+}
+
 extern int disk_create_partition(struct disk *disk,long long size)
 {
   struct partition part = {0};
