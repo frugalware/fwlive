@@ -689,8 +689,9 @@ extern int disk_create_partition(struct disk *disk,long long size)
     return -1;
     
   if(
-    (disk->type == DISKTYPE_DOS && part.number > 4)  ||
-    (disk->type == DISKTYPE_GPT && part.number > 128)            
+    (disk->type == DISKTYPE_DOS && part.number > 4)   ||
+    (disk->type == DISKTYPE_GPT && part.number > 128) ||
+    disk_has_extended_partition(disk)
   )
   {
     errno = ERANGE;
