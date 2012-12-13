@@ -595,10 +595,21 @@ extern long long disk_get_free_size(struct disk *disk)
   }
 
   size = disk->sectors;
-  
+
   if(disk->size > 0)
-    size -= disk->table[disk->size].end;
+  {
+    struct partition *last = &disk->table[disk->size-1];
   
+    if(disk_has_extended_partition(disk) && last->dostype == DOS_EXTENDED)
+    {
+      size -= last->start + disk->device->alignment;
+    }
+    else
+    {
+      size -= last->end;
+    }
+  }
+
   size *= disk->device->sectorsize;
   
   return size;
@@ -701,7 +712,6 @@ extern int disk_create_partition(struct disk *disk,long long size)
 
 extern int disk_create_extended_partition(struct disk *disk)
 {
-  int i = 0;
   struct partition part = {0};
   
   if(disk == 0 || disk->size < 0 || disk->type != DISKTYPE_DOS)
