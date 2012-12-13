@@ -711,13 +711,12 @@ extern int disk_create_extended_partition(struct disk *disk)
     return -1;
   }
   
-  for( ; i < disk->size ; ++i )
-    if(disk->table[i].dostype == DOS_EXTENDED)
-    {
-      errno = EINVAL;
-      error(strerror(errno));
-      return -1;
-    }
+  if(disk_has_extended_partition(disk))
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return -1;
+  }
   
   if(!newpartition(disk,disk->sectors,&part) || part.number > 4)
     return -1;
