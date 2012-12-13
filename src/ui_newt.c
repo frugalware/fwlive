@@ -530,6 +530,23 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   
   newtListboxSetWidth(listbox,listbox_width);
 
+  if(strcmp(disk_get_type(disk),"dos") == 0)
+  {
+    if(!disk_has_extended_partition(disk))
+    {
+      newtListboxAppendEntry(listbox,"primary","primary");
+      newtListboxAppendEntry(listbox,"extended","extended");
+    }
+    else
+    {
+      newtListboxAppendEntry(listbox,"logical","logical");
+    }
+  }
+  else
+  {
+    newtListboxAppendEntry(listbox,"primary","primary");
+  }
+
   form = newtForm(0,0,NEWT_FLAG_NOF12);
   
   newtFormAddComponents(form,textbox,ok,cancel,label,entry,listbox,(void *) 0);
