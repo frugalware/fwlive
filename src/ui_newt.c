@@ -547,6 +547,8 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
     newtListboxAppendEntry(listbox,"primary","primary");
   }
 
+  newtListboxSetCurrent(listbox,0);
+
   form = newtForm(0,0,NEWT_FLAG_NOF12);
   
   newtFormAddComponents(form,textbox,ok,cancel,label,entry,listbox,(void *) 0);
