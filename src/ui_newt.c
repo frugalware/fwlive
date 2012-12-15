@@ -555,6 +555,20 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
 
   newtFormSetCurrent(form,entry);
 
+  while(true)
+  {
+    newtFormRun(form,&es);
+    
+    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
+    {
+      break;
+    }
+    else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
+    {
+      break;
+    }
+  }
+
   newtFormDestroy(form);
 
   newtPopWindow();
