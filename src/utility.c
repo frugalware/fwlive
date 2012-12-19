@@ -132,6 +132,38 @@ extern bool size_to_string(char *s,size_t n,long long size,bool pad)
   return true;
 }
 
+extern long long string_to_size(const char *s)
+{
+  double base = 0;
+  int off = 0;
+  const char *suffix = 0;
+  long long unit = 0;
+
+  if(s == 0 || sscanf(s,"%lf%n",&base,&off) < 1)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return 0;
+  }
+
+  suffix = s + off;
+  
+  if(strcmp(suffix,"TiB") == 0)
+    unit = TEBIBYTE;
+  else if(strcmp(suffix,"GiB") == 0)
+    unit = GIBIBYTE;
+  else if(strcmp(suffix,"MiB") == 0)
+    unit = MEBIBYTE;
+  else if(strcmp(suffix,"KiB") == 0)
+    unit = KIBIBYTE;
+  else if(strcmp(suffix,"BiB") == 0)
+    unit = 1;
+  else
+    unit = 1;
+
+  return base * unit;
+}
+
 extern int get_text_length(const char *s)
 {
   wchar_t wc = 0;

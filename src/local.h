@@ -77,6 +77,7 @@ extern bool isrootpath(const char *path);
 extern bool isasciistring(const char *s);
 extern bool mkdir_recurse(const char *path);
 extern bool size_to_string(char *s,size_t n,long long size,bool pad);
+extern long long string_to_size(const char *s);
 extern int get_text_length(const char *s);
 extern bool execute(const char *command,const char *root,pid_t *cpid);
 extern void *memdup(const void *mem,size_t size);
