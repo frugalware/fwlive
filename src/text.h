@@ -29,7 +29,7 @@
 #define PARTITION_DIALOG_NEW_PARTITION_TEXT _("Select a partition size and partition type.\nIf this is a DOS label, then you need an extended\npartition to create more than 4 partitions.\n")
 #define PARTITION_DIALOG_NEW_SIZE_TEXT _("Partition Size")
 #define PARTITION_DIALOG_NEW_PARTITION_ERROR_TITLE _("Partition Allocation Error")
-#define PARTITION_DIALOG_NEW_PARTITION_ERROR_TEXT _("An error has occurred while attempting to allocate a new partition.\nAny of the following reasons may be the cause:\n\nYou have entered an invalid size. It must use binary units.\nThe partition limit has been reached.\nThere is no space left for the partition.\n"
+#define PARTITION_DIALOG_NEW_PARTITION_ERROR_TEXT _("An error has occurred while attempting to allocate a new partition.\nAny of the following reasons may be the cause:\n\nYou have entered an invalid size. It must use binary units.\nThe partition limit has been reached.\nThere is no space left for the partition.\n")
 #define FORMAT_TITLE _("Device Setup")
 #define FORMAT_TEXT _("Select a device to setup from the list below.\n")
 #define FORMAT_DIALOG_TITLE _("Filesystem Setup")

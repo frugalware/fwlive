@@ -484,7 +484,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   struct newtExitStruct es = {0};
   bool modified = false;
   char text[NEWT_WIDTH+1];
-  const char *size = 0;
+  const char *result = 0;
 
   if(!get_text_screen_size(PARTITION_DIALOG_NEW_PARTITION_TEXT,&textbox_width,&textbox_height))
     return false;
@@ -524,7 +524,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
 
   size_to_string(text,NEWT_WIDTH+1,disk_get_free_size(disk),false);
 
-  entry = newtEntry(label_width+1,textbox_height+1,text,entry_width,&size,0);
+  entry = newtEntry(label_width+1,textbox_height+1,text,entry_width,&result,0);
 
   listbox = newtListbox(0,textbox_height+label_height+2,listbox_height,NEWT_FLAG_SCROLL);
   
@@ -565,6 +565,31 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
     {
+      long long size = string_to_size(result);
+      const char *type = newtListboxGetCurrent(listbox);
+      int n = 0;
+
+      if(size == 0)
+      {
+        ui_dialog_text(PARTITION_DIALOG_NEW_PARTITION_ERROR_TITLE,PARTITION_DIALOG_NEW_PARTITION_ERROR_TEXT);
+        continue;
+      }
+      
+      if(strcmp(type,"primary") == 0)
+        n = disk_create_partition(disk,size);
+      else if(strcmp(type,"extended") == 0)
+        n = disk_create_extended_partition(disk);
+      else if(strcmp(type,"logical") == 0)
+        n = disk_create_logical_partition(disk,size);
+      
+      if(n == -1)
+      {
+        ui_dialog_text(PARTITION_DIALOG_NEW_PARTITION_ERROR_TITLE,PARTITION_DIALOG_NEW_PARTITION_ERROR_TEXT);
+        continue;
+      }
+
+      modified = true;
+      
       break;
     }
   }
