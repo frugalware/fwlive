@@ -999,12 +999,25 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
       
       if(action.disk)
       {
+        if(ui_dialog_partition_new_table(devices[action.device_number],&disks[action.device_number]))
+        {
+        }
       }
       else if(action.partition)
       {
+        if(ui_dialog_partition_modify_partition(disks[action.device_number],action.partition_number))
+        {
+        }
       }
       else if(action.space)
       {
+        if(ui_dialog_partition_new_partition(disks[action.device_number]))
+        {
+        }
+      }
+      else if(action.delete)
+      {
+        disk_delete_partition(disks[action.device_number]);
       }
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
