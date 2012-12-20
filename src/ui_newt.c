@@ -1037,19 +1037,23 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
       }
       else if(action.partition)
       {
-        if(ui_dialog_partition_modify_partition(disks[action.device_number],action.partition_number))
+        if(ui_dialog_partition_modify_partition(disk,partition))
         {
+          size_to_string(size,10,disk_partition_get_size(disk,partition),false);
+          snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition),size,(disk_partition_get_active(disk,partition)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition));          
+          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
+          newtListboxDeleteEntry(listbox,(void *) key.data); 
         }
       }
       else if(action.space)
       {
-        if(ui_dialog_partition_new_partition(disks[action.device_number]))
+        if(ui_dialog_partition_new_partition(disk))
         {
         }
       }
       else if(action.delete)
       {
-        disk_delete_partition(disks[action.device_number]);
+        disk_delete_partition(disk);
       }
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
