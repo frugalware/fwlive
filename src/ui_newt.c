@@ -926,11 +926,11 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     action.disk = true;
     
     newtListboxAppendEntry(listbox,text,(void *) action.data);
+
+    action.disk = false;
     
     if(disk != 0)
     {
-      action.disk = false;
-    
       action.partition = true;
     
       for( j = 0, k = disk_partition_get_count(disk) ; j < k ; ++j )
@@ -975,6 +975,8 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         action.delete = false;
       }
     }
+    
+    action.device_number = 0;
     
     newtListboxAppendEntry(listbox,"",0);
   }
