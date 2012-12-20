@@ -1049,6 +1049,32 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
       {
         if(ui_dialog_partition_new_partition(disk))
         {
+          if(disk_get_free_size(disk) > 0)
+          {
+            size_to_string(size,10,disk_get_free_size(disk),false);
+            snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+            newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
+          }
+          
+          key.space = false;
+          
+          key.partition = true;
+          
+          key.partition_number = partition + 1;
+
+          size_to_string(size,10,disk_partition_get_size(disk,partition+1),false);
+      
+          snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition+1),size,(disk_partition_get_active(disk,partition+1)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition+1));
+          
+          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+          
+          key.partition = false;
+          
+          key.partition_number = 0;
+          
+          key.space = true;
+          
+          newtListboxDeleteEntry(listbox,(void *) action.data);
         }
       }
       else if(action.delete)
