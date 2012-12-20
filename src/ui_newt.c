@@ -997,11 +997,15 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     {
       union partition_action action = { .data = (uintptr_t) newtListboxGetCurrent(listbox) };
       union partition_action key = { .data = action.data };
+      struct device *device = devices[action.device_number];
+      struct disk *disk = disks[action.device_number];
+      unsigned char partition = action.partition_number;
       
       if(action.disk)
       {
-        if(ui_dialog_partition_new_table(devices[action.device_number],&disks[action.device_number]))
+        if(ui_dialog_partition_new_table(device,&disk))
         {
+          disks[action.device_number] = disk;
           key.disk = false;
           key.partition = true;
           for( i = 0 ; i < 255 ; ++i )
@@ -1019,13 +1023,13 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           newtListboxDeleteEntry(listbox,(void *) key.data);
           key.delete = false;
           key.disk = true;    
-          size_to_string(size,10,device_get_size(devices[action.device_number]),false);
-          snprintf(text,NEWT_WIDTH+1,"%s %s %s label",device_get_path(devices[action.device_number]),size,disk_get_type(disks[action.device_number]));
+          size_to_string(size,10,device_get_size(device),false);
+          snprintf(text,NEWT_WIDTH+1,"%s %s %s label",device_get_path(device),size,disk_get_type(disk));
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
           newtListboxDeleteEntry(listbox,(void *) key.data);
           key.disk = false;
           key.space = true;
-          size_to_string(size,10,disk_get_free_size(disks[action.device_number]),false);
+          size_to_string(size,10,disk_get_free_size(disk),false);
           snprintf(text,NEWT_WIDTH+1,"free space %s",size);
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           key.space = false;
