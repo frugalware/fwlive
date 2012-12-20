@@ -13,6 +13,7 @@ union partition_action
     bool disk : 1;
     bool partition : 1;
     bool space : 1;
+    bool delete : 1;
   };
   uintptr_t data;
 };
@@ -956,6 +957,22 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         snprintf(text,NEWT_WIDTH+1,"free space %s",size);
         
         newtListboxAppendEntry(listbox,text,(void *) action.data);
+        
+        action.space = false;
+      }
+      
+      if(k > 0)
+      {
+        action.delete = true;
+
+        if(strcmp(disk_partition_get_purpose(disk,k-1),"extended") == 0)
+          snprintf(text,NEWT_WIDTH+1,"delete extended partition");
+        else
+          snprintf(text,NEWT_WIDTH+1,"delete last partition");
+        
+        newtListboxAppendEntry(listbox,text,(void *) action.data);
+        
+        action.delete = false;
       }
     }
     
