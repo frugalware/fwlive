@@ -1087,23 +1087,26 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
           }
           
-          key.space = false;
+          if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
+          {
+            key.space = false;
           
-          key.partition = true;
+            key.partition = true;
           
-          key.partition_number = partition;
+            key.partition_number = partition;
 
-          size_to_string(size,10,disk_partition_get_size(disk,partition),false);
+            size_to_string(size,10,disk_partition_get_size(disk,partition),false);
       
-          snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition),size,(disk_partition_get_active(disk,partition)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition));
+            snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition),size,(disk_partition_get_active(disk,partition)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition));
           
-          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+            newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           
-          key.partition = false;
+            key.partition = false;
           
-          key.partition_number = 0;
+            key.partition_number = 0;
           
-          key.space = true;
+            key.space = true;
+          }
           
           newtListboxDeleteEntry(listbox,(void *) action.data);
         }
