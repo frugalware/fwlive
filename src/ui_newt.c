@@ -935,8 +935,11 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     
       for( j = 0, k = disk_partition_get_count(disk) ; j < k ; ++j )
       {
+        if(strcmp(disk_partition_get_purpose(disk,j),"extended") == 0)
+          continue;
+
         action.partition_number = j;
-      
+            
         size_to_string(size,10,disk_partition_get_size(disk,j),false);
       
         snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,j),size,(disk_partition_get_active(disk,j)) ? "active" : "inactive",disk_partition_get_purpose(disk,j));
