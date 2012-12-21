@@ -1109,7 +1109,25 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
             key.partition_number = 0;
           
             key.space = true;
+            
+            snprintf(text,NEWT_WIDTH+1,"delete last partition");
           }
+          else
+          {
+            snprintf(text,NEWT_WIDTH+1,"delete extended partition");
+          }
+          
+          key.space = false;
+          
+          key.delete = true;
+          
+          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
+          
+          newtListboxDeleteEntry(listbox,(void *) key.data);
+          
+          key.delete = false;
+          
+          key.space = true;
           
           newtListboxDeleteEntry(listbox,(void *) action.data);
         }
