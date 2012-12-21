@@ -999,60 +999,91 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
       union partition_action key = { .data = action.data };
       struct device *device = devices[action.device_number];
       struct disk *disk = disks[action.device_number];
-      unsigned char partition = action.partition_number;
       
       if(action.disk)
       {
         if(ui_dialog_partition_new_table(device,&disk))
         {
           disks[action.device_number] = disk;
+        
           key.disk = false;
+        
           key.partition = true;
+        
           for( i = 0 ; i < 255 ; ++i )
           {
             key.partition_number = i;
+        
             if(newtListboxDeleteEntry(listbox,(void *) key.data) == -1)
               break;
           }
+        
           key.partition = false;
+        
           key.partition_number = 0;
+        
           key.space = true;
+        
           newtListboxDeleteEntry(listbox,(void *) key.data);
+        
           key.space = false;
+        
           key.delete = true;
+        
           newtListboxDeleteEntry(listbox,(void *) key.data);
+        
           key.delete = false;
+        
           key.disk = true;    
+        
           size_to_string(size,10,device_get_size(device),false);
+        
           snprintf(text,NEWT_WIDTH+1,"%s %s %s label",device_get_path(device),size,disk_get_type(disk));
+        
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
+        
           newtListboxDeleteEntry(listbox,(void *) key.data);
+        
           key.disk = false;
+        
           key.space = true;
+        
           size_to_string(size,10,disk_get_free_size(disk),false);
+        
           snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+        
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+        
           key.space = false;
         }
       }
       else if(action.partition)
       {
+        unsigned char partition = action.partition_number;
+        
         if(ui_dialog_partition_modify_partition(disk,partition))
         {
           size_to_string(size,10,disk_partition_get_size(disk,partition),false);
+        
           snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition),size,(disk_partition_get_active(disk,partition)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition));          
+        
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
+        
           newtListboxDeleteEntry(listbox,(void *) key.data); 
         }
       }
       else if(action.space)
       {
+        unsigned char partition = disk_partition_get_count(disk);
+        
         if(ui_dialog_partition_new_partition(disk))
         {
           if(disk_get_free_size(disk) > 0)
           {
             size_to_string(size,10,disk_get_free_size(disk),false);
+        
             snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+        
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
           }
           
@@ -1060,11 +1091,11 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           
           key.partition = true;
           
-          key.partition_number = partition + 1;
+          key.partition_number = partition;
 
-          size_to_string(size,10,disk_partition_get_size(disk,partition+1),false);
+          size_to_string(size,10,disk_partition_get_size(disk,partition),false);
       
-          snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition+1),size,(disk_partition_get_active(disk,partition+1)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition+1));
+          snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition),size,(disk_partition_get_active(disk,partition)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition));
           
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           
