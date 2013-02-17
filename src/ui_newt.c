@@ -1097,6 +1097,15 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           key.delete = false;
           
           key.space = true;
+
+          if(disk_get_free_size(disk) > 0)
+          {
+            size_to_string(size,10,disk_get_free_size(disk),false);
+        
+            snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+        
+            newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+          }
 #if 0
           if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
           {
@@ -1117,15 +1126,6 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
             key.partition_number = 0;
           
             key.space = true;
-          }
-
-          if(disk_get_free_size(disk) > 0)
-          {
-            size_to_string(size,10,disk_get_free_size(disk),false);
-        
-            snprintf(text,NEWT_WIDTH+1,"free space %s",size);
-        
-            newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
           }
                     
           newtListboxDeleteEntry(listbox,(void *) action.data);
