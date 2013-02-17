@@ -134,10 +134,6 @@ fi
 pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 
 ## Post-install tweaks
-#Add utf-8 in /etc/profile.d/less.sh
-if [ "`echo $FWLIVELANG|sed 's/.*\.\(.*\).*/\1/'`" == utf8 ]; then
-	sed -i -e 's/iso8859/utf-8/g' $CHROOTDIR/etc/profile.d/less.sh
-fi
 chroot $CHROOTDIR sh /etc/pacman-g2/hooks/update-frugalware-version post_sysupgrade # update /etc/frugalware-release
 chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
 if [ -n "$USERNAME" -a -n "$USERPASS" ]; then
