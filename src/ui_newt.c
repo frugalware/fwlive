@@ -1126,7 +1126,20 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
       else if(action.delete)
       {
         unsigned char partition = disk_partition_get_count(disk) - 1;
-      
+        
+        if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
+        {
+          key.delete = false;
+          
+          key.partition = true;
+          
+          key.partition_number = partition;
+          
+          newtListboxDeleteEntry(listbox,(void *) key.data);
+          
+          key.data = action.data;
+        }
+        
         disk_delete_partition(disk);
       }
     }
