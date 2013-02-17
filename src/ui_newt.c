@@ -1100,12 +1100,6 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
             key.partition_number = 0;
           
             key.space = true;
-            
-            snprintf(text,NEWT_WIDTH+1,"delete last partition");
-          }
-          else
-          {
-            snprintf(text,NEWT_WIDTH+1,"delete extended partition");
           }
 
           if(disk_get_free_size(disk) > 0)
@@ -1120,6 +1114,11 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           key.space = false;
           
           key.delete = true;
+          
+          if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
+            snprintf(text,NEWT_WIDTH+1,"delete last partition");
+          else
+            snprintf(text,NEWT_WIDTH+1,"delete extended partition");
           
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
           
