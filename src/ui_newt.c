@@ -1106,7 +1106,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           }
-#if 0
+
           if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
           {
             key.space = false;
@@ -1126,10 +1126,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
             key.partition_number = 0;
           
             key.space = true;
-          }
-                    
+          }                    
+
           newtListboxDeleteEntry(listbox,(void *) action.data);
-#endif
         }
       }
       else if(action.delete)
