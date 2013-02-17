@@ -229,6 +229,7 @@ rm -rf $CHROOTDIR/boot/*
 
 # Install fwsetup
 cp src/fwsetup $CHROOTDIR/sbin/fwsetup
+cp src/fwsetup-valgrind $CHROOTDIR/sbin/fwsetup-valgrind
 
 # Save version
 sed "s/.* \(.*\) (.*/\1/" $CHROOTDIR/etc/frugalware-release > $TREE/rootfs.version
