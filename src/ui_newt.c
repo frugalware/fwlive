@@ -998,7 +998,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == listbox)
     {
-      union partition_action action = { .data = (uintptr_t) newtListboxGetCurrent(listbox) };
+      const union partition_action action = { .data = (uintptr_t) newtListboxGetCurrent(listbox) };
       union partition_action key = { .data = action.data };
       struct device *device = devices[action.device_number];
       struct disk *disk = disks[action.device_number];
@@ -1141,6 +1141,20 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         }
         
         disk_delete_partition(disk);
+        
+        key.delete = false;
+        
+        key.space = true;
+        
+        size_to_string(size,10,disk_get_free_size(disk),false);
+        
+        snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+        
+        newtListboxDeleteEntry(listbox,(void *) key.data);
+        
+        newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+        
+        key.data = action.data;
       }
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
