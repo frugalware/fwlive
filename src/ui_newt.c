@@ -1081,6 +1081,23 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         
         if(ui_dialog_partition_new_partition(disk))
         {
+          key.space = false;
+          
+          key.delete = true;
+          
+          if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
+            snprintf(text,NEWT_WIDTH+1,"delete last partition");
+          else
+            snprintf(text,NEWT_WIDTH+1,"delete extended partition");
+
+          newtListboxDeleteEntry(listbox,(void *) key.data);
+          
+          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+          
+          key.delete = false;
+          
+          key.space = true;
+#if 0
           if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
           {
             key.space = false;
@@ -1110,25 +1127,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
           }
-          
-          key.space = false;
-          
-          key.delete = true;
-          
-          if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
-            snprintf(text,NEWT_WIDTH+1,"delete last partition");
-          else
-            snprintf(text,NEWT_WIDTH+1,"delete extended partition");
-          
-          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
-          
-          newtListboxDeleteEntry(listbox,(void *) key.data);
-          
-          key.delete = false;
-          
-          key.space = true;
-          
+                    
           newtListboxDeleteEntry(listbox,(void *) action.data);
+#endif
         }
       }
       else if(action.delete)
