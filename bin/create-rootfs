@@ -41,32 +41,7 @@ mount -o bind /var/cache/pacman-g2 $CHROOTDIR/var/cache/pacman-g2 >/dev/null
 echo "Successfully mounted chroot directories."
 
 # Pre-install tweaks
-mkdir -p $CHROOTDIR/etc/{profile.d,sysconfig/network}
-## file /etc/profile.d/lang.sh
-echo "export LANG=$FWLIVELANG" >$CHROOTDIR/etc/profile.d/lang.sh
-echo "export LC_ALL=\$LANG" >> $CHROOTDIR/etc/profile.d/lang.sh
-if [ "`echo $FWLIVELANG|sed 's/.*\.\(.*\).*/\1/'`" == utf8 ]; then
-	echo "export CHARSET=utf-8" >> $CHROOTDIR/etc/profile.d/lang.sh
-else
-	case $FWLIVELANG in
-		en_US)
-			echo "export CHARSET=iso-8859-1" >> $CHROOTDIR/etc/profile.d/lang.sh ;;
-		fr_FR)
-			echo "export CHARSET=iso-8859-15" >> $CHROOTDIR/etc/profile.d/lang.sh;;
-		*)	
-			echo "export CHARSET=iso-8859-15" >> $CHROOTDIR/etc/profile.d/lang.sh;;
-		esac
-fi
-chmod +x $CHROOTDIR/etc/profile.d/lang.sh
-## file /etc/sysconfig/keymap
-## TODO:To improve the function ( ex : for french keymap=fr-latin1 )
-case $FWLIVELANG in
-	en_*)
-		keymap=us ;;
-	*)
-		keymap=`echo $FWLIVELANG |sed 's/_.*//'` ;;
-esac
-echo "keymap=$keymap" > $CHROOTDIR/etc/sysconfig/keymap
+mkdir -p $CHROOTDIR/etc/sysconfig/network
 # file /etc/fstab - just to make systemd-remount-api-vfs.service happy
 cat >$CHROOTDIR/etc/fstab <<EOF
 none             /proc            proc        defaults         0   0
@@ -134,6 +109,19 @@ fi
 pacman -Syf kernel -r "$CHROOTDIR" --noconfirm --config pacman-g2.conf $EXTRAOPTS
 
 ## Post-install tweaks
+
+# locale.conf
+echo "LANG=$FWLIVELANG.utf8" > $CHROOTDIR/etc/locale.conf
+
+# vconsole.conf
+case $FWLIVELANG in
+	en_*)
+		keymap=us ;;
+	*)
+		keymap=`echo $FWLIVELANG |sed 's/_.*//'` ;;
+esac
+echo "KEYMAP=$keymap" > $CHROOTDIR/etc/vconsole.conf
+
 chroot $CHROOTDIR sh /etc/pacman-g2/hooks/update-frugalware-version post_sysupgrade # update /etc/frugalware-release
 chroot $CHROOTDIR sh -c "echo 'root:$ROOTPASS' | chpasswd"
 if [ -n "$USERNAME" -a -n "$USERPASS" ]; then
