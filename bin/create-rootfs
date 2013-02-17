@@ -51,7 +51,7 @@ usbfs            /proc/bus/usb    usbfs       devgid=23,devmode=664 0   0
 tmpfs            /dev/shm         tmpfs       defaults         0   0
 EOF
 # file /etc/sysconfig/network/default
-echo "[eth0]" >$CHROOTDIR/etc/sysconfig/network/default
+echo "[enp0s3]" >$CHROOTDIR/etc/sysconfig/network/default
 echo "options = dhcp" >>$CHROOTDIR/etc/sysconfig/network/default
 
 case $ARCHBUILD in 
