@@ -1021,23 +1021,23 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
               break;
           }
         
-          key.partition = false;
+          key.data = action.data;
         
-          key.partition_number = 0;
+          key.disk = false;
         
           key.space = true;
         
           newtListboxDeleteEntry(listbox,(void *) key.data);
         
-          key.space = false;
+          key.data = action.data;
+        
+          key.disk = false;
         
           key.delete = true;
         
           newtListboxDeleteEntry(listbox,(void *) key.data);
         
-          key.delete = false;
-        
-          key.disk = true;    
+          key.data = action.data;
         
           size_to_string(size,10,device_get_size(device),false);
         
@@ -1056,8 +1056,6 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           snprintf(text,NEWT_WIDTH+1,"free space %s",size);
         
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
-        
-          key.space = false;
         }
       }
       else if(action.partition)
