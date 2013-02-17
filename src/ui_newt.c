@@ -1128,18 +1128,6 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         unsigned char partition = disk_partition_get_count(disk) - 1;
       
         disk_delete_partition(disk);
-        
-        if(partition > 0)
-        {
-          if(strcmp(disk_partition_get_purpose(disk,partition),"extended") == 0)
-            snprintf(text,NEWT_WIDTH+1,"delete extended partition");
-          else
-            snprintf(text,NEWT_WIDTH+1,"delete last partition");
-          
-          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
-        }
-        
-        newtListboxDeleteEntry(listbox,(void *) key.data);
       }
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
