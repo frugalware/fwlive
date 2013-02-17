@@ -1094,9 +1094,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           
-          key.delete = false;
-          
-          key.space = true;
+          key.data = action.data;
 
           if(disk_get_free_size(disk) > 0)
           {
@@ -1121,11 +1119,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           
-            key.partition = false;
-          
-            key.partition_number = 0;
-          
-            key.space = true;
+            key.data = action.data;
           }                    
 
           newtListboxDeleteEntry(listbox,(void *) action.data);
