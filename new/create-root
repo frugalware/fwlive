@@ -62,3 +62,11 @@ while read line; do
 	fi
 done < mounts
 rm -f mounts
+
+# Generate the files needed for ISO.
+mksquashfs $ROOT rootfs -noappend -comp gzip
+cp $ROOT/boot/vmlinuz vmlinuz
+cp $ROOT/boot/initrd initrd
+
+# Delete the root directory.
+rm -rf $ROOT
