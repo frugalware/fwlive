@@ -9,6 +9,12 @@ if [ "$(id -u)" -ne 0 ]; then
 	exit 1
 fi
 
+# Create the virtual disk and mount it.
+dd if=/dev/zero of=rootfs.img bs=$(( 128 * 1024 )) count=$(( (4096 * 1024 * 1024) / (128 * 1024) ))
+mkfs.ext4 -q -F rootfs.img
+mkdir -p $ROOT
+mount -o loop rootfs.img $ROOT
+
 # Create root directory skeleton.
 mkdir -p $ROOT/{dev,proc,sys,tmp,var/tmp,var/cache/pacman-g2}
 mount -t devtmpfs none $ROOT/dev
@@ -57,16 +63,19 @@ EOF
 cp /proc/mounts mounts
 while read line; do
 	path=$(echo $line | cut -f 2 -d ' ')
+	if [ "$path" = "$ROOT" ]; then
+		continue
+	fi
 	if [ "$path" != "${path#$ROOT}" ]; then
 		umount $path
 	fi
 done < mounts
-rm -f mounts
+umount $ROOT
 
-# Generate the files needed for ISO.
-mksquashfs $ROOT rootfs -noappend -comp gzip
-cp $ROOT/boot/vmlinuz vmlinuz
-cp $ROOT/boot/initrd initrd
+# Now shrink the rootfs.img to minimum size.
+e2fsck -f rootfs.img
+resize2fs -M rootfs.img
+e2fsck -f rootfs.img
 
-# Delete the root directory.
-rm -rf $ROOT
+# Clean up leftovers.
+rm -rf mounts $ROOT
