@@ -25,7 +25,7 @@ mount -t tmpfs none $ROOT/var/tmp
 mount -o bind /var/cache/pacman-g2 $ROOT/var/cache/pacman-g2
 
 # Setup root directory with pacman-g2.
-pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base newt valgrind gdb
+pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base newt valgrind gdb terminus-font
 
 # LiveCD customizations beyond here.
 
@@ -41,7 +41,7 @@ EOF
 # System vconsole.conf setup.
 cat > $ROOT/etc/vconsole.conf << EOF
 KEYMAP=us
-FONT=LatArCyrHeb-16
+FONT=ter-v16n
 EOF
 
 # System fstab setup.
