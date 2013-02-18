@@ -1,0 +1,52 @@
+#!/bin/sh
+
+set -e
+
+ROOT="$(pwd)/root"
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "You must be root to do this."
+	exit 1
+fi
+
+# Create root directory skeleton.
+mkdir -p $ROOT/{dev,proc,sys,tmp,var/tmp,var/cache/pacman-g2}
+mount -t devtmpfs none $ROOT/dev
+mount -t sysfs none $ROOT/sys
+mount -t proc none $ROOT/proc
+mount -t tmpfs none $ROOT/tmp
+mount -t tmpfs none $ROOT/var/tmp
+mount -o bind /var/cache/pacman-g2 $ROOT/var/cache/pacman-g2
+
+# Setup root directory with pacman-g2.
+pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base
+
+# LiveCD customizations beyond here.
+
+# System locale.conf setup.
+cat > $ROOT/etc/locale.conf << EOF
+LANG=en_US.utf8
+EOF
+
+# System vconsole.conf setup.
+cat > $ROOT/etc/vconsole.conf << EOF
+KEYMAP=us
+FONT=LatArCyrHeb-16
+EOF
+
+# System fstab setup.
+cat > $ROOT/etc/fstab << EOF
+none /proc proc defaults 0 0
+none /sys sysfs defaults 0 0
+none /dev/shm tmpfs defaults 0 0
+none /dev/pts devpts gid=5,mode=620 0 0
+none /proc/bus/usb usbfs devgid=23,devmode=664 0 0
+EOF
+
+# Setup root user.
+chroot $ROOT sh -c "echo 'root:fwlive' | chpasswd"
+
+# System hostname setup.
+cat > $ROOT/etc/hostname << EOF
+fwlive
+EOF
