@@ -50,3 +50,13 @@ chroot $ROOT sh -c "echo 'root:fwlive' | chpasswd"
 cat > $ROOT/etc/hostname << EOF
 fwlive
 EOF
+
+# Unmount all paths mounted earlier.
+cp /proc/mounts mounts
+while read line; do
+	path=$(echo $line | cut -f 2 -d ' ')
+	if [ "$path" != "${path#$ROOT}" ]; then
+		umount $path
+	fi
+done < mounts
+rm -f mounts
