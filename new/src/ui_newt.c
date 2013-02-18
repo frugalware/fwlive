@@ -1141,13 +1141,16 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         }
         
         disk_delete_partition(disk);
-                
-        if(strcmp(disk_partition_get_purpose(disk,--partition),"extended") != 0)
-          snprintf(text,NEWT_WIDTH+1,"delete last partition");
-        else
-          snprintf(text,NEWT_WIDTH+1,"delete extended partition");
         
-        newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+        if(partition > 0)
+        {
+          if(strcmp(disk_partition_get_purpose(disk,partition-1),"extended") != 0)
+            snprintf(text,NEWT_WIDTH+1,"delete last partition");
+          else
+            snprintf(text,NEWT_WIDTH+1,"delete extended partition");
+        
+          newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+        }
         
         key.delete = false;
         
