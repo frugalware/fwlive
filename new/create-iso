@@ -16,13 +16,24 @@ cp squashfs.img $ROOT/LiveOS/squashfs.img
 
 # Setup isolinux bootloader.
 cp /usr/lib/syslinux/isolinux.bin $ROOT/boot/syslinux/isolinux.bin
-#cp /usr/lib/syslinux/vesamenu.c32 $ROOT/boot/syslinux/vesamenu.c32
+cp /usr/lib/syslinux/menu.c32 $ROOT/boot/syslinux/menu.c32
 cat > $ROOT/boot/syslinux/syslinux.cfg << EOF
-default frugalware
+timeout 100
+ui menu.c32
+
+menu title Frugalware Live
+
 label frugalware
+menu label Frugalware (Normal Mode)
 linux /boot/vmlinuz
 initrd /boot/initrd
-append root=live:CDLABEL=fwlive vga=789 video=800x600
+append root=live:CDLABEL=fwlive quiet
+
+label frugalwarevm
+menu label Frugalware (Virtual Machine Mode)
+linux /boot/vmlinuz
+initrd /boot/initrd
+append root=live:CDLABEL=fwlive quiet vga=789 video=800x600
 EOF
 
 # Create the ISO.
