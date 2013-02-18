@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+ROOT="$(pwd)/root"
+
+# Create the skeleton directory.
+mkdir -p $ROOT/{boot/syslinux,LiveOS}
+
+# Setup kernel and initrd.
+cp vmlinuz $ROOT/boot/vmlinuz
+cp initrd $ROOT/boot/initrd
+
+# Setup squashfs image.
+cp squashfs.img $ROOT/LiveOS/squashfs.img
+
+# Setup isolinux bootloader.
+cp /usr/lib/syslinux/isolinux.bin $ROOT/boot/syslinux/isolinux.bin
+#cp /usr/lib/syslinux/vesamenu.c32 $ROOT/boot/syslinux/vesamenu.c32
+cat > $ROOT/boot/syslinux/syslinux.cfg << EOF
+default frugalware
+label frugalware
+linux /boot/vmlinuz
+initrd /boot/initrd
+append root=live:CDLABEL=fwlive vga=789 video=800x600
+EOF
+
+# Create the ISO.
+mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive.iso $ROOT
+isohybrid fwlive.iso
+
+# Delete the root directory.
+rm -rf $ROOT
