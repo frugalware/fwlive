@@ -26,6 +26,9 @@ static bool partition_run(void)
   if(!partition_setup())
     return false;
 
+  if(!ui_window_partition(devices,disks))
+    return false;
+
   return true;
 }
 
