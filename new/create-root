@@ -38,6 +38,8 @@ EOF
 cat > $ROOT/etc/fstab << EOF
 none /proc proc defaults 0 0
 none /sys sysfs defaults 0 0
+none /tmp tmpfs defaults 0 0
+none /var/tmp tmpfs defaults 0 0
 none /dev/shm tmpfs defaults 0 0
 none /dev/pts devpts gid=5,mode=620 0 0
 none /proc/bus/usb usbfs devgid=23,devmode=664 0 0
