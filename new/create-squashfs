@@ -14,7 +14,7 @@ mkdir -p $ROOT/LiveOS
 cp rootfs.img $ROOT/LiveOS/rootfs.img
 
 # Create squashfs image.
-mksquashfs $ROOT squashfs.img -noappend -comp gzip
+mksquashfs $ROOT squashfs.img -noappend -no-progress -comp lzo
 
 # Delete the root directory.
 rm -rf $ROOT
