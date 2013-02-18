@@ -59,6 +59,10 @@ cat > $ROOT/etc/hostname << EOF
 fwlive
 EOF
 
+# Copy kernel and initrd for ISO use later.
+cp $ROOT/boot/vmlinuz vmlinuz
+cp $ROOT/boot/initrd initrd
+
 # Unmount all paths mounted earlier.
 cp /proc/mounts mounts
 while read line; do
