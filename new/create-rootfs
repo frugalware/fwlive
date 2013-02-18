@@ -16,7 +16,7 @@ mkdir -p $ROOT
 mount -o loop rootfs.img $ROOT
 
 # Create root directory skeleton.
-mkdir -p $ROOT/{dev,proc,sys,tmp,var/tmp,var/cache/pacman-g2}
+mkdir -p $ROOT/{dev,proc,sys,tmp,var/tmp,var/cache/pacman-g2,var/log,etc/sysconfig}
 mount -t devtmpfs none $ROOT/dev
 mount -t sysfs none $ROOT/sys
 mount -t proc none $ROOT/proc
@@ -77,9 +77,9 @@ done < mounts
 umount $ROOT
 
 # Now shrink the rootfs.img to minimum size.
-e2fsck -f rootfs.img
+e2fsck -f -a rootfs.img
 resize2fs -M rootfs.img
-e2fsck -f rootfs.img
+e2fsck -f -a rootfs.img
 
 # Clean up leftovers.
 rm -rf mounts $ROOT
