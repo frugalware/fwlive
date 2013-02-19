@@ -922,7 +922,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     
     size_to_string(size,10,device_get_size(device),false);
     
-    snprintf(text,NEWT_WIDTH+1,"%s %s %s label",device_get_path(device),size,(disk == 0) ? "unknown" : disk_get_type(disk));
+    snprintf(text,NEWT_WIDTH+1,"Disk %s: %s label (%s)",device_get_path(device),(disk == 0) ? "nil" : disk_get_type(disk),size);
     
     action.device_number = i;
     
@@ -1045,7 +1045,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         
           size_to_string(size,10,device_get_size(device),false);
         
-          snprintf(text,NEWT_WIDTH+1,"%s %s %s label",device_get_path(device),size,disk_get_type(disk));
+          snprintf(text,NEWT_WIDTH+1,"Disk %s: %s label (%s)",device_get_path(device),disk_get_type(disk),size);
         
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
         
