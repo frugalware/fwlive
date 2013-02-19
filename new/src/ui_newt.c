@@ -403,7 +403,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   
   entry = newtEntry(label_width+1,textbox_height+1,name,entry_width,&name,0);
 
-  listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_SCROLL);
+  listbox = newtListbox(0,textbox_height+label_height+checkbox_height+3,listbox_height,NEWT_FLAG_SCROLL);
   
   newtListboxSetWidth(listbox,listbox_width);
 
