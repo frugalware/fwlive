@@ -16,7 +16,7 @@
 #define PASSWORD_MISMATCH_TITLE _("Passwords Do Not Match")
 #define PASSWORD_MISMATCH_TEXT _("The passwords you have entered do not match.\n")
 #define PARTITION_TITLE _("Partition Setup")
-#define PARTITION_TEXT _("Select a disk device to setup a new partition table.\nSelect a partition to modify its parameters.\nSelect a disk device's free space to setup a new partition.\n")
+#define PARTITION_TEXT _("Select a disk device to setup a new partition table.\nSelect a partition to modify its parameters.\nSelect a disk device's free space to setup a new partition.\nSelect a disk device's deletion entry to delete the last partition.\n")
 #define PARTITION_DIALOG_NEW_TABLE_TITLE _("New Partition Table")
 #define PARTITION_DIALOG_NEW_TABLE_TEXT _("Select a partition table type from the list below.\n")
 #define PARTITION_DIALOG_MODIFY_PARTITION_TITLE _("Modifying a Partition")
