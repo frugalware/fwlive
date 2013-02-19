@@ -2,3 +2,4 @@ add detailed error handling for when a pacman transaction fails
 see if unicode handling of GPT partition names can be fixed
 add config handling for CONSOLE and X11 keymap configuration
 add selection for default systemd boot target
+test 4096 byte sector disk drive handling code in block.c
