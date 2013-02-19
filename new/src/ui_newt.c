@@ -1060,6 +1060,8 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
         
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
+          
+          newtListboxSetCurrentByKey(listbox,(void *) action.data);
         }
       }
       else if(action.partition)
@@ -1075,6 +1077,8 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
         
           newtListboxDeleteEntry(listbox,(void *) key.data); 
+          
+          newtListboxSetCurrentByKey(listbox,(void *) action.data);
         }
       }
       else if(action.space)
@@ -1169,6 +1173,8 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
         
         newtListboxDeleteEntry(listbox,(void *) action.data);
+        
+        newtListboxSetCurrentByKey(listbox,(void *) ((partition > 0) ? action.data : key.data));
       }
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
