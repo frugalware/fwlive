@@ -20,6 +20,8 @@ extern int main(int argc,char **argv)
     return EXIT_FAILURE;
   }
 
+  remove(LOGFILE);
+
   logfile = fopen(LOGFILE,"a");
 
   if(logfile == 0)
@@ -50,8 +52,8 @@ struct global *g = &local;
 struct module *modules[] =
 {
   &partition_module,
-  &format_module,
-  &install_module,
-  &postconfig_module,
+//  &format_module,
+//  &install_module,
+//  &postconfig_module,
   0
 };
