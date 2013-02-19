@@ -412,7 +412,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   for( i = 0 ; purposes[i] != 0 ; ++i )
   {
     if(strcmp(purposes[i],"unknown") == 0)
-      continue; 
+      continue;
   
     newtListboxAppendEntry(listbox,purposes[i],purposes[i]);
     
@@ -984,7 +984,8 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     
     action.device_number = 0;
     
-    newtListboxAppendEntry(listbox,"",0);
+    if(devices[i+1] != 0)
+      newtListboxAppendEntry(listbox,"",0);
   }
 
   newtListboxSetCurrent(listbox,0);
