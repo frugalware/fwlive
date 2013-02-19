@@ -960,7 +960,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
       
         size_to_string(size,10,freesize,false);
         
-        snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+        snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
         
         newtListboxAppendEntry(listbox,text,(void *) action.data);
         
@@ -1057,7 +1057,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         
           size_to_string(size,10,disk_get_free_size(disk),false);
         
-          snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+          snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
         
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
         }
@@ -1102,7 +1102,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           {
             size_to_string(size,10,disk_get_free_size(disk),false);
         
-            snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+            snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
         
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           }
@@ -1162,7 +1162,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         
         size_to_string(size,10,disk_get_free_size(disk),false);
         
-        snprintf(text,NEWT_WIDTH+1,"free space %s",size);
+        snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
         
         newtListboxDeleteEntry(listbox,(void *) key.data);
         
