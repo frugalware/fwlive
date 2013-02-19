@@ -945,7 +945,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
             
         size_to_string(size,10,disk_partition_get_size(disk,j),false);
       
-        snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,j),size,(disk_partition_get_active(disk,j)) ? "active" : "inactive",disk_partition_get_purpose(disk,j));
+        snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,j),disk_partition_get_purpose(disk,j),(disk_partition_get_active(disk,j)) ? "active" : "inactive",size);
         
         newtListboxAppendEntry(listbox,text,(void *) action.data);
       }
@@ -1070,7 +1070,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         {
           size_to_string(size,10,disk_partition_get_size(disk,partition),false);
         
-          snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition),size,(disk_partition_get_active(disk,partition)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition));          
+          snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);          
         
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
         
@@ -1117,7 +1117,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
             size_to_string(size,10,disk_partition_get_size(disk,partition),false);
       
-            snprintf(text,NEWT_WIDTH+1,"partition %d %s %s %s",disk_partition_get_number(disk,partition),size,(disk_partition_get_active(disk,partition)) ? "active" : "inactive",disk_partition_get_purpose(disk,partition));
+            snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
           
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           
