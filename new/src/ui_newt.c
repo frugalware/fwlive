@@ -1124,11 +1124,11 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
             snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
           
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
-          
-            key.data = action.data;
           }                    
 
           newtListboxDeleteEntry(listbox,(void *) action.data);
+          
+          newtListboxSetCurrentByKey(listbox,(void *) ((disk_get_free_size(disk) > 0) ? action.data : key.data));
         }
       }
       else if(action.delete)
