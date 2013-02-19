@@ -21,12 +21,31 @@ static bool partition_setup(void)
   return true;
 }
 
+static bool partition_flush(void)
+{
+  int i = 0;
+
+  for( ; devices[i] != 0 ; ++i )
+  {
+    if(disks[i] == 0)
+      continue;
+    
+    if(!disk_flush(disks[i]))
+      return false;
+  }
+	
+  return true;
+}
+
 static bool partition_run(void)
 {
   if(!partition_setup())
     return false;
 
   if(!ui_window_partition(devices,disks))
+    return false;
+
+  if(!partition_flush())
     return false;
 
   return true;
