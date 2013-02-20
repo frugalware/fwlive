@@ -1101,7 +1101,7 @@ extern bool disk_flush(struct disk *disk)
 
     snprintf(command+n,_POSIX_ARG_MAX-n,"' | sfdisk --unit S --Linux '%s';echo -n -e 'x\\ni\\n0x%.8x\\nw\\n' | fdisk '%s';",
       disk->device->path,
-      (disk->dosuuid == 0) ? (unsigned int) rand() : disk->dosuuid,
+      (disk->dosuuid == 0) ? (unsigned int) rand_r(&seed) : disk->dosuuid,
       disk->device->path
     );
 

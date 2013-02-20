@@ -18,6 +18,7 @@
 #include <glob.h>
 #include <regex.h>
 #include <locale.h>
+#include <time.h>
 #include "text.h"
 
 #define LOGFILE "/var/log/fwsetup.log"
@@ -153,3 +154,4 @@ extern struct module format_module;
 extern struct module install_module;
 extern struct module postconfig_module;
 extern struct module *modules[];
+extern unsigned int seed;

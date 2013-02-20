@@ -13,6 +13,8 @@ extern int main(int argc,char **argv)
     return EXIT_FAILURE;
   }
 
+  seed = time(0);
+
   if(setlocale(LC_ALL,"") == 0)
   {
     perror("main");
@@ -57,3 +59,5 @@ struct module *modules[] =
 //  &postconfig_module,
   0
 };
+
+unsigned int seed;
