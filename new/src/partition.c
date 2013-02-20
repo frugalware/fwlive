@@ -30,7 +30,7 @@ static bool partition_flush(void)
   char text[LINE_MAX] = {0};
 
   for( ; devices[j] != 0 ; ++j )
-	  ;
+    ;
 
   if(j < 10)
     padding = 1;
