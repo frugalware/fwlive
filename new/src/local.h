@@ -92,19 +92,19 @@ static inline long max(long a,long b) { return (a > b) ? a : b; }
 static inline long minv(long *v,size_t size)
 {
   long i = 0;
-  
+
   for( size_t n = 0 ; n < size ; ++n )
     i = min(i,v[n]);
-  
+
   return i;
 }
 static inline long maxv(long *v,size_t size)
 {
   long i = 0;
-  
+
   for( size_t n = 0 ; n < size ; ++n )
     i = max(i,v[n]);
-  
+
   return i;
 }
 extern struct device **device_probe_all(bool disk);

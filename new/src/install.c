@@ -29,7 +29,7 @@ static void install_database_callback(const char *name,PM_DB *db)
       eprintf("More than one valid database found in the config file, so skipping it.\n");
       return;
     }
-    
+
     dl_database = db;
   }
 }
@@ -101,7 +101,7 @@ static int install_download_callback(PM_NETBUF *ctl,int dl_xfered0,void *arg)
   size_to_string(dl_size_text,20,dl_amount,true);
 
   snprintf(dl_size_text+strlen(dl_size_text),20-strlen(dl_size_text),"/");
-  
+
   size_to_string(dl_size_text+strlen(dl_size_text),20-strlen(dl_size_text),dl_total,false);
 
   if(dl_howmany < 10)
@@ -144,7 +144,7 @@ static void install_event_callback(unsigned char event,void *data1,void *data2)
       percent = 0;
       title = _("Resolving Dependencies");
       break;
-      
+
     case PM_TRANS_EVT_RESOLVEDEPS_DONE:
       percent = 100;
       title = _("Resolving Dependencies");
@@ -160,7 +160,7 @@ static void install_event_callback(unsigned char event,void *data1,void *data2)
       percent = 0;
       title = _("Checking Package Integrity");
       break;
-    
+
     case PM_TRANS_EVT_INTEGRITY_DONE:
       percent = 100;
       title = _("Checking Package Integrity");
@@ -174,33 +174,33 @@ static void install_event_callback(unsigned char event,void *data1,void *data2)
 
     case PM_TRANS_EVT_FILECONFLICTS_START:
       break;
-    
+
     case PM_TRANS_EVT_FILECONFLICTS_DONE:
       break;
 
     case PM_TRANS_EVT_CLEANUP_START:
       break;
-    
+
     case PM_TRANS_EVT_CLEANUP_DONE:
       break;
-    
+
     case PM_TRANS_EVT_ADD_START:
       break;
 
     case PM_TRANS_EVT_EXTRACT_DONE:
       break;
-    
+
     case PM_TRANS_EVT_SCRIPTLET_INFO:
       break;
-    
+
     case PM_TRANS_EVT_ADD_DONE:
       break;
-    
+
     default:
       eprintf("Unhandled pacman transaction event: %hhu\n",event);
       return;
   }
-  
+
   if(title != 0 && percent != -1)
     ui_dialog_progress(title,"",percent);
 }
@@ -236,7 +236,7 @@ static void install_progress_callback(unsigned char event,char *pkg,int percent,
     case PM_TRANS_PROGRESS_INTERCONFLICTS_START:
       title = _("Checking for Inter-Conflicts");
       break;
-    
+
     case PM_TRANS_PROGRESS_CONFLICTS_START:
       title = _("Checking for File Conflicts");
       break;
@@ -244,12 +244,12 @@ static void install_progress_callback(unsigned char event,char *pkg,int percent,
     case PM_TRANS_PROGRESS_ADD_START:
       title = _("Installing");
       break;
-    
+
     default:
       eprintf("Unhandled pacman progress event: %hhu\n",event);
       break;
   }
-  
+
   if(title != 0 && percent >= 0 && percent <= 100)
     ui_dialog_progress(title,text,percent);
 }
@@ -289,7 +289,7 @@ static bool install_setup(void)
   {
     error(pacman_strerror(pm_errno));
     return false;
-  }  
+  }
 
   if(pacman_set_option(PM_OPT_DLCB,(long) install_download_callback) == -1)
   {
@@ -411,9 +411,9 @@ static bool install_database_update(void)
   if(pacman_db_update(1,dl_database) == -1)
   {
     error(pacman_strerror(pm_errno));
-    return false;  
+    return false;
   }
-  
+
   return true;
 }
 
@@ -424,7 +424,7 @@ static void install_groups_free(struct install *groups)
 
   for( struct install *grp = groups ; grp->name != 0 ; ++grp )
     free(grp->name);
-  
+
   free(groups);
 }
 
@@ -440,7 +440,7 @@ static bool install_groups_get(struct install **groups)
     errno = EINVAL;
     error(strerror(errno));
     return false;
-  }  
+  }
 
   if((list = pacman_db_getgrpcache(dl_database)) == 0)
   {
@@ -451,10 +451,10 @@ static bool install_groups_get(struct install **groups)
   for( ; list ; list = pacman_list_next(list) )
   {
     const char *s = (const char *) pacman_list_getdata(list);
-      
+
     if(s == 0)
       continue;
-      
+
     if(strcmp(s,"apps") == 0)
       ++matches;
     else if(strcmp(s,"base") == 0)
@@ -484,7 +484,7 @@ static bool install_groups_get(struct install **groups)
     else if(strstr(s,"-extra") != 0)
       ++matches;
   }
-  
+
   if(matches == 0)
   {
     eprintf("Could not find any matching groups in the database.\n");
@@ -496,17 +496,17 @@ static bool install_groups_get(struct install **groups)
     error(pacman_strerror(pm_errno));
     return false;
   }
-  
+
   grps = malloc0(sizeof(struct install) * (matches + 1));
 
   for( ; list ; list = pacman_list_next(list) )
   {
     const char *s = (const char *) pacman_list_getdata(list);
     bool cache = false;
-      
+
     if(s == 0)
       continue;
-      
+
     if(strcmp(s,"apps") == 0)
       cache = true;
     else if(strcmp(s,"base") == 0)
@@ -545,11 +545,11 @@ static bool install_groups_get(struct install **groups)
   }
 
   grps[j].name = 0;
-  
+
   grps[j].checked = false;
-  
+
   *groups = grps;
-  
+
   return true;
 }
 
@@ -574,27 +574,27 @@ static bool install_groups_install(const struct install *groups)
   {
     if(!i->checked)
       continue;
-  
+
     PM_GRP *grp = pacman_db_readgrp(dl_database,(char *) i->name);
-    
+
     if(grp == 0)
     {
       error(pacman_strerror(pm_errno));
       return false;
     }
-    
+
     PM_LIST *pkgs = (PM_LIST *) pacman_grp_getinfo(grp,PM_GRP_PKGNAMES);
-    
+
     if(pkgs == 0)
     {
       error(pacman_strerror(pm_errno));
       return false;
     }
-    
+
     for( ; pkgs ; pkgs = pacman_list_next(pkgs) )
     {
       const char *pkg = (const char *) pacman_list_getdata(pkgs);
-      
+
       if(pkg == 0)
       {
         error(pacman_strerror(pm_errno));
@@ -661,29 +661,29 @@ static void install_reset(void)
   pacman_release();
 
   ui_dialog_progress(0,0,-1);
-  
+
   dl_database = 0;
-  
+
   memset(dl_filename,0,sizeof(dl_filename));
 
   dl_offset = 0;
-  
+
   memset(&dl_time0,0,sizeof(dl_time0));
-  
+
   memset(&dl_time1,0,sizeof(dl_time1));
 
   dl_rate = 0;
-  
+
   dl_xfered1 = 0;
 
   dl_eta_h = 0;
-  
+
   dl_eta_m = 0;
-  
+
   dl_eta_s = 0;
-  
+
   dl_remain = 0;
-  
+
   dl_howmany = 0;
 }
 

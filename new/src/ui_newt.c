@@ -21,24 +21,24 @@ union partition_action
 static inline bool findpath(struct format **targets,struct format *target,const char *path)
 {
   struct format **p = targets;
-  
+
   for( ; *p != 0 ; ++p )
   {
     struct format *t = *p;
-    
+
     if(t == target)
       continue;
-    
+
     if(t->newfilesystem == 0 && t->options == 0 && t->mountpath == 0)
-      continue; 
+      continue;
 
     if(strcmp(t->newfilesystem,"swap") == 0)
       continue;
-	
+
     if(strcmp(t->mountpath,path) == 0)
       return true;
   }
-  
+
   return false;
 }
 
@@ -87,32 +87,32 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   const char **p = 0;
   newtComponent form = 0;
   struct newtExitStruct es = {0};
-  
+
   if(!get_text_screen_size(FORMAT_DIALOG_TEXT,&textbox_width,&textbox_height))
     return false;
-  
+
   if(!get_label_screen_size(FORMAT_MOUNT_ENTRY_TEXT,&label1_width,&label1_height))
     return false;
-  
+
   if(!get_label_screen_size(FORMAT_PARAMETERS_ENTRY_TEXT,&label2_width,&label2_height))
     return false;
-  
+
   if(!get_button_screen_size(CANCEL_BUTTON_TEXT,&cancel_width,&cancel_height))
     return false;
-  
+
   if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
     return false;
-    
+
   entry_left = max(label1_width,label2_width) + 1;
-  
+
   entry1_width = NEWT_WIDTH - entry_left;
-  
+
   entry1_height = 1;
-  
+
   entry2_width = NEWT_WIDTH - entry_left;
-  
+
   entry2_height = 1;
-  
+
   listbox_width = NEWT_WIDTH;
 
   listbox_height = NEWT_HEIGHT - textbox_height - entry1_height - entry2_height - ok_height - 4;
@@ -122,28 +122,28 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
     eprintf("Failed to open a NEWT window.\n");
     return false;
   }
-  
+
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
-  
+
   newtTextboxSetText(textbox,FORMAT_DIALOG_TEXT);
-  
+
   label1 = newtLabel(0,textbox_height+1,FORMAT_MOUNT_ENTRY_TEXT);
-  
+
   entry1 = newtEntry(entry_left,textbox_height+1,(target->mountpath != 0) ? target->mountpath : "/",entry1_width,&path,0);
-  
+
   label2 = newtLabel(0,textbox_height+label1_height+2,FORMAT_PARAMETERS_ENTRY_TEXT);
-  
+
   entry2 = newtEntry(entry_left,textbox_height+label1_height+2,(target->options != 0) ? target->options : "",entry2_width,&parameters,0);
-  
+
   listbox = newtListbox(0,textbox_height+label1_height+label2_height+3,listbox_height,NEWT_FLAG_SCROLL);
-  
+
   newtListboxSetWidth(listbox,listbox_width);
 
   for( p = filesystems ; *p != 0 ; ++p )
   {
     newtListboxAppendEntry(listbox,*p,*p);
   }
-  
+
   if(target->format && target->newfilesystem != 0)
   {
     for( p = filesystems ; *p != 0 ; ++p )
@@ -159,17 +159,17 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
   {
     newtListboxSetCurrentByKey(listbox,(void *) filesystems[0]);
   }
-  
+
   cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
-  
+
   ok = newtButton(NEWT_WIDTH-cancel_width-ok_width,NEWT_HEIGHT-cancel_height,OK_BUTTON_TEXT);
-  
+
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,listbox,cancel,ok,(void *) 0);
 
   newtFormSetCurrent(form,entry1);
-  
+
   while(true)
   {
     newtFormRun(form,&es);
@@ -177,11 +177,11 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
     {
       break;
-    }    
+    }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
     {
       const char *filesystem = newtListboxGetCurrent(listbox);
-    
+
       if(
         (strcmp(filesystem,"noformat") == 0 && strcmp(target->filesystem,"unknown") == 0)        ||
         (strcmp(filesystem,"swap") != 0 && (!isrootpath(path) || findpath(targets,target,path)))
@@ -190,29 +190,29 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
         ui_dialog_text(FORMAT_PATH_TITLE,FORMAT_PATH_TEXT);
         continue;
       }
-      
+
       free(target->newfilesystem);
-      
+
       free(target->options);
-      
+
       free(target->mountpath);
-      
+
       target->format = (strcmp(filesystem,"noformat") != 0);
-      
+
       target->newfilesystem = strdup( (target->format) ? filesystem : target->filesystem );
-      
+
       target->options = strdup(parameters);
-            
+
       target->mountpath = strdup(path);
-      
+
       break;
     }
   }
-  
+
   newtFormDestroy(form);
-  
+
   newtPopWindow();
-  
+
   return true;
 }
 
@@ -244,7 +244,7 @@ static bool ui_dialog_partition_new_table(struct device *device,struct disk **da
     return false;
 
   listbox_width = NEWT_WIDTH;
-  
+
   listbox_height = NEWT_HEIGHT - textbox_height - ok_height - 2;
 
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,PARTITION_DIALOG_NEW_TABLE_TITLE) != 0)
@@ -258,21 +258,21 @@ static bool ui_dialog_partition_new_table(struct device *device,struct disk **da
   newtTextboxSetText(textbox,PARTITION_DIALOG_NEW_TABLE_TEXT);
 
   ok = newtButton(NEWT_WIDTH-ok_width-cancel_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
-  
+
   cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
 
   listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_SCROLL);
-  
+
   newtListboxSetWidth(listbox,listbox_width);
 
   newtListboxAppendEntry(listbox,"dos","dos");
-  
+
   newtListboxAppendEntry(listbox,"gpt","gpt");
 
   newtListboxSetCurrent(listbox,0);
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,ok,cancel,listbox,(void *) 0);
 
   newtFormSetCurrent(form,listbox);
@@ -280,7 +280,7 @@ static bool ui_dialog_partition_new_table(struct device *device,struct disk **da
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
     {
       break;
@@ -289,7 +289,7 @@ static bool ui_dialog_partition_new_table(struct device *device,struct disk **da
     {
       const char *type = newtListboxGetCurrent(listbox);
       struct disk *disk = *data;
-      
+
       if(disk == 0)
       {
         disk = disk_open_empty(device,type);
@@ -298,11 +298,11 @@ static bool ui_dialog_partition_new_table(struct device *device,struct disk **da
       {
         disk_new_table(disk,type);
       }
-      
+
       *data = disk;
-      
+
       modified = true;
-      
+
       break;
     }
   }
@@ -376,7 +376,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   entry_height = 1;
 
   listbox_width = NEWT_WIDTH;
-  
+
   listbox_height = NEWT_HEIGHT - textbox_height - ok_height - checkbox_height - label_height - 4;
 
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,PARTITION_DIALOG_MODIFY_PARTITION_TITLE) != 0)
@@ -390,7 +390,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   newtTextboxSetText(textbox,PARTITION_DIALOG_MODIFY_PARTITION_TEXT);
 
   ok = newtButton(NEWT_WIDTH-ok_width-cancel_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
-  
+
   cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
 
   active = (disk_partition_get_active(disk,n)) ? '*' : ' ';
@@ -400,11 +400,11 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   label = newtLabel(0,textbox_height+1,PARTITION_DIALOG_MODIFY_PARTITION_NAME_TEXT);
 
   name = (strcmp(disk_get_type(disk),"gpt") == 0) ? disk_partition_get_name(disk,n) : "";
-  
+
   entry = newtEntry(label_width+1,textbox_height+1,name,entry_width,&name,0);
 
   listbox = newtListbox(0,textbox_height+label_height+checkbox_height+3,listbox_height,NEWT_FLAG_SCROLL);
-  
+
   newtListboxSetWidth(listbox,listbox_width);
 
   purpose = disk_partition_get_purpose(disk,n);
@@ -413,15 +413,15 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   {
     if(strcmp(purposes[i],"unknown") == 0)
       continue;
-  
+
     newtListboxAppendEntry(listbox,purposes[i],purposes[i]);
-    
+
     if(strcmp(purposes[i],purpose) == 0)
       newtListboxSetCurrentByKey(listbox,(void *) purposes[i]);
   }
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,ok,cancel,checkbox,label,entry,listbox,(void *) 0);
 
   newtFormSetCurrent(form,entry);
@@ -429,7 +429,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
     {
       break;
@@ -437,7 +437,7 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == ok)
     {
       purpose = newtListboxGetCurrent(listbox);
-    
+
       if(!isasciistring(name) || strlen(name) > 36 || (strcmp(disk_get_type(disk),"gpt") != 0 && strcmp(purpose,"bios") == 0))
       {
         ui_dialog_text(PARTITION_DIALOG_MODIFY_PARTITION_ERROR_TITLE,PARTITION_DIALOG_MODIFY_PARTITION_ERROR_TEXT);
@@ -492,13 +492,13 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
 
   if(!get_text_screen_size(PARTITION_DIALOG_NEW_PARTITION_TEXT,&textbox_width,&textbox_height))
     return false;
-  
+
   if(!get_button_screen_size(OK_BUTTON_TEXT,&ok_width,&ok_height))
     return false;
-    
+
   if(!get_button_screen_size(CANCEL_BUTTON_TEXT,&cancel_width,&cancel_height))
     return false;
-  
+
   if(!get_label_screen_size(PARTITION_DIALOG_NEW_SIZE_TEXT,&label_width,&label_height))
     return false;
 
@@ -507,7 +507,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   entry_height = 1;
 
   listbox_width = NEWT_WIDTH;
-  
+
   listbox_height = NEWT_HEIGHT - textbox_height - ok_height - label_height - 3;
 
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,PARTITION_DIALOG_NEW_PARTITION_TITLE) != 0)
@@ -521,7 +521,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   newtTextboxSetText(textbox,PARTITION_DIALOG_NEW_PARTITION_TEXT);
 
   ok = newtButton(NEWT_WIDTH-ok_width-cancel_width,NEWT_HEIGHT-ok_height,OK_BUTTON_TEXT);
-  
+
   cancel = newtButton(NEWT_WIDTH-cancel_width,NEWT_HEIGHT-cancel_height,CANCEL_BUTTON_TEXT);
 
   label = newtLabel(0,textbox_height+1,PARTITION_DIALOG_NEW_SIZE_TEXT);
@@ -531,7 +531,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   entry = newtEntry(label_width+1,textbox_height+1,text,entry_width,&result,0);
 
   listbox = newtListbox(0,textbox_height+label_height+2,listbox_height,NEWT_FLAG_SCROLL);
-  
+
   newtListboxSetWidth(listbox,listbox_width);
 
   if(strcmp(disk_get_type(disk),"dos") == 0)
@@ -554,7 +554,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   newtListboxSetCurrent(listbox,0);
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,ok,cancel,label,entry,listbox,(void *) 0);
 
   newtFormSetCurrent(form,entry);
@@ -562,7 +562,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == cancel)
     {
       break;
@@ -578,14 +578,14 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
         ui_dialog_text(PARTITION_DIALOG_NEW_PARTITION_ERROR_TITLE,PARTITION_DIALOG_NEW_PARTITION_ERROR_TEXT);
         continue;
       }
-      
+
       if(strcmp(type,"primary") == 0)
         n = disk_create_partition(disk,size);
       else if(strcmp(type,"extended") == 0)
         n = disk_create_extended_partition(disk);
       else if(strcmp(type,"logical") == 0)
         n = disk_create_logical_partition(disk,size);
-      
+
       if(n == -1)
       {
         ui_dialog_text(PARTITION_DIALOG_NEW_PARTITION_ERROR_TITLE,PARTITION_DIALOG_NEW_PARTITION_ERROR_TEXT);
@@ -593,7 +593,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
       }
 
       modified = true;
-      
+
       break;
     }
   }
@@ -601,7 +601,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   newtFormDestroy(form);
 
   newtPopWindow();
-  
+
   return modified;
 }
 
@@ -633,17 +633,17 @@ extern int ui_main(int argc,char **argv)
     eprintf("We require a terminal of 80x24 or greater to use the NEWT user interface.\n");
     newtFinished();
     return 1;
-  }  
+  }
 
   newtCls();
 
   while(true)
   {
     module = modules[n];
-  
+
     if(module == 0)
       break;
-  
+
     if(module->run == 0 || module->reset == 0 || module->name == 0)
     {
       errno = EINVAL;
@@ -651,11 +651,11 @@ extern int ui_main(int argc,char **argv)
       code = EXIT_FAILURE;
       break;
     }
-  
+
     eprintf("About to run module '%s'.\n",module->name);
-  
+
     bool success = module->run();
-    
+
     if(!success)
     {
       eprintf("A fatal error has been reported by module '%s'.\n",module->name);
@@ -665,9 +665,9 @@ extern int ui_main(int argc,char **argv)
       code = EXIT_FAILURE;
       break;
     }
-    
+
     module->reset();
-    
+
     ++n;
   }
 
@@ -705,29 +705,29 @@ extern void ui_dialog_text(const char *title,const char *text)
     eprintf("Failed to open a NEWT window.\n");
     return;
   }
-  
+
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
-  
+
   newtTextboxSetText(textbox,text);
-  
+
   button = newtButton(NEWT_WIDTH-button_width,NEWT_HEIGHT-button_height,OK_BUTTON_TEXT);
-  
+
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,button,(void *) 0);
-  
+
   newtFormSetCurrent(form,button);
 
   while(true)
-  {  
+  {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == button)
       break;
   }
-  
+
   newtFormDestroy(form);
-  
+
   newtPopWindow();
 }
 
@@ -752,13 +752,13 @@ extern bool ui_dialog_yesno(const char *title,const char *text,bool defaultno)
     error(strerror(errno));
     return false;
   }
-  
+
   if(!get_text_screen_size(text,&textbox_width,&textbox_height))
     return false;
 
   if(!get_button_screen_size(YES_BUTTON_TEXT,&yes_width,&yes_height))
     return false;
-  
+
   if(!get_button_screen_size(NO_BUTTON_TEXT,&no_width,&no_height))
     return false;
 
@@ -769,34 +769,34 @@ extern bool ui_dialog_yesno(const char *title,const char *text,bool defaultno)
   }
 
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
-  
+
   newtTextboxSetText(textbox,text);
 
   yes = newtButton(NEWT_WIDTH-yes_width-no_width,NEWT_HEIGHT-yes_height,YES_BUTTON_TEXT);
-  
+
   no = newtButton(NEWT_WIDTH-no_width,NEWT_HEIGHT-no_height,NO_BUTTON_TEXT);
-  
+
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,yes,no,(void *) 0);
-  
+
   newtFormSetCurrent(form,(defaultno) ? no : yes);
-  
+
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && (es.u.co == yes || es.u.co == no))
     {
       result = (es.u.co == yes);
       break;
     }
   }
-  
+
   newtFormDestroy(form);
-  
+
   newtPopWindow();
-  
+
   return result;
 }
 
@@ -819,7 +819,7 @@ extern bool ui_dialog_progress(const char *title,const char *text,int percent)
       scale = 0;
       form = 0;
     }
-    
+
     if(title == 0 && text == 0 && percent == -1)
       return true;
   }
@@ -838,24 +838,24 @@ extern bool ui_dialog_progress(const char *title,const char *text,int percent)
       eprintf("Failed to open a NEWT window.\n");
       return false;
     }
-    
+
     oldtitle = strdup(title);
-    
+
     label = newtLabel(0,0,"");
-    
+
     scale = newtScale(0,2,NEWT_WIDTH,100);
-    
+
     form = newtForm(0,0,NEWT_FLAG_NOF12);
 
     newtFormAddComponents(form,label,scale,(void *) 0);
   }
 
   newtLabelSetText(label,text);
-  
+
   newtScaleSet(scale,percent);
 
   newtDrawForm(form);
-  
+
   newtRefresh();
 
   return true;
@@ -894,9 +894,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     return false;
 
   listbox_width = NEWT_WIDTH;
-  
+
   listbox_height = NEWT_HEIGHT - textbox_height - next_height - 2;
-  
+
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,PARTITION_TITLE) != 0)
   {
     eprintf("Failed to open a NEWT window.\n");
@@ -904,9 +904,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
   }
 
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
-  
+
   newtTextboxSetText(textbox,PARTITION_TEXT);
-  
+
   next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
 
   listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_RETURNEXIT|NEWT_FLAG_SCROLL);
@@ -919,54 +919,54 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     struct disk *disk = disks[i];
     union partition_action action = {{0}};
     long long freesize = 0;
-    
+
     size_to_string(size,10,device_get_size(device),false);
-    
+
     snprintf(text,NEWT_WIDTH+1,"Disk %s: %s label (%s)",device_get_path(device),(disk == 0) ? "nil" : disk_get_type(disk),size);
-    
+
     action.device_number = i;
-    
+
     action.disk = true;
-    
+
     newtListboxAppendEntry(listbox,text,(void *) action.data);
 
     action.disk = false;
-    
+
     if(disk != 0)
     {
       action.partition = true;
-    
+
       for( j = 0, k = disk_partition_get_count(disk) ; j < k ; ++j )
       {
         if(strcmp(disk_partition_get_purpose(disk,j),"extended") == 0)
           continue;
 
         action.partition_number = j;
-            
+
         size_to_string(size,10,disk_partition_get_size(disk,j),false);
-      
+
         snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,j),disk_partition_get_purpose(disk,j),(disk_partition_get_active(disk,j)) ? "active" : "inactive",size);
-        
+
         newtListboxAppendEntry(listbox,text,(void *) action.data);
       }
-      
+
       action.partition = false;
-      
+
       action.partition_number = 0;
 
       if((freesize = disk_get_free_size(disk)) > 0)
       {
         action.space = true;
-      
+
         size_to_string(size,10,freesize,false);
-        
+
         snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
-        
+
         newtListboxAppendEntry(listbox,text,(void *) action.data);
-        
+
         action.space = false;
       }
-      
+
       if(k > 0)
       {
         action.delete = true;
@@ -975,15 +975,15 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           snprintf(text,NEWT_WIDTH+1,"%2cDelete Extended Partition",' ');
         else
           snprintf(text,NEWT_WIDTH+1,"%2cDelete Last Partition",' ');
-        
+
         newtListboxAppendEntry(listbox,text,(void *) action.data);
-        
+
         action.delete = false;
       }
     }
-    
+
     action.device_number = 0;
-    
+
     if(devices[i+1] != 0)
       newtListboxAppendEntry(listbox,"",0);
   }
@@ -991,189 +991,189 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
   newtListboxSetCurrent(listbox,0);
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,next,listbox,(void *) 0);
 
   newtFormSetCurrent(form,listbox);
 
   while(true)
-  { 
+  {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == listbox)
     {
       const union partition_action action = { .data = (uintptr_t) newtListboxGetCurrent(listbox) };
       union partition_action key = { .data = action.data };
       struct device *device = devices[action.device_number];
       struct disk *disk = disks[action.device_number];
-      
+
       if(action.disk)
       {
         if(ui_dialog_partition_new_table(device,&disk))
         {
           disks[action.device_number] = disk;
-        
+
           key.disk = false;
-        
+
           key.partition = true;
-        
+
           for( i = 0 ; i < 255 ; ++i )
           {
             key.partition_number = i;
-        
+
             if(newtListboxDeleteEntry(listbox,(void *) key.data) == -1)
               break;
           }
-        
+
           key.data = action.data;
-        
+
           key.disk = false;
-        
+
           key.space = true;
-        
+
           newtListboxDeleteEntry(listbox,(void *) key.data);
-        
+
           key.data = action.data;
-        
+
           key.disk = false;
-        
+
           key.delete = true;
-        
+
           newtListboxDeleteEntry(listbox,(void *) key.data);
-        
+
           key.data = action.data;
-        
+
           size_to_string(size,10,device_get_size(device),false);
-        
+
           snprintf(text,NEWT_WIDTH+1,"Disk %s: %s label (%s)",device_get_path(device),disk_get_type(disk),size);
-        
+
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
-        
+
           newtListboxDeleteEntry(listbox,(void *) key.data);
-        
+
           key.disk = false;
-        
+
           key.space = true;
-        
+
           size_to_string(size,10,disk_get_free_size(disk),false);
-        
+
           snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
-        
+
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
-          
+
           newtListboxSetCurrentByKey(listbox,(void *) action.data);
         }
       }
       else if(action.partition)
       {
         unsigned char partition = action.partition_number;
-        
+
         if(ui_dialog_partition_modify_partition(disk,partition))
         {
           size_to_string(size,10,disk_partition_get_size(disk,partition),false);
-        
-          snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);          
-        
+
+          snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
+
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
-        
-          newtListboxDeleteEntry(listbox,(void *) key.data); 
-          
+
+          newtListboxDeleteEntry(listbox,(void *) key.data);
+
           newtListboxSetCurrentByKey(listbox,(void *) action.data);
         }
       }
       else if(action.space)
       {
         unsigned char partition = disk_partition_get_count(disk);
-        
+
         if(ui_dialog_partition_new_partition(disk))
         {
           key.space = false;
-          
+
           key.delete = true;
-          
+
           if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
             snprintf(text,NEWT_WIDTH+1,"%2cDelete Last Partition",' ');
           else
             snprintf(text,NEWT_WIDTH+1,"%2cDelete Extended Partition",' ');
 
           newtListboxDeleteEntry(listbox,(void *) key.data);
-          
+
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
-          
+
           key.data = action.data;
 
           if(disk_get_free_size(disk) > 0)
           {
             size_to_string(size,10,disk_get_free_size(disk),false);
-        
+
             snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
-        
+
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           }
 
           if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
           {
             key.space = false;
-          
+
             key.partition = true;
-          
+
             key.partition_number = partition;
 
             size_to_string(size,10,disk_partition_get_size(disk,partition),false);
-      
+
             snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
-          
+
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
-          }                    
+          }
 
           newtListboxDeleteEntry(listbox,(void *) action.data);
-          
+
           newtListboxSetCurrentByKey(listbox,(void *) ((disk_get_free_size(disk) > 0) ? action.data : key.data));
         }
       }
       else if(action.delete)
       {
         unsigned char partition = disk_partition_get_count(disk) - 1;
-        
+
         if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
         {
           key.delete = false;
-          
+
           key.partition = true;
-          
+
           key.partition_number = partition;
-          
+
           newtListboxDeleteEntry(listbox,(void *) key.data);
-          
+
           key.data = action.data;
         }
-        
+
         disk_delete_partition(disk);
-        
+
         if(partition > 0)
         {
           if(strcmp(disk_partition_get_purpose(disk,partition-1),"extended") != 0)
             snprintf(text,NEWT_WIDTH+1,"%2cDelete Last Partition",' ');
           else
             snprintf(text,NEWT_WIDTH+1,"%2cDelete Extended Partition",' ');
-        
+
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
         }
-        
+
         key.delete = false;
-        
+
         key.space = true;
-        
+
         size_to_string(size,10,disk_get_free_size(disk),false);
-        
+
         snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
-        
+
         newtListboxDeleteEntry(listbox,(void *) key.data);
-        
+
         newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
-        
+
         newtListboxDeleteEntry(listbox,(void *) action.data);
-        
+
         newtListboxSetCurrentByKey(listbox,(void *) ((partition > 0) ? action.data : key.data));
       }
     }
@@ -1205,24 +1205,24 @@ extern bool ui_window_format(struct format **targets)
   char text[NEWT_WIDTH+1] = {0};
   newtComponent form = 0;
   struct newtExitStruct es = {0};
-  
+
   if(targets == 0)
   {
     errno = EINVAL;
     error(strerror(errno));
     return false;
   }
-  
+
   if(!get_text_screen_size(FORMAT_TEXT,&textbox_width,&textbox_height))
     return false;
-  
+
   if(!get_button_screen_size(NEXT_BUTTON_TEXT,&next_width,&next_height))
     return false;
-  
+
   listbox_width = NEWT_WIDTH;
-  
+
   listbox_height = NEWT_HEIGHT - textbox_height - next_height - 2;
-    
+
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,FORMAT_TITLE) != 0)
   {
     eprintf("Failed to open a NEWT window.\n");
@@ -1230,53 +1230,53 @@ extern bool ui_window_format(struct format **targets)
   }
 
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
-  
+
   newtTextboxSetText(textbox,FORMAT_TEXT);
-  
+
   next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
 
   listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_RETURNEXIT|NEWT_FLAG_SCROLL);
 
   newtListboxSetWidth(listbox,listbox_width);
-  
+
   for( p = targets ; *p != 0 ; ++p )
   {
     struct format *target = *p;
-    
+
     snprintf(text,NEWT_WIDTH+1,"%-11s %-11s %-11s",target->devicepath,target->size,target->filesystem);
-    
+
     newtListboxAppendEntry(listbox,text,target);
   }
-  
+
   newtListboxSetCurrentByKey(listbox,targets[0]);
-  
+
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,next,listbox,(void *) 0);
-  
+
   newtFormSetCurrent(form,listbox);
-  
+
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == listbox)
     {
       struct format *target = newtListboxGetCurrent(listbox);
-      
+
       ui_dialog_format(targets,target);
-      
+
       if(target->newfilesystem != 0 && target->options != 0 && target->mountpath != 0)
       {
         snprintf(text,NEWT_WIDTH+1,"%-11s %-11s %-11s %-11s",target->devicepath,target->size,target->newfilesystem,(strcmp(target->newfilesystem,"swap") == 0) ? "active" : target->mountpath);
-        
+
         newtListboxInsertEntry(listbox,text,target,target);
-        
+
         newtListboxDeleteEntry(listbox,target);
-        
-        newtListboxSetCurrentByKey(listbox,target); 
+
+        newtListboxSetCurrentByKey(listbox,target);
       }
-      
+
       continue;
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
@@ -1290,37 +1290,37 @@ extern bool ui_window_format(struct format **targets)
 
         if(target->newfilesystem == 0 && target->options == 0 && target->mountpath == 0)
           continue;
-        
+
         if(strcmp(target->newfilesystem,"swap") == 0)
         {
           swap = true;
           continue;
         }
-        
+
         if(strcmp(target->mountpath,"/") == 0)
         {
           root = true;
           continue;
         }
       }
-      
+
       if(!swap && !ui_dialog_yesno(NO_SWAP_TITLE,NO_SWAP_TEXT,true))
         continue;
-      
+
       if(!root)
       {
         ui_dialog_text(NO_ROOT_TITLE,NO_ROOT_TEXT);
         continue;
       }
-       
+
       break;
     }
   }
-  
+
   newtFormDestroy(form);
-  
+
   newtPopWindow();
-  
+
   return true;
 }
 
@@ -1369,10 +1369,10 @@ extern bool ui_window_root(struct account *data)
   entry_width = NEWT_WIDTH - entry_left;
 
   entry_height = 1;
-  
+
   if(!get_button_screen_size(NEXT_BUTTON_TEXT,&next_width,&next_height))
     return false;
-  
+
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,ROOT_TITLE) != 0)
   {
     eprintf("Failed to open a NEWT window.\n");
@@ -1380,29 +1380,29 @@ extern bool ui_window_root(struct account *data)
   }
 
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
-  
+
   newtTextboxSetText(textbox,ROOT_TEXT);
-  
+
   label1 = newtLabel(0,textbox_height+1,PASSWORD_ENTER_TEXT);
-    
+
   entry1 = newtEntry(entry_left,textbox_height+1,"",entry_width,&password1,NEWT_FLAG_PASSWORD);
-  
+
   label2 = newtLabel(0,textbox_height+label1_height+2,PASSWORD_CONFIRM_TEXT);
-  
+
   entry2 = newtEntry(entry_left,textbox_height+label1_height+2,"",entry_width,&password2,NEWT_FLAG_PASSWORD);
-  
+
   next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
 
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,next,(void *) 0);
-  
+
   newtFormSetCurrent(form,entry1);
-  
+
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
     {
       if(get_text_length(password1) < PASSWORD_LENGTH || get_text_length(password2) < PASSWORD_LENGTH)
@@ -1416,27 +1416,27 @@ extern bool ui_window_root(struct account *data)
         ui_dialog_text(PASSWORD_MISMATCH_TITLE,PASSWORD_MISMATCH_TEXT);
         continue;
       }
-      
+
       break;
     }
   }
 
   data->name = 0;
-  
+
   data->user = strdup("root");
-  
+
   data->password = strdup(password1);
-  
+
   data->group = strdup("root");
-  
+
   data->groups = 0;
-  
+
   data->home = strdup("/root");
-  
+
   data->shell = strdup("/bin/bash");
-  
+
   newtFormDestroy(form);
-  
+
   newtPopWindow();
 
   return true;
@@ -1476,7 +1476,7 @@ extern bool ui_window_user(struct account *data)
   newtComponent form = 0;
   struct newtExitStruct es = {0};
   char home[PATH_MAX] = {0};
-  
+
   if(data == 0)
   {
     errno = EINVAL;
@@ -1492,17 +1492,17 @@ extern bool ui_window_user(struct account *data)
 
   if(!get_label_screen_size(USER_ENTRY_TEXT,&label2_width,&label2_height))
     return false;
-  
+
   if(!get_label_screen_size(PASSWORD_ENTER_TEXT,&label3_width,&label3_height))
     return false;
-  
+
   if(!get_label_screen_size(PASSWORD_CONFIRM_TEXT,&label4_width,&label4_height))
     return false;
 
   entry_left = maxv( (long []) { label1_width, label2_width, label3_width, label4_width }, 4) + 1;
-  
+
   entry_width = NEWT_WIDTH - entry_left;
-  
+
   entry_height = 0;
 
   if(!get_button_screen_size(NEXT_BUTTON_TEXT,&next_width,&next_height))
@@ -1517,27 +1517,27 @@ extern bool ui_window_user(struct account *data)
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
 
   newtTextboxSetText(textbox,USER_TEXT);
-  
+
   label1 = newtLabel(0,textbox_height+1,NAME_ENTRY_TEXT);
 
   entry1 = newtEntry(entry_left,textbox_height+1,"",entry_width,&name,0);
-  
+
   label2 = newtLabel(0,textbox_height+label1_height+2,USER_ENTRY_TEXT);
-  
+
   entry2 = newtEntry(entry_left,textbox_height+label1_height+2,"",entry_width,&user,0);
-  
+
   label3 = newtLabel(0,textbox_height+label1_height+label2_height+3,PASSWORD_ENTER_TEXT);
-  
+
   entry3 = newtEntry(entry_left,textbox_height+label1_height+label2_height+3,"",entry_width,&password1,NEWT_FLAG_PASSWORD);
-  
+
   label4 = newtLabel(0,textbox_height+label1_height+label2_height+label3_height+4,PASSWORD_CONFIRM_TEXT);
-  
+
   entry4 = newtEntry(entry_left,textbox_height+label1_height+label2_height+label3_height+4,"",entry_width,&password2,NEWT_FLAG_PASSWORD);
-  
+
   next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
-  
+
   form = newtForm(0,0,NEWT_FLAG_NOF12);
-  
+
   newtFormAddComponents(form,textbox,label1,entry1,label2,entry2,label3,entry3,label4,entry4,next,(void *) 0);
 
   newtFormSetCurrent(form,entry1);
@@ -1545,7 +1545,7 @@ extern bool ui_window_user(struct account *data)
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
     {
       if(get_text_length(user) < 1)
@@ -1553,43 +1553,43 @@ extern bool ui_window_user(struct account *data)
         ui_dialog_text(NO_USER_TITLE,NO_USER_TEXT);
         continue;
       }
-      
+
       if(get_text_length(password1) < PASSWORD_LENGTH || get_text_length(password2) < PASSWORD_LENGTH)
       {
         ui_dialog_text(PASSWORD_SHORT_TITLE,PASSWORD_SHORT_TEXT);
         continue;
       }
-      
+
       if(strcmp(password1,password2) != 0)
       {
         ui_dialog_text(PASSWORD_MISMATCH_TITLE,PASSWORD_MISMATCH_TEXT);
         continue;
       }
-      
+
       break;
     }
   }
-  
+
   data->name = (get_text_length(name) > 0) ? strdup(name) : 0;
-  
+
   data->user = strdup(user);
-  
+
   data->password = strdup(password1);
-  
+
   data->group = strdup("users");
-  
+
   data->groups = strdup("audio,camera,cdrom,floppy,scanner,video,uucp,storage,netdev,locate");
-  
+
   snprintf(home,PATH_MAX,"/home/%s",user);
-  
+
   data->home = strdup(home);
-  
+
   data->shell = strdup("/bin/bash");
 
   newtFormDestroy(form);
-  
+
   newtPopWindow();
-  
+
   return true;
 }
 
@@ -1626,7 +1626,7 @@ extern bool ui_window_time(char **data,char **zone,bool *utc)
 
   if(!get_checkbox_screen_size(UTC_TEXT,&checkbox_width,&checkbox_height))
     return false;
-  
+
   listbox_width = NEWT_WIDTH;
 
   listbox_height = NEWT_HEIGHT - textbox_height - next_height - checkbox_height - 3;
@@ -1638,15 +1638,15 @@ extern bool ui_window_time(char **data,char **zone,bool *utc)
   }
 
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
-  
+
   newtTextboxSetText(textbox,TIME_TEXT);
-  
+
   next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
 
   checkbox = newtCheckbox(0,textbox_height+1,UTC_TEXT,result,0,&result);
 
   listbox = newtListbox(0,textbox_height+checkbox_height+2,listbox_height,NEWT_FLAG_SCROLL);
-  
+
   newtListboxSetWidth(listbox,listbox_width);
 
   for( char **p = data ; *p != 0 ; ++p )
@@ -1663,7 +1663,7 @@ extern bool ui_window_time(char **data,char **zone,bool *utc)
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
       break;
   }
@@ -1710,7 +1710,7 @@ extern bool ui_window_install(struct install *data)
     return false;
 
   checkboxtree_width = NEWT_WIDTH;
-  
+
   checkboxtree_height = NEWT_HEIGHT - textbox_height - next_height - 2;
 
   if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,INSTALL_TITLE) != 0)
@@ -1718,7 +1718,7 @@ extern bool ui_window_install(struct install *data)
     eprintf("Failed to open a NEWT window.\n");
     return false;
   }
-  
+
   textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
 
   newtTextboxSetText(textbox,INSTALL_TEXT);
@@ -1748,7 +1748,7 @@ extern bool ui_window_install(struct install *data)
   while(true)
   {
     newtFormRun(form,&es);
-    
+
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
     {
       grp = data;

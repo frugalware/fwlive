@@ -107,7 +107,7 @@ static inline bool isdisk(const struct stat *st)
     // virtio disks
     case 253:
       return true;
-    
+
     default:
       return false;
   }
@@ -160,9 +160,9 @@ static bool getuuid(struct disk *disk)
 static bool zapdisk(const char *path)
 {
   char command[_POSIX_ARG_MAX] = {0};
-  
+
   snprintf(command,_POSIX_ARG_MAX,"sgdisk --zap-all '%s'",path);
-  
+
   return execute(command,"/",0);
 }
 
@@ -190,7 +190,7 @@ static inline void getsectors(struct disk *disk)
 static bool newpartition(struct disk *disk,long long size,struct partition *part)
 {
   struct partition *last = 0;
-  
+
   if(disk->size == 0)
   {
     part->number = 1;
@@ -213,18 +213,18 @@ static bool newpartition(struct disk *disk,long long size,struct partition *part
 
   if(part->end > disk->sectors)
     part->end = disk->sectors;
-  
+
   part->size = (part->end - part->start) + 1;
 
   if(
     part->size >= disk->sectors               ||
-    (last != 0 && last->end >= disk->sectors)               
+    (last != 0 && last->end >= disk->sectors)
   )
   {
     errno = ERANGE;
     error(strerror(errno));
     return false;
-  }  
+  }
 
   return true;
 }
@@ -244,7 +244,7 @@ extern struct device **device_probe_all(bool disk)
     error(strerror(errno));
     return 0;
   }
-  
+
   if(disk)
   {
     if(glob("/dev/[hsv]d[a-z]",flags,0,&ge) != 0)
@@ -253,28 +253,28 @@ extern struct device **device_probe_all(bool disk)
       error(strerror(errno));
       return 0;
     }
-    
+
     flags |= GLOB_APPEND;
   }
-  
+
   devices = malloc0(ge.gl_pathc * sizeof(struct device *));
-  
+
   for( ; i < ge.gl_pathc ; ++i )
   {
     device = device_open(ge.gl_pathv[i]);
-    
+
     if(device == 0)
       continue;
-    
+
     devices[n++] = device;
   }
-  
+
   devices = realloc(devices,(n + 1) * sizeof(struct device *));
 
   devices[n] = 0;
-  
+
   globfree(&ge);
-  
+
   return devices;
 }
 
@@ -288,14 +288,14 @@ extern struct device *device_open(const char *path)
   long long sectors = 0;
   enum devicetype type = DEVICETYPE_UNKNOWN;
   struct device *device = 0;
-  
+
   if(path == 0)
   {
     errno = EINVAL;
     error(strerror(errno));
     goto bail;
   }
-  
+
   if((fd = open(path,O_RDONLY)) == -1 || fstat(fd,&st) == -1)
   {
     error(strerror(errno));
@@ -321,44 +321,44 @@ extern struct device *device_open(const char *path)
     error(strerror(errno));
     goto bail;
   }
-  
+
   alignment = MEBIBYTE / sectorsize;
-  
+
   sectors = size / sectorsize;
-  
+
   if(size <= 0 || sectorsize <= 0 || (MEBIBYTE % sectorsize) != 0 || (size % sectorsize) != 0)
   {
     errno = ERANGE;
     error(strerror(errno));
     goto bail;
   }
-  
+
   if(S_ISREG(st.st_mode))
     type = DEVICETYPE_FILE;
   else if(isdisk(&st))
     type = DEVICETYPE_DISK;
   else
     type = DEVICETYPE_UNKNOWN;
-  
+
   device = malloc0(sizeof(struct device));
-  
+
   device->path = strdup(path);
-  
+
   device->size = size;
-  
+
   device->sectorsize = sectorsize;
-  
+
   device->alignment = alignment;
-  
+
   device->sectors = sectors;
-  
+
   device->type = type;
-  
+
 bail:
 
   if(fd != -1)
     close(fd);
-  
+
   return device;
 }
 
@@ -382,7 +382,7 @@ extern long long device_get_size(struct device *device)
     error(strerror(errno));
     return 0;
   }
-  
+
   return device->size;
 }
 
@@ -394,7 +394,7 @@ extern const char *device_get_type(struct device *device)
     error(strerror(errno));
     return 0;
   }
-  
+
   if(device->type == DEVICETYPE_FILE)
     return "file";
   else if(device->type == DEVICETYPE_DISK)
@@ -409,9 +409,9 @@ extern void device_close(struct device *device)
 {
   if(device == 0)
     return;
-  
+
   free(device->path);
-  
+
   free(device);
 }
 
@@ -488,28 +488,28 @@ extern struct disk *disk_open(struct device *device)
       error("partition table too big");
       goto bail;
     }
-    
+
     for( ; i < j && (partition = blkid_partlist_get_partition(partlist,i)) != 0 ; ++i )
     {
       struct partition *part = &disk.table[i];
-      
+
       part->number = blkid_partition_get_partno(partition);
-      
+
       part->start = blkid_partition_get_start(partition);
-      
+
       part->size = blkid_partition_get_size(partition);
-      
+
       part->end = part->start + part->size - 1;
-      
+
       if(disk.type == DISKTYPE_DOS)
       {
         part->dostype = blkid_partition_get_type(partition);
-        
+
         part->dosactive = (blkid_partition_get_flags(partition) == 0x80);
-        
+
         continue;
       }
-      
+
       if(disk.type == DISKTYPE_GPT)
       {
         if(blkid_partition_get_name(partition) != 0)
@@ -518,13 +518,13 @@ extern struct disk *disk_open(struct device *device)
         snprintf(part->gptuuid,37,"%s",blkid_partition_get_uuid(partition));
 
         snprintf(part->gpttype,37,"%s",blkid_partition_get_type_string(partition));
-        
+
         part->gptflags = blkid_partition_get_flags(partition);
-        
+
         continue;
       }
     }
-    
+
     disk.size = j;
   }
 
@@ -537,10 +537,10 @@ bail:
 
   if(fd != -1)
     close(fd);
-  
+
   if(probe != 0)
     blkid_free_probe(probe);
-  
+
   return result;
 }
 
@@ -554,9 +554,9 @@ extern struct disk *disk_open_empty(struct device *device,const char *type)
     error(strerror(errno));
     return 0;
   }
-  
+
   disk.device = device;
-  
+
   disk_new_table(&disk,type);
 
   return memdup(&disk,sizeof(struct disk));
@@ -572,21 +572,21 @@ extern const char *disk_get_type(struct disk *disk)
     error(strerror(errno));
     return 0;
   }
-  
+
   if(disk->type == DISKTYPE_DOS)
     type = "dos";
   else if(disk->type == DISKTYPE_GPT)
     type = "gpt";
   else
     type = "unknown";
-  
+
   return type;
 }
 
 extern long long disk_get_free_size(struct disk *disk)
 {
   long long size = 0;
-  
+
   if(disk == 0)
   {
     errno = EINVAL;
@@ -599,7 +599,7 @@ extern long long disk_get_free_size(struct disk *disk)
   if(disk->size > 0)
   {
     struct partition *last = &disk->table[disk->size-1];
-  
+
     if(disk_has_extended_partition(disk) && last->dostype == DOS_EXTENDED)
     {
       size -= last->start + disk->device->alignment;
@@ -611,7 +611,7 @@ extern long long disk_get_free_size(struct disk *disk)
   }
 
   size *= disk->device->sectorsize;
-  
+
   return size;
 }
 
@@ -626,7 +626,7 @@ extern void disk_new_table(struct disk *disk,const char *type)
     error(strerror(errno));
     return;
   }
-  
+
   device = disk->device;
 
   if(strcmp(type,"dos") == 0)
@@ -641,9 +641,9 @@ extern void disk_new_table(struct disk *disk,const char *type)
   }
 
   memset(disk,0,sizeof(struct disk));
-  
+
   disk->device = device;
-  
+
   disk->type = disktype;
 
   getsectors(disk);
@@ -670,7 +670,7 @@ extern bool disk_has_extended_partition(struct disk *disk)
     if(disk->table[i].dostype == DOS_EXTENDED)
       return true;
   }
-  
+
   return false;
 }
 
@@ -687,7 +687,7 @@ extern int disk_create_partition(struct disk *disk,long long size)
 
   if(!newpartition(disk,size,&part))
     return -1;
-    
+
   if(
     (disk->type == DISKTYPE_DOS && part.number > 4)   ||
     (disk->type == DISKTYPE_GPT && part.number > 128) ||
@@ -697,7 +697,7 @@ extern int disk_create_partition(struct disk *disk,long long size)
     errno = ERANGE;
     error(strerror(errno));
     return -1;
-  }  
+  }
 
   if(disk->type == DISKTYPE_DOS)
     part.dostype = DOS_DATA;
@@ -714,30 +714,30 @@ extern int disk_create_partition(struct disk *disk,long long size)
 extern int disk_create_extended_partition(struct disk *disk)
 {
   struct partition part = {0};
-  
+
   if(disk == 0 || disk->size < 0 || disk->type != DISKTYPE_DOS)
   {
     errno = EINVAL;
     error(strerror(errno));
     return -1;
   }
-  
+
   if(disk_has_extended_partition(disk))
   {
     errno = EINVAL;
     error(strerror(errno));
     return -1;
   }
-  
+
   if(!newpartition(disk,disk->sectors,&part) || part.number > 4)
     return -1;
-  
+
   part.dostype = DOS_EXTENDED;
-  
+
   memcpy(&disk->table[disk->size++],&part,sizeof(struct partition));
 
-  disk->modified = true;  
-  
+  disk->modified = true;
+
   return disk->size - 1;
 }
 
@@ -747,48 +747,48 @@ extern int disk_create_logical_partition(struct disk *disk,long long size)
   struct partition *ext = 0;
   struct partition *last = 0;
   struct partition part = {0};
-  
+
   if(disk == 0 || disk->size < 0 || disk->type != DISKTYPE_DOS || size <= 0)
   {
     errno = EINVAL;
     error(strerror(errno));
     return -1;
   }
-  
+
   for( ; i < disk->size ; ++i )
   {
     struct partition *part = &disk->table[i];
-    
+
     if(part->dostype == DOS_EXTENDED && ext == 0)
       ext = part;
-    
+
     last = part;
   }
-  
+
   if(ext == 0 || ext->number > 4)
   {
     errno = EINVAL;
     error(strerror(errno));
     return -1;
   }
-    
+
   part.number = (ext == last) ? 5 : last->number + 1;
-  
+
   part.start = last->end + 1 + disk->device->alignment;
-  
+
   part.size = size / disk->device->sectorsize;
-  
+
   part.end = part.start + part.size - 1;
-  
+
   part.start = alignsector(disk->device,part.start);
-  
+
   part.end = alignsector(disk->device,part.end) - 1;
-  
+
   if(part.end > disk->sectors)
     part.end = disk->sectors;
-  
+
   part.size = (part.end - part.start) + 1;
-  
+
   if(
     part.size >= disk->sectors ||
     last->end >= disk->sectors ||
@@ -799,13 +799,13 @@ extern int disk_create_logical_partition(struct disk *disk,long long size)
     error(strerror(errno));
     return -1;
   }
-  
+
   part.dostype = DOS_DATA;
-  
+
   memcpy(&disk->table[disk->size++],&part,sizeof(struct partition));
 
   disk->modified = true;
-  
+
   return disk->size - 1;
 }
 
@@ -819,9 +819,9 @@ extern void disk_delete_partition(struct disk *disk)
     error(strerror(errno));
     return;
   }
-  
+
   last = &disk->table[--disk->size];
-  
+
   memset(last,0,sizeof(struct partition));
 
   disk->modified = true;
@@ -839,7 +839,7 @@ extern void disk_partition_set_purpose(struct disk *disk,int n,const char *purpo
   }
 
   part = &disk->table[n];
-  
+
   if(disk->type == DISKTYPE_DOS)
   {
     if(strcmp(purpose,"data") == 0)
@@ -870,7 +870,7 @@ extern void disk_partition_set_purpose(struct disk *disk,int n,const char *purpo
     else if(strcmp(purpose,"bios") == 0)
       snprintf(part->gpttype,37,"%s",GPT_BIOS);
   }
-  
+
   disk->modified = true;
 }
 
@@ -886,7 +886,7 @@ extern void disk_partition_set_active(struct disk *disk,int n,bool active)
   }
 
   part = &disk->table[n];
-  
+
   if(disk->type == DISKTYPE_DOS)
     part->dosactive = active;
   else if(disk->type == DISKTYPE_GPT)
@@ -896,7 +896,7 @@ extern void disk_partition_set_active(struct disk *disk,int n,bool active)
     else if((part->gptflags & GPT_BOOT_FLAG) != 0)
       part->gptflags ^= GPT_BOOT_FLAG;
   }
-  
+
   disk->modified = true;
 }
 
@@ -936,7 +936,7 @@ extern const char *disk_partition_get_purpose(struct disk *disk,int n)
   }
 
   part = &disk->table[n];
-  
+
   if(disk->type == DISKTYPE_DOS)
   {
     if(part->dostype == DOS_DATA)
@@ -967,7 +967,7 @@ extern const char *disk_partition_get_purpose(struct disk *disk,int n)
      else if(strcmp(part->gpttype,GPT_BIOS) == 0)
        purpose = "bios";
   }
-  
+
   return purpose;
 }
 
@@ -975,35 +975,35 @@ extern bool disk_partition_get_active(struct disk *disk,int n)
 {
   struct partition *part = 0;
   bool active = false;
-  
+
   if(disk == 0 || n < 0 || n > disk->size)
   {
     errno = EINVAL;
     error(strerror(errno));
     return false;
   }
-  
+
   part = &disk->table[n];
-  
+
   if(disk->type == DISKTYPE_DOS)
     active = part->dosactive;
   else if(disk->type == DISKTYPE_GPT)
     active = (part->gptflags & GPT_BOOT_FLAG) != 0;
-  
+
   return active;
 }
 
 extern const char *disk_partition_get_name(struct disk *disk,int n)
 {
   struct partition *part = 0;
-  
+
   if(disk == 0 || n < 0 || n > disk->size || disk->type != DISKTYPE_GPT)
   {
     errno = EINVAL;
     error(strerror(errno));
     return 0;
   }
-  
+
   part = &disk->table[n];
 
   return part->gptname;
@@ -1012,32 +1012,32 @@ extern const char *disk_partition_get_name(struct disk *disk,int n)
 extern int disk_partition_get_number(struct disk *disk,int n)
 {
   struct partition *part = 0;
-  
+
   if(disk == 0 || n < 0 || n > disk->size)
   {
     errno = EINVAL;
     error(strerror(errno));
     return 0;
   }
-  
+
   part = &disk->table[n];
-  
+
   return part->number;
 }
 
 extern long long disk_partition_get_size(struct disk *disk,int n)
 {
   struct partition *part = 0;
-  
+
   if(disk == 0 || n < 0 || n > disk->size)
   {
     errno = EINVAL;
     error(strerror(errno));
     return 0;
   }
-  
+
   part = &disk->table[n];
-  
+
   return part->size * disk->device->sectorsize;
 }
 
@@ -1063,62 +1063,62 @@ extern bool disk_flush(struct disk *disk)
   if(disk->type == DISKTYPE_DOS)
   {
     snprintf(command,_POSIX_ARG_MAX,"set -e;echo -n -e '");
-    
+
     n = strlen(command);
-    
+
     for( ; i < disk->size ; ++i )
     {
       part = &disk->table[i];
-      
+
       if(prev != 0)
         j = part->number - prev->number;
-      
+
       for( ; j > 1 ; --j )
       {
         snprintf(command+n,_POSIX_ARG_MAX-n,"0 0 0x00 -\\n");
-        
+
         n = strlen(command);
       }
-      
+
       snprintf(command+n,_POSIX_ARG_MAX-n,"%lld %lld 0x%.2hhx %c\\n",
         part->start,
         part->size,
         part->dostype,
         (part->dosactive) ? '*' : '-'
       );
-      
+
       n = strlen(command);
-      
+
       prev = part;
     }
-    
+
     if(n < 20)
     {
       snprintf(command+n,_POSIX_ARG_MAX-n,"0 0 0x00 -\\n");
-      
+
       n = strlen(command);
     }
-      
+
     snprintf(command+n,_POSIX_ARG_MAX-n,"' | sfdisk --unit S --Linux '%s';echo -n -e 'x\\ni\\n0x%.8x\\nw\\n' | fdisk '%s';",
       disk->device->path,
       (disk->dosuuid == 0) ? (unsigned int) rand() : disk->dosuuid,
       disk->device->path
     );
-    
-    n = strlen(command);    
+
+    n = strlen(command);
   }
   else if(disk->type == DISKTYPE_GPT)
   {
     snprintf(command,_POSIX_ARG_MAX,"set -e;sgdisk --clear --disk-guid='%s'",
       (strlen(disk->gptuuid) == 0) ? "R" : disk->gptuuid
     );
-    
+
     n = strlen(command);
-    
+
     for( ; i < disk->size ; ++i )
     {
       part = &disk->table[i];
-      
+
       snprintf(command+n,_POSIX_ARG_MAX-n," --new='%d:%lld:%lld' --change-name='%d:%s' --partition-guid='%d:%s' --typecode='%d:%s' --attributes='%d:=:0x%.16llx'",
         part->number,
         part->start,
@@ -1135,20 +1135,20 @@ extern bool disk_flush(struct disk *disk)
 
       n = strlen(command);
     }
-    
+
     snprintf(command+n,_POSIX_ARG_MAX-n," '%s';",
       disk->device->path
     );
-    
-    n = strlen(command);  
+
+    n = strlen(command);
   }
-  
+
   if(!zapdisk(disk->device->path))
     return false;
-  
+
   if(!execute(command,"/",0))
     return false;
-  
+
   return true;
 }
 

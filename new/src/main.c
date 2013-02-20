@@ -16,7 +16,7 @@ extern int main(int argc,char **argv)
   if(setlocale(LC_ALL,"") == 0)
   {
     perror("main");
-    
+
     return EXIT_FAILURE;
   }
 

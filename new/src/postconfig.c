@@ -25,26 +25,26 @@ static bool is_root_setup(void)
     error(strerror(errno));
     return false;
   }
-  
+
   while(fgets(line,LINE_MAX,file) != 0)
   {
     tmp = line;
 
     if((user = strsep(&tmp,":")) == 0)
       continue;
-    
+
     if((pwd = strsep(&tmp,":")) == 0)
       continue;
-    
+
     if(strcmp(user,"root") == 0)
     {
       result = (strlen(pwd) > 1);
       break;
     }
   }
-  
+
   fclose(file);
-  
+
   return result;
 }
 
@@ -55,31 +55,31 @@ static bool is_user_setup(void)
   char *tmp = 0;
   char *gid = 0;
   bool result = false;
-  
+
   file = fopen("etc/passwd","rb");
-  
+
   if(file == 0)
   {
     error(strerror(errno));
-    return false;    
+    return false;
   }
-  
+
   while(fgets(line,LINE_MAX,file) != 0)
   {
     tmp = line;
 
     if(strsep(&tmp,":") == 0)
       continue;
-    
+
     if(strsep(&tmp,":") == 0)
       continue;
-    
+
     if(strsep(&tmp,":") == 0)
       continue;
-    
+
     if((gid = strsep(&tmp,":")) == 0)
       continue;
-    
+
     if(strcmp(gid,"100") == 0)
     {
       result = true;
@@ -88,7 +88,7 @@ static bool is_user_setup(void)
   }
 
   fclose(file);
-  
+
   return result;
 }
 
@@ -103,8 +103,8 @@ static bool root_action(struct account *account)
     return false;
   }
 
-  snprintf(command,_POSIX_ARG_MAX,"echo '%s:%s' | chpasswd",account->user,account->password);  
-  
+  snprintf(command,_POSIX_ARG_MAX,"echo '%s:%s' | chpasswd",account->user,account->password);
+
   return execute(command,INSTALL_ROOT,0);
 }
 
@@ -123,12 +123,12 @@ static bool user_action(struct account *account)
 
   if(!execute(command,INSTALL_ROOT,0))
     return false;
-  
+
   snprintf(command,_POSIX_ARG_MAX,"echo '%s:%s' | chpasswd",account->user,account->password);
-  
+
   if(!execute(command,INSTALL_ROOT,0))
     return false;
-  
+
   return true;
 }
 
@@ -140,17 +140,17 @@ static void account_free(struct account *account)
   free(account->name);
 
   free(account->user);
-  
+
   free(account->password);
-  
+
   free(account->group);
-  
+
   free(account->groups);
-  
+
   free(account->home);
-  
+
   free(account->shell);
-  
+
   memset(account,0,sizeof(struct account));
 }
 
@@ -187,7 +187,7 @@ static bool get_timezone_data(void)
     error(strerror(errno));
     return false;
   }
-  
+
   tz_data = malloc0(sizeof(char *) * (tz_size + 1));
 
   if(nftw(TZSEARCHDIR,timezone_nftw_callback,512,FTW_DEPTH|FTW_PHYS) == -1)
@@ -210,15 +210,15 @@ static bool time_action(char *zone,bool utc)
     error(strerror(errno));
     return false;
   }
-  
+
   snprintf(buf,4096,"/" TZDIR "/%s",zone);
-  
+
   if(symlink(buf,TZFILE) == -1)
   {
     error(strerror(errno));
     return false;
   }
-  
+
   snprintf(buf,4096,"hwclock --systohc %s",(utc) ? "--utc" : "--localtime");
 
   if(!execute(buf,INSTALL_ROOT,0))
@@ -232,7 +232,7 @@ static bool postconfig_run(void)
   struct account account = {0};
   char *zone = 0;
   bool utc = true;
-  
+
   if(chdir(INSTALL_ROOT) == -1)
   {
     error(strerror(errno));
@@ -244,33 +244,33 @@ static bool postconfig_run(void)
     error(strerror(errno));
     return false;
   }
-  
+
   if(mount("none",INSTALL_ROOT "/proc","proc",0,0) == -1)
   {
     error(strerror(errno));
     return false;
   }
-  
+
   if(mount("none",INSTALL_ROOT "/sys","sysfs",0,0) == -1)
   {
     error(strerror(errno));
     return false;
   }
-  
+
   if(!is_root_setup() && (!ui_window_root(&account) || !root_action(&account)))
   {
     account_free(&account);
     return false;
   }
-  
+
   account_free(&account);
-  
+
   if(!is_user_setup() && (!ui_window_user(&account) || !user_action(&account)))
   {
     account_free(&account);
     return false;
   }
-  
+
   account_free(&account);
 
   if(!get_timezone_data() || !ui_window_time(tz_data,&zone,&utc) || !time_action(zone,utc))
@@ -279,21 +279,21 @@ static bool postconfig_run(void)
   if(umount2(INSTALL_ROOT "/dev",MNT_DETACH) == -1)
   {
     error(strerror(errno));
-    return false;    
+    return false;
   }
-  
+
   if(umount2(INSTALL_ROOT "/proc",MNT_DETACH) == -1)
   {
     error(strerror(errno));
     return false;
   }
-  
+
   if(umount2(INSTALL_ROOT "/sys",MNT_DETACH) == -1)
   {
     error(strerror(errno));
     return false;
   }
-  
+
   return true;
 }
 
@@ -307,9 +307,9 @@ static void postconfig_reset(void)
   {
     for( size_t i = 0 ; tz_data[i] != 0 ; ++i )
       free(tz_data[i]);
-    
+
     free(tz_data);
-    
+
     tz_data = 0;
   }
 }

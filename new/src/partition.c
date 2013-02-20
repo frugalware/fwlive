@@ -31,7 +31,7 @@ static bool partition_flush(void)
 
   for( ; devices[j] != 0 ; ++j )
 	  ;
-	
+
   if(j < 10)
     padding = 1;
   else if(j < 100)
@@ -41,27 +41,27 @@ static bool partition_flush(void)
   else if(j < 10000)
     padding = 4;
 
-	
+
   for( ; devices[i] != 0 ; ++i )
   {
     struct device *device = devices[i];
     struct disk *disk = disks[i];
-  
+
     snprintf(text,LINE_MAX,"(%*d/%d) - %s",padding,i+1,j,device_get_path(device));
-    
+
     percent = (float) (i+1) / j * 100;
-	  
+
     ui_dialog_progress(_("Partitioning"),text,percent);
-	  
+
     if(disk && !disk_flush(disk))
     {
       ui_dialog_progress(0,0,-1);
       return false;
     }
   }
-	
+
   ui_dialog_progress(0,0,-1);
-	
+
   return true;
 }
 
@@ -91,19 +91,19 @@ static void partition_reset(void)
       {
         disk_close(disks[i]);
       }
-      
+
       free(disks);
-      
+
       disks = 0;
     }
-    
+
     for( i = 0 ; devices[i] != 0 ; ++i )
     {
       device_close(devices[i]);
     }
-    
+
     free(devices);
-    
+
     devices = 0;
   }
 }
