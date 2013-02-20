@@ -24,15 +24,43 @@ static bool partition_setup(void)
 static bool partition_flush(void)
 {
   int i = 0;
+  int j = 0;
+  int padding = 0;
+  int percent = 0;
+  char text[LINE_MAX] = {0};
 
+  for( ; devices[j] != 0 ; ++j )
+	  ;
+	
+  if(j < 10)
+    padding = 1;
+  else if(j < 100)
+    padding = 2;
+  else if(j < 1000)
+    padding = 3;
+  else if(j < 10000)
+    padding = 4;
+
+	
   for( ; devices[i] != 0 ; ++i )
   {
-    if(disks[i] == 0)
-      continue;
+    struct device *device = devices[i];
+    struct disk *disk = disks[i];
+  
+    snprintf(text,LINE_MAX,"(%*d/%d) - %s",padding,i+1,j,device_get_path(device));
     
-    if(!disk_flush(disks[i]))
+    percent = (float) (i+1) / j * 100;
+	  
+    ui_dialog_progress(_("Partitioning"),text,percent);
+	  
+    if(disk && !disk_flush(disk))
+    {
+      ui_dialog_progress(0,0,-1);
       return false;
+    }
   }
+	
+  ui_dialog_progress(0,0,-1);
 	
   return true;
 }
