@@ -729,7 +729,7 @@ extern int disk_create_extended_partition(struct disk *disk)
     return -1;
   }
 
-  if(!newpartition(disk,disk->sectors,&part) || part.number > 4)
+  if(!newpartition(disk,disk_get_free_size(disk),&part) || part.number > 4)
     return -1;
 
   part.dostype = DOS_EXTENDED;
