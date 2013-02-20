@@ -411,9 +411,6 @@ static bool ui_dialog_partition_modify_partition(struct disk *disk,int n)
 
   for( i = 0 ; purposes[i] != 0 ; ++i )
   {
-    if(strcmp(purposes[i],"unknown") == 0)
-      continue;
-
     newtListboxAppendEntry(listbox,purposes[i],purposes[i]);
 
     if(strcmp(purposes[i],purpose) == 0)
