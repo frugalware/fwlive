@@ -82,12 +82,16 @@ static bool partition_run(void)
 static void partition_reset(void)
 {
   int i = 0;
+  int j = 0;
 
   if(devices != 0)
   {
+    for( ; devices[j] != 0 ; ++j )
+      ;
+  
     if(disks != 0)
     {
-      for( i = 0 ; disks[i] != 0 ; ++i )
+      for( i = 0 ; i < j ; ++i )
       {
         disk_close(disks[i]);
       }
@@ -97,7 +101,7 @@ static void partition_reset(void)
       disks = 0;
     }
 
-    for( i = 0 ; devices[i] != 0 ; ++i )
+    for( i = 0 ; i < j ; ++i )
     {
       device_close(devices[i]);
     }
