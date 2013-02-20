@@ -134,12 +134,12 @@ extern bool size_to_string(char *s,size_t n,long long size,bool pad)
 
 extern long long string_to_size(const char *s)
 {
-  double base = 0;
+  long double base = 0;
   int off = 0;
   const char *suffix = 0;
   long long unit = 0;
 
-  if(s == 0 || sscanf(s,"%lf%n",&base,&off) < 1)
+  if(s == 0 || sscanf(s,"%Lf%n",&base,&off) < 1)
   {
     errno = EINVAL;
     error(strerror(errno));
