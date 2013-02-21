@@ -599,6 +599,10 @@ extern long long disk_get_free_size(struct disk *disk)
       size -= last->end;
     }
   }
+  else
+  {
+    size -= disk->device->alignment;
+  }
 
   size *= disk->device->sectorsize;
 
