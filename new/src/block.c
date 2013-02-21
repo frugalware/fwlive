@@ -179,7 +179,7 @@ static inline long long alignsector(const struct device *device,long long sector
 static inline void getsectors(struct disk *disk)
 {
   long long sectorsize = disk->device->sectorsize;
-  long long sectors = disk->device->sectors - 1;
+  long long sectors = disk->device->sectors;
 
   if(disk->type == DISKTYPE_GPT)
     sectors -= 1 + ((128 * 128) / sectorsize);
@@ -212,7 +212,7 @@ static bool newpartition(struct disk *disk,long long size,struct partition *part
   part->end = alignsector(disk->device,part->end) - 1;
 
   if(part->end > disk->sectors)
-    part->end = disk->sectors;
+    part->end = disk->sectors - 1;
 
   part->size = (part->end - part->start) + 1;
 
@@ -775,7 +775,7 @@ extern int disk_create_logical_partition(struct disk *disk,long long size)
   part.end = alignsector(disk->device,part.end) - 1;
 
   if(part.end > disk->sectors)
-    part.end = disk->sectors;
+    part.end = disk->sectors - 1;
 
   part.size = (part.end - part.start) + 1;
 
