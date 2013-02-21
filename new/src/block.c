@@ -211,7 +211,7 @@ static bool newpartition(struct disk *disk,long long size,struct partition *part
 
   part->end = alignsector(disk->device,part->end) - 1;
 
-  if(part->end > disk->sectors)
+  if(part->end >= disk->sectors)
     part->end = disk->sectors - 1;
 
   part->size = (part->end - part->start) + 1;
@@ -774,7 +774,7 @@ extern int disk_create_logical_partition(struct disk *disk,long long size)
 
   part.end = alignsector(disk->device,part.end) - 1;
 
-  if(part.end > disk->sectors)
+  if(part.end >= disk->sectors)
     part.end = disk->sectors - 1;
 
   part.size = (part.end - part.start) + 1;
