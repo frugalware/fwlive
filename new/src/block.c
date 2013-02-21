@@ -216,16 +216,6 @@ static bool newpartition(struct disk *disk,long long size,struct partition *part
 
   part->size = (part->end - part->start) + 1;
 
-  if(
-    part->size >= disk->sectors               ||
-    (last != 0 && last->end >= disk->sectors)
-  )
-  {
-    errno = ERANGE;
-    error(strerror(errno));
-    return false;
-  }
-
   return true;
 }
 
@@ -789,11 +779,7 @@ extern int disk_create_logical_partition(struct disk *disk,long long size)
 
   part.size = (part.end - part.start) + 1;
 
-  if(
-    part.size >= disk->sectors ||
-    last->end >= disk->sectors ||
-    part.number > 60
-  )
+  if(part.number > 60)
   {
     errno = ERANGE;
     error(strerror(errno));
