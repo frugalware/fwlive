@@ -46,3 +46,14 @@ ROOTCOMPRESS="$ROOTCOMPRESS"
 ROOTREPO="$ROOTREPO"
 DISKSIZE="$DISKSIZE"
 EOF
+
+cat > Makefile << EOF
+fwlive.iso: squashfs.img
+	bin/create-iso
+
+squashfs.img:
+	bin/create-rootfs
+
+clean:
+	\$(RM) fwlive.iso squashfs.img
+EOF
