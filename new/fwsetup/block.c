@@ -1035,9 +1035,7 @@ extern bool disk_flush(struct disk *disk)
 {
   char command[_POSIX_ARG_MAX] = {0};
   int i = 0;
-  int j = 0;
   struct partition *part = 0;
-  struct partition *prev = 0;
   size_t n = 0;
 
   if(disk == 0 || (disk->type != DISKTYPE_DOS && disk->type != DISKTYPE_GPT))
@@ -1052,7 +1050,9 @@ extern bool disk_flush(struct disk *disk)
 
   if(disk->type == DISKTYPE_DOS)
   {
-    snprintf(command,_POSIX_ARG_MAX,"set -e;echo -n -e '");
+    snprintf(command,_POSIX_ARG_MAX,"set -e;echo -n -e 'o\\nx\\ni\\n0x%.8x\\nr\\n",
+      (disk->dosuuid == 0) ? (unsigned int) rand_r(&seed) : disk->dosuuid
+    );
 
     n = strlen(command);
 
@@ -1060,42 +1060,30 @@ extern bool disk_flush(struct disk *disk)
     {
       part = &disk->table[i];
 
-      if(prev != 0)
-        j = part->number - prev->number;
-
-      for( ; j > 1 ; --j )
-      {
-        snprintf(command+n,_POSIX_ARG_MAX-n,"0 0 0x00 -\\n");
-
-        n = strlen(command);
-      }
-
-      snprintf(command+n,_POSIX_ARG_MAX-n,"%lld %lld 0x%.2hhx %c\\n",
+      snprintf(command+n,_POSIX_ARG_MAX-n,"n\\n%c\\n%d\\n%lld\\n%lld\\nt\\n%d\\n%.2x\\n",
+        (part->dostype == DOS_EXTENDED) ? 'e' : (part->number > 4) ? 'l' : 'p',
+        part->number,
         part->start,
-        part->size,
-        part->dostype,
-        (part->dosactive) ? '*' : '-'
+        part->end,
+        part->number,
+        part->dostype
       );
 
       n = strlen(command);
-
-      prev = part;
+      
+      if(part->dosactive)
+      {
+        snprintf(command+n,_POSIX_ARG_MAX-n,"a\\n%d\\n",
+          part->number
+        );
+        
+        n = strlen(command);
+      }
     }
 
-    if(n < 20)
-    {
-      snprintf(command+n,_POSIX_ARG_MAX-n,"0 0 0x00 -\\n");
-
-      n = strlen(command);
-    }
-
-    snprintf(command+n,_POSIX_ARG_MAX-n,"' | sfdisk --unit S --Linux '%s';echo -n -e 'x\\ni\\n0x%.8x\\nw\\n' | fdisk '%s';",
-      disk->device->path,
-      (disk->dosuuid == 0) ? (unsigned int) rand_r(&seed) : disk->dosuuid,
+    snprintf(command+n,_POSIX_ARG_MAX-n,"w\\n' | fdisk -u=sectors '%s'",
       disk->device->path
     );
-
-    n = strlen(command);
   }
   else if(disk->type == DISKTYPE_GPT)
   {
@@ -1129,8 +1117,6 @@ extern bool disk_flush(struct disk *disk)
     snprintf(command+n,_POSIX_ARG_MAX-n," '%s';",
       disk->device->path
     );
-
-    n = strlen(command);
   }
 
   if(!zapdisk(disk->device->path))
