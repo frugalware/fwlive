@@ -2,6 +2,7 @@
 
 ROOTSIZE="1"
 ROOTCOMPRESS="lzo"
+ROOTREPO="current"
 DISKSIZE="4G"
 
 error()
@@ -27,6 +28,11 @@ while test "$#" -gt 0; do
       ROOTCOMPRESS="$2"
       shift
       ;;
+    --rootrepo)
+      test -z "$2" && error "No argument supplied: rootrepo"
+      ROOTREPO="$2"
+      shift
+      ;;
     *)
       error "Invalid argument: $1"
       ;;
@@ -37,5 +43,6 @@ done
 cat > fwlive.cfg << EOF
 ROOTSIZE="$ROOTSIZE"
 ROOTCOMPRESS="$ROOTCOMPRESS"
+ROOTREPO="$ROOTREPO"
 DISKSIZE="$DISKSIZE"
 EOF
