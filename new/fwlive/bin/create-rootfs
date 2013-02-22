@@ -11,8 +11,22 @@ if [ "$(id -u)" -ne 0 ]; then
 	exit 1
 fi
 
+# Cleanup from a previous run.
+cp /proc/mounts mounts
+while read line; do
+	path=$(echo $line | cut -f 2 -d ' ')
+	if [ "$path" = "$ROOT" ]; then
+		continue
+	fi
+	if [ "$path" != "${path#$ROOT}" ]; then
+		umount $path
+	fi
+done < mounts
+umount $ROOT
+rm -rf $ROOT vmlinuz initrd mounts rootfs.img squashfs.img pacman-g2.conf
+
 # Create the virtual disk and mount it.
-dd if=/dev/zero of=rootfs.img bs=$(( 128 * 1024 )) count=$(( (4096 * 1024 * 1024) / (128 * 1024) ))
+dd if=/dev/zero of=rootfs.img bs=$(( 128 * 1024 )) count=$(( ($ROOTSIZE * 1024 * 1024 * 1024) / (128 * 1024) ))
 mkfs.ext4 -q -F rootfs.img
 mkdir -p $ROOT
 mount -o loop rootfs.img $ROOT
@@ -30,11 +44,6 @@ mount -o bind /var/cache/pacman-g2 $ROOT/var/cache/pacman-g2
 pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base newt valgrind gdb terminus-font
 
 # LiveCD customizations beyond here.
-
-# Install fwsetup.
-install -m 0755 -o 0 -g 0 src/fwsetup $ROOT/sbin/fwsetup
-install -m 0755 -o 0 -g 0 src/fwsetup-valgrind $ROOT/sbin/fwsetup-valgrind
-install -m 0644 -o 0 -g 0 src/fwsetup.supp $ROOT/usr/lib/valgrind/fwsetup.supp
 
 # System locale.conf setup.
 cat > $ROOT/etc/locale.conf << EOF
@@ -91,7 +100,7 @@ e2fsck -f -a rootfs.img
 # Now prepare the squashfs.
 mkdir -p $ROOT/LiveOS
 mv rootfs.img $ROOT/LiveOS/rootfs.img
-mksquashfs $ROOT squashfs.img -noappend -no-progress -comp lzo
+mksquashfs $ROOT squashfs.img -noappend -no-progress -comp $ROOTCOMPRESS
 
 # Clean up leftovers.
-rm -rf mounts $ROOT
+rm -rf mounts $ROOT pacman-g2.conf
