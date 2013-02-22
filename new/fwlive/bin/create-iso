@@ -37,7 +37,7 @@ append root=live:CDLABEL=fwlive quiet vga=789 video=800x600
 EOF
 
 # Create the ISO.
-mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -o fwlive.iso $ROOT
+mkisofs -R -J -V fwlive -b boot/syslinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf8 -o fwlive.iso $ROOT
 isohybrid fwlive.iso
 
 # Delete the root directory.
