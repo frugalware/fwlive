@@ -596,7 +596,7 @@ extern long long disk_get_free_size(struct disk *disk)
     }
     else
     {
-      size -= last->end;
+      size -= last->end + 1;
     }
   }
   else
