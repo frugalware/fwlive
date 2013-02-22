@@ -768,7 +768,7 @@ extern int disk_create_logical_partition(struct disk *disk,long long size)
 
   part.number = (ext == last) ? 5 : last->number + 1;
 
-  part.start = last->end + 1 + disk->device->alignment;
+  part.start = ((ext == last) ? last->start : last->end + 1) + disk->device->alignment;
 
   part.size = size / disk->device->sectorsize;
 
