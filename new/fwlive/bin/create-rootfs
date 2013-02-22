@@ -2,6 +2,8 @@
 
 set -e
 
+. ./fwlive.cfg
+
 ROOT="$(pwd)/root"
 
 if [ "$(id -u)" -ne 0 ]; then

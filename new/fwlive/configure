@@ -1,0 +1,37 @@
+#!/bin/sh
+
+ROOTSIZE="1"
+DISKSIZE="4G"
+
+error()
+{
+  echo "$1"
+  exit 1
+}
+
+while test "$#" -gt 0; do
+  case "$1" in
+    --rootsize)
+      test -z "$2" && error "No argument supplied: rootsize"
+      ROOTSIZE="$2"
+      shift
+      ;;
+    --disksize)
+      test -z "$2" && error "No argument supplied: disksize"
+      DISKSIZE="$2"
+      shift
+      ;;
+    *)
+      error "Invalid argument: $1"
+      ;;
+  esac
+  shift
+done
+
+cat > fwlive.cfg << EOF
+ROOTSIZE="$ROOTSIZE"
+DISKSIZE="$DISKSIZE"
+EOF
+
+cat > Makefile << EOF
+EOF
