@@ -22,7 +22,7 @@ while read line; do
 		umount $path
 	fi
 done < mounts
-umount $ROOT
+[ -d "$ROOT" ] && umount $ROOT
 rm -rf $ROOT vmlinuz initrd mounts rootfs.img squashfs.img pacman-g2.conf
 
 # Create the virtual disk and mount it.
@@ -40,8 +40,16 @@ mount -t tmpfs none $ROOT/tmp
 mount -t tmpfs none $ROOT/var/tmp
 mount -o bind /var/cache/pacman-g2 $ROOT/var/cache/pacman-g2
 
+# Setup pacman-g2.conf.
+cat > pacman-g2.conf << EOF
+[options]
+LogFile = /var/log/pacman-g2.log
+[frugalware$(test "$ROOTREPO" = "current" -o "$ROOTREPO" = "testing" && echo -n "-$ROOTREPO")]
+Server = http://ftp.frugalware.org/pub/frugalware/frugalware$(test "$ROOTREPO" = "current" -o "$ROOTREPO" = "testing" && echo -n "-$ROOTREPO")/frugalware-x86_64
+EOF
+
 # Setup root directory with pacman-g2.
-pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base newt valgrind gdb terminus-font
+pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base
 
 # LiveCD customizations beyond here.
 
@@ -53,7 +61,7 @@ EOF
 # System vconsole.conf setup.
 cat > $ROOT/etc/vconsole.conf << EOF
 KEYMAP=us
-FONT=ter-v16n
+FONT=default8x16
 EOF
 
 # System fstab setup.
