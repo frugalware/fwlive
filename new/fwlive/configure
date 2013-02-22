@@ -3,7 +3,8 @@
 ROOTSIZE="1"
 ROOTCOMPRESS="lzo"
 ROOTREPO="current"
-DISKSIZE="4G"
+QEMURAM="1024"
+QEMUSIZE="4G"
 
 error()
 {
@@ -18,11 +19,6 @@ while test "$#" -gt 0; do
       ROOTSIZE="$2"
       shift
       ;;
-    --disksize)
-      test -z "$2" && error "No argument supplied: disksize"
-      DISKSIZE="$2"
-      shift
-      ;;
     --rootcompress)
       test -z "$2" && error "No argument supplied: rootcompress"
       ROOTCOMPRESS="$2"
@@ -31,6 +27,16 @@ while test "$#" -gt 0; do
     --rootrepo)
       test -z "$2" && error "No argument supplied: rootrepo"
       ROOTREPO="$2"
+      shift
+      ;;
+    --qemuram)
+      test -z "$2" && error "No argument supplied: qemuram"
+      QEMURAM="$2"
+      shift
+      ;;
+    --qemusize)
+      test -z "$2" && error "No argument supplied: qemusize"
+      QEMUSIZE="$2"
       shift
       ;;
     *)
@@ -44,7 +50,8 @@ cat > fwlive.cfg << EOF
 ROOTSIZE="$ROOTSIZE"
 ROOTCOMPRESS="$ROOTCOMPRESS"
 ROOTREPO="$ROOTREPO"
-DISKSIZE="$DISKSIZE"
+QEMUSIZE="$QEMUSIZE"
+QEMURAM="$QEMURAM"
 EOF
 
 cat > Makefile << EOF
