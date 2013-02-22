@@ -66,7 +66,7 @@ cat > $ROOT/etc/hostname << EOF
 fwlive
 EOF
 
-# Copy kernel and initrd for ISO use later.
+# Copy kernel and initrd for later use.
 cp $ROOT/boot/vmlinuz vmlinuz
 cp $ROOT/boot/initrd initrd
 
@@ -87,6 +87,11 @@ umount $ROOT
 e2fsck -f -a rootfs.img
 resize2fs -M rootfs.img
 e2fsck -f -a rootfs.img
+
+# Now prepare the squashfs.
+mkdir -p $ROOT/LiveOS
+mv rootfs.img $ROOT/LiveOS/rootfs.img
+mksquashfs $ROOT squashfs.img -noappend -no-progress -comp lzo
 
 # Clean up leftovers.
 rm -rf mounts $ROOT

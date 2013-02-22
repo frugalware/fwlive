@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ROOTSIZE="1"
+ROOTCOMPRESS="lzo"
 DISKSIZE="4G"
 
 error()
@@ -21,6 +22,11 @@ while test "$#" -gt 0; do
       DISKSIZE="$2"
       shift
       ;;
+    --rootcompress)
+      test -z "$2" && error "No argument supplied: rootcompress"
+      ROOTCOMPRESS="$2"
+      shift
+      ;;
     *)
       error "Invalid argument: $1"
       ;;
@@ -30,8 +36,6 @@ done
 
 cat > fwlive.cfg << EOF
 ROOTSIZE="$ROOTSIZE"
+ROOTCOMPRESS="$ROOTCOMPRESS"
 DISKSIZE="$DISKSIZE"
-EOF
-
-cat > Makefile << EOF
 EOF
