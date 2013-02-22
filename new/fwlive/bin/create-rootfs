@@ -53,6 +53,14 @@ pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy b
 
 # LiveCD customizations beyond here.
 
+# Install fwsetup if it's in the git repo.
+if test -x ../fwsetup/fwsetup; then
+  install -d $ROOT/usr/bin $ROOT/usr/lib/valgrind
+  install -m 0755 ../fwsetup/fwsetup $ROOT/usr/bin
+  install -m 0755 ../fwsetup/fwsetup-valgrind $ROOT/usr/bin
+  install -m 0644 ../fwsetup/fwsetup.supp $ROOT/usr/lib/valgrind
+fi
+
 # System locale.conf setup.
 cat > $ROOT/etc/locale.conf << EOF
 LANG=en_US.utf8
