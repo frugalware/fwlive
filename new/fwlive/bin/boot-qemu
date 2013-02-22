@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+. ./fwlive.cfg
+
+test ! -f fwlive.img && qemu-img-kvm create -f qcow2 fwlive.img $QEMUSIZE
+
+qemu-kvm -m $QEMURAM -cdrom fwlive.iso -hda fwlive.img
