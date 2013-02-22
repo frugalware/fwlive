@@ -62,16 +62,30 @@ if test "$UI" = "newt"; then
 fi
 
 cat > Makefile << EOF
-CFLAGS := $CFLAGS
-LDFLAGS := $LDFLAGS
-TARGETS := ${SOURCES//.c/.o}
-PROGRAM := fwsetup
+CFLAGS          := $CFLAGS
+LDFLAGS         := $LDFLAGS
+TARGETS         := ${SOURCES//.c/.o}
+PROGRAM         := fwsetup
+ROOT            := \$(DESTDIR)/usr
+BINDIR          := \$(ROOT)/bin
+$(test "$RELEASE" = "current" && echo "VALGRINDDIR     := \$(ROOT)/lib/valgrind")
+$(test "$RELEASE" = "current" && echo "VALGRINDWRAPPER := \$(PROGRAM)-valgrind")
+$(test "$RELEASE" = "current" && echo "VALGRINDFILE    := \$(PROGRAM).supp")
 
 %.o: %.c local.h text.h
 	\$(CC) \$(CFLAGS) -c \$< -o \$@
 
 \$(PROGRAM): \$(TARGETS)
 	\$(CC) \$(LDFLAGS) \$^ -o \$@
+
+.PHONY: install clean
+
+install: \$(PROGRAM)
+	mkdir -p \$(BINDIR)
+$(test "$RELEASE" = "current" && echo "	mkdir -p \$(VALGRINDDIR)")
+	install -m 0755 \$(PROGRAM) \$(BINDIR)/\$(PROGRAM)
+$(test "$RELEASE" = "current" && echo "	install -m 0755 \$(VALGRINDWRAPPER) \$(BINDIR)/\$(VALGRINDWRAPPER)")
+$(test "$RELEASE" = "current" && echo "	install -m 0644 \$(VALGRINDFILE) \$(VALGRINDDIR)/\$(VALGRINDFILE)")
 
 clean:
 	\$(RM) \$(PROGRAM) \$(TARGETS)
