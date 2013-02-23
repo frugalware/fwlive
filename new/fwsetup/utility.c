@@ -1,5 +1,28 @@
 #include "local.h"
 
+extern bool mount_special(void)
+{
+  if(mount("none",INSTALL_ROOT "/dev","devtmpfs",0,0) == -1)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
+  if(mount("none",INSTALL_ROOT "/proc","proc",0,0) == -1)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
+  if(mount("none",INSTALL_ROOT "/sys","sysfs",0,0) == -1)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
+  return true;
+}
+
 extern bool isrootpath(const char *path)
 {
   regex_t re = {0};

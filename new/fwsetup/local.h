@@ -74,6 +74,7 @@ struct module
   const char *name;
 };
 
+extern bool mount_special(void);
 extern bool isrootpath(const char *path);
 extern bool isasciistring(const char *s);
 extern bool mkdir_recurse(const char *path);

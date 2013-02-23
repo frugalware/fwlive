@@ -297,24 +297,6 @@ static bool postconfig_run(void)
     return false;
   }
 
-  if(mount("none",INSTALL_ROOT "/dev","devtmpfs",0,0) == -1)
-  {
-    error(strerror(errno));
-    return false;
-  }
-
-  if(mount("none",INSTALL_ROOT "/proc","proc",0,0) == -1)
-  {
-    error(strerror(errno));
-    return false;
-  }
-
-  if(mount("none",INSTALL_ROOT "/sys","sysfs",0,0) == -1)
-  {
-    error(strerror(errno));
-    return false;
-  }
-
   if(!write_locale_conf())
     return false;
 
@@ -336,24 +318,6 @@ static bool postconfig_run(void)
 
   if(!get_timezone_data() || !ui_window_time(tz_data,&zone,&utc) || !time_action(zone,utc))
     return false;
-
-  if(umount2(INSTALL_ROOT "/dev",MNT_DETACH) == -1)
-  {
-    error(strerror(errno));
-    return false;
-  }
-
-  if(umount2(INSTALL_ROOT "/proc",MNT_DETACH) == -1)
-  {
-    error(strerror(errno));
-    return false;
-  }
-
-  if(umount2(INSTALL_ROOT "/sys",MNT_DETACH) == -1)
-  {
-    error(strerror(errno));
-    return false;
-  }
 
   return true;
 }
