@@ -318,6 +318,9 @@ static bool format_run(void)
   if(!format_process_devices())
     return false;
 
+  if(!mount_special())
+    return false;
+
   return true;
 }
 
