@@ -9,6 +9,64 @@ static size_t tz_size = 0;
 static size_t tz_count = 0;
 static char **tz_data = 0;
 
+static bool write_locale_conf(void)
+{
+  const char *lang = 0;
+  FILE *file = 0;
+  int i = 0;
+  static const char *vars[] =
+  {
+    "LANGUAGE",
+    "LC_CTYPE",
+    "LC_NUMERIC",
+    "LC_TIME",
+    "LC_COLLATE",
+    "LC_MONETARY",
+    "LC_MESSAGES",
+    "LC_PAPER",
+    "LC_NAME",
+    "LC_ADDRESS",
+    "LC_TELEPHONE",
+    "LC_MEASUREMENT",
+    "LC_IDENTIFICATION",
+    0
+  };
+  
+  if((lang = getenv("LANG")) == 0)
+  {
+    eprintf("LANG is not defined.\n");
+    return false;
+  }
+  
+  if((file = fopen("etc/locale.conf","wb")) == 0)
+  {
+    error(strerror(errno));
+    return false;
+  }
+  
+  fprintf(file,
+    "# /etc/locale.conf\n"
+    "# The system wide locale(s) is defined below.\n"
+    "# For a complete list of supported locales, run this shell command:\n"
+    "# locale -a\n"
+    "\n"
+    "LANG=%s%s\n"
+    "\n"
+    "# The settings below should only be used for advanced configurations.\n"
+    "# Please read the locale man page 7 for more information.\n"
+    "\n",
+    lang,
+    (strstr(lang,".utf8") == 0) ? "" : ".utf8"
+  );
+
+  for( ; vars[i] != 0 ; ++i )
+    fprintf(file,"#%s=\n",vars[i]);
+
+  fclose(file);
+
+  return true;
+}
+
 static bool is_root_setup(void)
 {
   FILE *file = 0;
@@ -256,6 +314,9 @@ static bool postconfig_run(void)
     error(strerror(errno));
     return false;
   }
+
+  if(!write_locale_conf())
+    return false;
 
   if(!is_root_setup() && (!ui_window_root(&account) || !root_action(&account)))
   {
