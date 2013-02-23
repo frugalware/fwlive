@@ -4,3 +4,4 @@ add config handling for CONSOLE and X11 keymap configuration
 add selection for default systemd boot target
 test 4096 byte sector disk drive handling code in block.c
 replace my method of retrieving disk unique identifier with libblkid's API, should be in v2.23.
+if libfdisk can replace our writing needs, then use that instead of running fdisk/gdisk.
