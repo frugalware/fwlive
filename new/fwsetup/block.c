@@ -113,6 +113,28 @@ static inline bool isdisk(const struct stat *st)
   }
 }
 
+// TODO: replace this function with something better. only works on little endian cpus.
+static bool putdosuuid(struct disk *disk)
+{
+  int fd = -1;
+  unsigned int n = (disk->dosuuid == 0) ? (unsigned int) rand_r(&seed) : disk->dosuuid;
+  
+  if(
+    (fd = open(disk->device->path,O_WRONLY) == -1) ||
+    lseek(fd,440,SEEK_SET) == (off_t) -1           ||
+    write(fd,&n,sizeof(n)) != sizeof(n)            ||
+    close(fd) == -1
+  )
+  {
+    error(strerror(errno));
+    if(fd != -1)
+      close(fd);
+    return false;
+  }
+  
+  return true;
+}
+
 static bool getuuid(struct disk *disk)
 {
   char command[_POSIX_ARG_MAX] = {0};
