@@ -161,7 +161,7 @@ static bool root_action(struct account *account)
     return false;
   }
 
-  snprintf(command,_POSIX_ARG_MAX,"echo '%s:%s' | chpasswd",account->user,account->password);
+  strfcpy(command,sizeof(command),"echo '%s:%s' | chpasswd",account->user,account->password);
 
   return execute(command,INSTALL_ROOT,0);
 }
@@ -177,12 +177,12 @@ static bool user_action(struct account *account)
     return false;
   }
 
-  snprintf(command,_POSIX_ARG_MAX,"useradd -m -c '%s' -g '%s' -G '%s' -d '%s' -s '%s' '%s'",(account->name != 0) ? account->name : "",account->group,account->groups,account->home,account->shell,account->user);
+  strfcpy(command,sizeof(command),"useradd -m -c '%s' -g '%s' -G '%s' -d '%s' -s '%s' '%s'",(account->name != 0) ? account->name : "",account->group,account->groups,account->home,account->shell,account->user);
 
   if(!execute(command,INSTALL_ROOT,0))
     return false;
 
-  snprintf(command,_POSIX_ARG_MAX,"echo '%s:%s' | chpasswd",account->user,account->password);
+  strfcpy(command,sizeof(command),"echo '%s:%s' | chpasswd",account->user,account->password);
 
   if(!execute(command,INSTALL_ROOT,0))
     return false;
@@ -261,7 +261,7 @@ static bool get_timezone_data(void)
 
 static bool time_action(char *zone,bool utc)
 {
-  char buf[4096] = {0};
+  char buf[_POSIX_ARG_MAX] = {0};
 
   if(unlink(TZFILE) == -1 && errno != ENOENT)
   {
@@ -269,7 +269,7 @@ static bool time_action(char *zone,bool utc)
     return false;
   }
 
-  snprintf(buf,4096,"/" TZDIR "/%s",zone);
+  strfcpy(buf,sizeof(buf),"/" TZDIR "/%s",zone);
 
   if(symlink(buf,TZFILE) == -1)
   {
@@ -277,7 +277,7 @@ static bool time_action(char *zone,bool utc)
     return false;
   }
 
-  snprintf(buf,4096,"hwclock --systohc %s",(utc) ? "--utc" : "--localtime");
+  strfcpy(buf,sizeof(buf),"hwclock --systohc %s",(utc) ? "--utc" : "--localtime");
 
   if(!execute(buf,INSTALL_ROOT,0))
     return false;
