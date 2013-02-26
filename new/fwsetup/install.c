@@ -91,12 +91,12 @@ static int install_download_callback(PM_NETBUF *ctl,int dl_xfered0,void *arg)
     dl_eta_s = (int) ((dl_total - dl_amount) / (dl_rate * KIBIBYTE)) % 3600 % 60;
   }
 
-  snprintf(dl_eta_text,9,"%.2u:%.2u:%.2u",dl_eta_h,dl_eta_m,dl_eta_s);
+  strfcpy(dl_eta_text,sizeof(dl_eta_text),"%.2u:%.2u:%.2u",dl_eta_h,dl_eta_m,dl_eta_s);
 
   if(dl_rate > KIBIBYTE)
-    snprintf(dl_rate_text,47,"%6.0fKiB/s",dl_rate);
+    strfcpy(dl_rate_text,sizeof(dl_rate_text),"%6.0fKiB/s",dl_rate);
   else
-    snprintf(dl_rate_text,47,"%6.1fKiB/s",dl_rate);
+    strfcpy(dl_rate_text,sizeof(dl_rate_text),"%6.1fKiB/s",dl_rate);
 
   size_to_string(dl_size_text,20,dl_amount,true);
 
@@ -113,7 +113,7 @@ static int install_download_callback(PM_NETBUF *ctl,int dl_xfered0,void *arg)
   else if(dl_howmany < 10000)
     dl_pkg_padding = 4;
 
-  snprintf(dl_pkg_text,10,"%*d/%d",dl_pkg_padding,dl_remain,dl_howmany);
+  strfcpy(dl_pkg_text,sizeof(dl_pkg_text),"%*d/%d",dl_pkg_padding,dl_remain,dl_howmany);
 
   if((s = strchr(dl_filename,' ')) != 0)
     *s = 0;
@@ -128,7 +128,7 @@ static int install_download_callback(PM_NETBUF *ctl,int dl_xfered0,void *arg)
     dl_file_text[j] = 0;
 #endif
 
-  snprintf(dl_text,256,"(%s) %s (%s) %s %s",dl_pkg_text,dl_file_text,dl_size_text,dl_rate_text,dl_eta_text);
+  strfcpy(dl_text,sizeof(dl_text),"(%s) %s (%s) %s %s",dl_pkg_text,dl_file_text,dl_size_text,dl_rate_text,dl_eta_text);
 
   return ui_dialog_progress(_("Downloading"),dl_text,dl_percent);
 }
@@ -226,7 +226,7 @@ static void install_progress_callback(unsigned char event,char *pkg,int percent,
   else if(howmany < 10000)
     padding = 4;
 
-  snprintf(text,256,"(%*d/%d)",padding,remain,howmany);
+  strfcpy(text,sizeof(text),"(%*d/%d)",padding,remain,howmany);
 
   if(strlen(pkg) > 0)
     snprintf(text+strlen(text),256-strlen(text)," - %s",pkg);
@@ -381,17 +381,17 @@ static bool install_setup(void)
     return false;
   }
 
-  snprintf(path,PATH_MAX,"%s/%s",INSTALL_ROOT,dbdir);
+  strfcpy(path,sizeof(path),"%s/%s",INSTALL_ROOT,dbdir);
 
   if(!mkdir_recurse(path))
     return false;
 
-  snprintf(path,PATH_MAX,"%s/%s",INSTALL_ROOT,cachedir);
+  strfcpy(path,sizeof(path),"%s/%s",INSTALL_ROOT,cachedir);
 
   if(!mkdir_recurse(path))
     return false;
 
-  snprintf(path,PATH_MAX,"%s/%s",INSTALL_ROOT,hooksdir);
+  strfcpy(path,sizeof(path),"%s/%s",INSTALL_ROOT,hooksdir);
 
   if(!mkdir_recurse(path))
     return false;
