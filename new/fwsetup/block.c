@@ -145,9 +145,9 @@ static bool getuuid(struct disk *disk)
   char *p = 0;
 
   if(disk->type == DISKTYPE_DOS)
-    snprintf(command,_POSIX_ARG_MAX,"export LC_ALL=C;yes | fdisk -l '%s' 2> /dev/null | sed -rn 's|^Disk identifier: 0x([0-9a-fA-F]+)$|\\1|p'",disk->device->path);
+    strfcpy(command,sizeof(command),"export LC_ALL=C;yes | fdisk -l '%s' 2> /dev/null | sed -rn 's|^Disk identifier: 0x([0-9a-fA-F]+)$|\\1|p'",disk->device->path);
   else if(disk->type == DISKTYPE_GPT)
-    snprintf(command,_POSIX_ARG_MAX,"export LC_ALL=C;yes | gdisk -l '%s' 2> /dev/null | sed -rn 's|^Disk identifier \\(GUID\\): ([0-9a-zA-Z-]+)$|\\1|p'",disk->device->path);
+    strfcpy(command,sizeof(command),"export LC_ALL=C;yes | gdisk -l '%s' 2> /dev/null | sed -rn 's|^Disk identifier \\(GUID\\): ([0-9a-zA-Z-]+)$|\\1|p'",disk->device->path);
   else
     return false;
 
@@ -169,7 +169,7 @@ static bool getuuid(struct disk *disk)
     if(disk->type == DISKTYPE_DOS)
       disk->dosuuid = strtoul(line,0,16);
     else if(disk->type == DISKTYPE_GPT)
-      snprintf(disk->gptuuid,37,"%s",line);
+      strfcpy(disk->gptuuid,sizeof(disk->gptuuid),"%s",line);
     return true;
   }
   else
@@ -183,7 +183,7 @@ static bool zapdisk(const char *path)
 {
   char command[_POSIX_ARG_MAX] = {0};
 
-  snprintf(command,_POSIX_ARG_MAX,"sgdisk --zap-all '%s'",path);
+  strfcpy(command,sizeof(command),"sgdisk --zap-all '%s'",path);
 
   return execute(command,"/",0);
 }
@@ -525,11 +525,11 @@ extern struct disk *disk_open(struct device *device)
       if(disk.type == DISKTYPE_GPT)
       {
         if(blkid_partition_get_name(partition) != 0)
-          snprintf(part->gptname,37,"%s",blkid_partition_get_name(partition));
+          strfcpy(part->gptname,sizeof(part->gptname),"%s",blkid_partition_get_name(partition));
 
-        snprintf(part->gptuuid,37,"%s",blkid_partition_get_uuid(partition));
+        strfcpy(part->gptuuid,sizeof(part->gptuuid),"%s",blkid_partition_get_uuid(partition));
 
-        snprintf(part->gpttype,37,"%s",blkid_partition_get_type_string(partition));
+        strfcpy(part->gpttype,sizeof(part->gpttype),"%s",blkid_partition_get_type_string(partition));
 
         part->gptflags = blkid_partition_get_flags(partition);
 
@@ -718,7 +718,7 @@ extern int disk_create_partition(struct disk *disk,long long size)
   if(disk->type == DISKTYPE_DOS)
     part.dostype = DOS_DATA;
   else if(disk->type == DISKTYPE_GPT)
-    snprintf(part.gpttype,37,"%s",GPT_DATA);
+    strfcpy(part.gpttype,sizeof(part.gpttype),"%s",GPT_DATA);
 
   memcpy(&disk->table[disk->size++],&part,sizeof(struct partition));
 
@@ -870,17 +870,17 @@ extern void disk_partition_set_purpose(struct disk *disk,int n,const char *purpo
   else if(disk->type == DISKTYPE_GPT)
   {
     if(strcmp(purpose,"data") == 0)
-      snprintf(part->gpttype,37,"%s",GPT_DATA);
+      strfcpy(part->gpttype,sizeof(part->gpttype),"%s",GPT_DATA);
     else if(strcmp(purpose,"swap") == 0)
-      snprintf(part->gpttype,37,"%s",GPT_SWAP);
+      strfcpy(part->gpttype,sizeof(part->gpttype),"%s",GPT_SWAP);
     else if(strcmp(purpose,"raid") == 0)
-      snprintf(part->gpttype,37,"%s",GPT_RAID);
+      strfcpy(part->gpttype,sizeof(part->gpttype),"%s",GPT_RAID);
     else if(strcmp(purpose,"lvm") == 0)
-      snprintf(part->gpttype,37,"%s",GPT_LVM);
+      strfcpy(part->gpttype,sizeof(part->gpttype),"%s",GPT_LVM);
     else if(strcmp(purpose,"efi") == 0)
-      snprintf(part->gpttype,37,"%s",GPT_EFI);
+      strfcpy(part->gpttype,sizeof(part->gpttype),"%s",GPT_EFI);
     else if(strcmp(purpose,"bios") == 0)
-      snprintf(part->gpttype,37,"%s",GPT_BIOS);
+      strfcpy(part->gpttype,sizeof(part->gpttype),"%s",GPT_BIOS);
   }
 
   disk->modified = true;
@@ -925,7 +925,7 @@ extern void disk_partition_set_name(struct disk *disk,int n,const char *name)
 
   part = &disk->table[n];
 
-  snprintf(part->gptname,37,"%s",name);
+  strfcpy(part->gptname,sizeof(part->gptname),"%s",name);
 
   disk->modified = true;
 }
