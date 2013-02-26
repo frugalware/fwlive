@@ -131,7 +131,7 @@ static bool format_setup(void)
 
         add_target(target,&n,&size);
 
-        snprintf(buf,PATH_MAX,"%s%d",device_get_path(device),disk_partition_get_number(disk,i));
+        strfcpy(buf,sizeof(buf),"%s%d",device_get_path(device),disk_partition_get_number(disk,i));
 
         target->devicepath = strdup(buf);
 
@@ -234,7 +234,7 @@ static bool format_process_devices(void)
   {
     struct format *target = targets[i];
 
-    snprintf(text,256,"(%*d/%d) - %-8s - %-8s",padding,i+1,j,target->devicepath,target->newfilesystem);
+    strfcpy(text,sizeof(text),"(%*d/%d) - %-8s - %-8s",padding,i+1,j,target->devicepath,target->newfilesystem);
 
     percent = (float) (i+1) / j * 100;
 
@@ -259,7 +259,7 @@ static bool format_process_devices(void)
       else if(strcmp(target->newfilesystem,"swap") == 0)
         program = "mkswap";
 
-      snprintf(command,_POSIX_ARG_MAX,"%s %s %s",program,target->options,target->devicepath);
+      strfcpy(command,sizeof(command),"%s %s %s",program,target->options,target->devicepath);
 
       if(!execute(command,"/",0))
       {
@@ -270,7 +270,7 @@ static bool format_process_devices(void)
 
     if(strcmp(target->newfilesystem,"swap") == 0)
     {
-      snprintf(command,_POSIX_ARG_MAX,"swapon %s",target->devicepath);
+      strfcpy(command,sizeof(command),"swapon %s",target->devicepath);
 
       if(!execute(command,"/",0))
       {
@@ -280,7 +280,7 @@ static bool format_process_devices(void)
     }
     else
     {
-      snprintf(path,PATH_MAX,"%s%s",INSTALL_ROOT,target->mountpath);
+      strfcpy(path,sizeof(path),"%s%s",INSTALL_ROOT,target->mountpath);
 
       if(!mkdir_recurse(path))
       {
