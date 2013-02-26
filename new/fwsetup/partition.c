@@ -47,7 +47,7 @@ static bool partition_flush(void)
     struct device *device = devices[i];
     struct disk *disk = disks[i];
 
-    snprintf(text,LINE_MAX,"(%*d/%d) - %s",padding,i+1,j,device_get_path(device));
+    strfcpy(text,sizeof(text),"(%*d/%d) - %s",padding,i+1,j,device_get_path(device));
 
     percent = (float) (i+1) / j * 100;
 
