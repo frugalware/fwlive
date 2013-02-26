@@ -1109,17 +1109,15 @@ extern bool disk_flush(struct disk *disk)
   }
   else if(disk->type == DISKTYPE_GPT)
   {
-    snprintf(command,_POSIX_ARG_MAX,"set -e;sgdisk --clear --disk-guid='%s'",
+    strfcpy(command,sizeof(command),"set -e;sgdisk --clear --disk-guid='%s'",
       (strlen(disk->gptuuid) == 0) ? "R" : disk->gptuuid
     );
-
-    n = strlen(command);
 
     for( ; i < disk->size ; ++i )
     {
       part = &disk->table[i];
 
-      snprintf(command+n,_POSIX_ARG_MAX-n," --new='%d:%lld:%lld' --change-name='%d:%s' --partition-guid='%d:%s' --typecode='%d:%s' --attributes='%d:=:0x%.16llx'",
+      strfcat(command,sizeof(command)," --new='%d:%lld:%lld' --change-name='%d:%s' --partition-guid='%d:%s' --typecode='%d:%s' --attributes='%d:=:0x%.16llx'",
         part->number,
         part->start,
         part->end,
@@ -1132,11 +1130,9 @@ extern bool disk_flush(struct disk *disk)
         part->number,
         part->gptflags
       );
-
-      n = strlen(command);
     }
 
-    snprintf(command+n,_POSIX_ARG_MAX-n," '%s';",
+    strfcat(command,sizeof(command)," '%s';",
       disk->device->path
     );
   }
