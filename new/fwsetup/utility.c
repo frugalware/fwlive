@@ -1,5 +1,42 @@
 #include "local.h"
 
+extern void strfcpy(char *s,size_t n,const char *fmt,...)
+{
+  va_list args;
+
+  if(s == 0 || n == 0 || fmt == 0)
+  {
+    error(strerror(errno));
+    return;
+  }
+  
+  va_start(args,fmt);
+  
+  vsnprintf(s,n,fmt,args);
+  
+  va_end(args);
+}
+
+extern void strfcat(char *s,size_t n,const char *fmt,...)
+{
+  va_list args;
+  size_t off = 0;
+  
+  if(s == 0 || n == 0 || fmt == 0)
+  {
+    error(strerror(errno));
+    return;
+  }
+  
+  va_start(args,fmt);
+
+  off = strlen(s);
+  
+  vsnprintf(s+off,n-off,fmt,args);
+  
+  va_end(args);
+}
+
 extern bool mount_special(void)
 {
   if(mount("none",INSTALL_ROOT "/dev","devtmpfs",0,0) == -1)

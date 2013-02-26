@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -74,6 +75,8 @@ struct module
   const char *name;
 };
 
+extern void strfcpy(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
+extern void strfcat(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
 extern bool mount_special(void);
 extern bool isrootpath(const char *path);
 extern bool isasciistring(const char *s);
