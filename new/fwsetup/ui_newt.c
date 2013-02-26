@@ -657,7 +657,7 @@ extern int ui_main(int argc,char **argv)
     {
       eprintf("A fatal error has been reported by module '%s'.\n",module->name);
       module->reset();
-      snprintf(text,4096,_("A fatal error has been reported by module '%s'.\n\nPlease read the logfile at '%s'.\nThank you.\n"),module->name,LOGFILE);
+      strfcpy(text,sizeof(text),_("A fatal error has been reported by module '%s'.\n\nPlease read the logfile at '%s'.\nThank you.\n"),module->name,LOGFILE);
       ui_dialog_text(_("Module Fatal Error"),text);
       code = EXIT_FAILURE;
       break;
@@ -919,7 +919,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
     size_to_string(size,10,device_get_size(device),false);
 
-    snprintf(text,TEXT_MAX,"Disk %s: %s label (%s)",device_get_path(device),(disk == 0) ? "nil" : disk_get_type(disk),size);
+    strfcpy(text,sizeof(text),"Disk %s: %s label (%s)",device_get_path(device),(disk == 0) ? "nil" : disk_get_type(disk),size);
 
     action.device_number = i;
 
@@ -942,7 +942,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         size_to_string(size,10,disk_partition_get_size(disk,j),false);
 
-        snprintf(text,TEXT_MAX,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,j),disk_partition_get_purpose(disk,j),(disk_partition_get_active(disk,j)) ? "active" : "inactive",size);
+        strfcpy(text,sizeof(text),"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,j),disk_partition_get_purpose(disk,j),(disk_partition_get_active(disk,j)) ? "active" : "inactive",size);
 
         newtListboxAppendEntry(listbox,text,(void *) action.data);
       }
@@ -957,7 +957,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         size_to_string(size,10,freesize,false);
 
-        snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
+        strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
         newtListboxAppendEntry(listbox,text,(void *) action.data);
 
@@ -969,9 +969,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         action.delete = true;
 
         if(strcmp(disk_partition_get_purpose(disk,k-1),"extended") == 0)
-          snprintf(text,TEXT_MAX,"%2cDelete Extended Partition",' ');
+          strfcpy(text,sizeof(text),"%2cDelete Extended Partition",' ');
         else
-          snprintf(text,TEXT_MAX,"%2cDelete Last Partition",' ');
+          strfcpy(text,sizeof(text),"%2cDelete Last Partition",' ');
 
         newtListboxAppendEntry(listbox,text,(void *) action.data);
 
@@ -1042,7 +1042,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
           size_to_string(size,10,device_get_size(device),false);
 
-          snprintf(text,TEXT_MAX,"Disk %s: %s label (%s)",device_get_path(device),disk_get_type(disk),size);
+          strfcpy(text,sizeof(text),"Disk %s: %s label (%s)",device_get_path(device),disk_get_type(disk),size);
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
 
@@ -1054,7 +1054,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
           size_to_string(size,10,disk_get_free_size(disk),false);
 
-          snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
+          strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
 
@@ -1069,7 +1069,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         {
           size_to_string(size,10,disk_partition_get_size(disk,partition),false);
 
-          snprintf(text,TEXT_MAX,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
+          strfcpy(text,sizeof(text),"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
 
@@ -1089,9 +1089,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           key.delete = true;
 
           if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
-            snprintf(text,TEXT_MAX,"%2cDelete Last Partition",' ');
+            strfcpy(text,sizeof(text),"%2cDelete Last Partition",' ');
           else
-            snprintf(text,TEXT_MAX,"%2cDelete Extended Partition",' ');
+            strfcpy(text,sizeof(text),"%2cDelete Extended Partition",' ');
 
           newtListboxDeleteEntry(listbox,(void *) key.data);
 
@@ -1103,7 +1103,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           {
             size_to_string(size,10,disk_get_free_size(disk),false);
 
-            snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
+            strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           }
@@ -1118,7 +1118,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
             size_to_string(size,10,disk_partition_get_size(disk,partition),false);
 
-            snprintf(text,TEXT_MAX,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
+            strfcpy(text,sizeof(text),"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
 
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           }
@@ -1150,9 +1150,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         if(partition > 0)
         {
           if(strcmp(disk_partition_get_purpose(disk,partition-1),"extended") != 0)
-            snprintf(text,TEXT_MAX,"%2cDelete Last Partition",' ');
+            strfcpy(text,sizeof(text),"%2cDelete Last Partition",' ');
           else
-            snprintf(text,TEXT_MAX,"%2cDelete Extended Partition",' ');
+            strfcpy(text,sizeof(text),"%2cDelete Extended Partition",' ');
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
         }
@@ -1163,7 +1163,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         size_to_string(size,10,disk_get_free_size(disk),false);
 
-        snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
+        strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
         newtListboxDeleteEntry(listbox,(void *) key.data);
 
@@ -1240,7 +1240,7 @@ extern bool ui_window_format(struct format **targets)
   {
     struct format *target = *p;
 
-    snprintf(text,TEXT_MAX,"%-11s %-11s %-11s",target->devicepath,target->size,target->filesystem);
+    strfcpy(text,sizeof(text),"%-11s %-11s %-11s",target->devicepath,target->size,target->filesystem);
 
     newtListboxAppendEntry(listbox,text,target);
   }
@@ -1265,7 +1265,7 @@ extern bool ui_window_format(struct format **targets)
 
       if(target->newfilesystem != 0 && target->options != 0 && target->mountpath != 0)
       {
-        snprintf(text,TEXT_MAX,"%-11s %-11s %-11s %-11s",target->devicepath,target->size,target->newfilesystem,(strcmp(target->newfilesystem,"swap") == 0) ? "active" : target->mountpath);
+        strfcpy(text,sizeof(text),"%-11s %-11s %-11s %-11s",target->devicepath,target->size,target->newfilesystem,(strcmp(target->newfilesystem,"swap") == 0) ? "active" : target->mountpath);
 
         newtListboxInsertEntry(listbox,text,target,target);
 
@@ -1577,7 +1577,7 @@ extern bool ui_window_user(struct account *data)
 
   data->groups = strdup("audio,camera,cdrom,floppy,scanner,video,uucp,storage,netdev,locate");
 
-  snprintf(home,PATH_MAX,"/home/%s",user);
+  strfcpy(home,sizeof(home),"/home/%s",user);
 
   data->home = strdup(home);
 
