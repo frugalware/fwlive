@@ -123,7 +123,7 @@ extern bool mkdir_recurse(const char *path)
     return false;
   }
 
-  snprintf(buf,PATH_MAX,"%s",path);
+  strfcpy(buf,sizeof(buf),"%s",path);
 
   while((s = strchr(s,'/')) != 0)
   {
@@ -187,7 +187,7 @@ extern bool size_to_string(char *s,size_t n,long long size,bool pad)
     suffix = "BiB";
   }
 
-  snprintf(s,n,"%*.1f%s",(pad) ? 6 : 0,(double) size / divisor,suffix);
+  strfcpy(s,n,"%*.1f%s",(pad) ? 6 : 0,(double) size / divisor,suffix);
 
   return true;
 }
