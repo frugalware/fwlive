@@ -484,7 +484,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
   newtComponent form = 0;
   struct newtExitStruct es = {0};
   bool modified = false;
-  char text[NEWT_WIDTH+1];
+  char text[TEXT_MAX] = {0};
   const char *result = 0;
 
   if(!get_text_screen_size(PARTITION_DIALOG_NEW_PARTITION_TEXT,&textbox_width,&textbox_height))
@@ -523,7 +523,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
 
   label = newtLabel(0,textbox_height+1,PARTITION_DIALOG_NEW_SIZE_TEXT);
 
-  size_to_string(text,NEWT_WIDTH+1,disk_get_free_size(disk),false);
+  size_to_string(text,TEXT_MAX,disk_get_free_size(disk),false);
 
   entry = newtEntry(label_width+1,textbox_height+1,text,entry_width,&result,0);
 
@@ -875,7 +875,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
   int j = 0;
   int k = 0;
   char size[10] = {0};
-  char text[NEWT_WIDTH + 1] = {0};
+  char text[TEXT_MAX] = {0};
 
   if(devices == 0 || disks == 0 || sizeof(union partition_action) != sizeof(uintptr_t))
   {
@@ -919,7 +919,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
     size_to_string(size,10,device_get_size(device),false);
 
-    snprintf(text,NEWT_WIDTH+1,"Disk %s: %s label (%s)",device_get_path(device),(disk == 0) ? "nil" : disk_get_type(disk),size);
+    snprintf(text,TEXT_MAX,"Disk %s: %s label (%s)",device_get_path(device),(disk == 0) ? "nil" : disk_get_type(disk),size);
 
     action.device_number = i;
 
@@ -942,7 +942,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         size_to_string(size,10,disk_partition_get_size(disk,j),false);
 
-        snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,j),disk_partition_get_purpose(disk,j),(disk_partition_get_active(disk,j)) ? "active" : "inactive",size);
+        snprintf(text,TEXT_MAX,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,j),disk_partition_get_purpose(disk,j),(disk_partition_get_active(disk,j)) ? "active" : "inactive",size);
 
         newtListboxAppendEntry(listbox,text,(void *) action.data);
       }
@@ -957,7 +957,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         size_to_string(size,10,freesize,false);
 
-        snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
+        snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
 
         newtListboxAppendEntry(listbox,text,(void *) action.data);
 
@@ -969,9 +969,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         action.delete = true;
 
         if(strcmp(disk_partition_get_purpose(disk,k-1),"extended") == 0)
-          snprintf(text,NEWT_WIDTH+1,"%2cDelete Extended Partition",' ');
+          snprintf(text,TEXT_MAX,"%2cDelete Extended Partition",' ');
         else
-          snprintf(text,NEWT_WIDTH+1,"%2cDelete Last Partition",' ');
+          snprintf(text,TEXT_MAX,"%2cDelete Last Partition",' ');
 
         newtListboxAppendEntry(listbox,text,(void *) action.data);
 
@@ -1042,7 +1042,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
           size_to_string(size,10,device_get_size(device),false);
 
-          snprintf(text,NEWT_WIDTH+1,"Disk %s: %s label (%s)",device_get_path(device),disk_get_type(disk),size);
+          snprintf(text,TEXT_MAX,"Disk %s: %s label (%s)",device_get_path(device),disk_get_type(disk),size);
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
 
@@ -1054,7 +1054,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
           size_to_string(size,10,disk_get_free_size(disk),false);
 
-          snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
+          snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
 
@@ -1069,7 +1069,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         {
           size_to_string(size,10,disk_partition_get_size(disk,partition),false);
 
-          snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
+          snprintf(text,TEXT_MAX,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) key.data);
 
@@ -1089,9 +1089,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           key.delete = true;
 
           if(strcmp(disk_partition_get_purpose(disk,partition),"extended") != 0)
-            snprintf(text,NEWT_WIDTH+1,"%2cDelete Last Partition",' ');
+            snprintf(text,TEXT_MAX,"%2cDelete Last Partition",' ');
           else
-            snprintf(text,NEWT_WIDTH+1,"%2cDelete Extended Partition",' ');
+            snprintf(text,TEXT_MAX,"%2cDelete Extended Partition",' ');
 
           newtListboxDeleteEntry(listbox,(void *) key.data);
 
@@ -1103,7 +1103,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
           {
             size_to_string(size,10,disk_get_free_size(disk),false);
 
-            snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
+            snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
 
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           }
@@ -1118,7 +1118,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
             size_to_string(size,10,disk_partition_get_size(disk,partition),false);
 
-            snprintf(text,NEWT_WIDTH+1,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
+            snprintf(text,TEXT_MAX,"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
 
             newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
           }
@@ -1150,9 +1150,9 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
         if(partition > 0)
         {
           if(strcmp(disk_partition_get_purpose(disk,partition-1),"extended") != 0)
-            snprintf(text,NEWT_WIDTH+1,"%2cDelete Last Partition",' ');
+            snprintf(text,TEXT_MAX,"%2cDelete Last Partition",' ');
           else
-            snprintf(text,NEWT_WIDTH+1,"%2cDelete Extended Partition",' ');
+            snprintf(text,TEXT_MAX,"%2cDelete Extended Partition",' ');
 
           newtListboxInsertEntry(listbox,text,(void *) key.data,(void *) action.data);
         }
@@ -1163,7 +1163,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         size_to_string(size,10,disk_get_free_size(disk),false);
 
-        snprintf(text,NEWT_WIDTH+1,"%2cFree Space (%s)",' ',size);
+        snprintf(text,TEXT_MAX,"%2cFree Space (%s)",' ',size);
 
         newtListboxDeleteEntry(listbox,(void *) key.data);
 
@@ -1199,7 +1199,7 @@ extern bool ui_window_format(struct format **targets)
   newtComponent next = 0;
   newtComponent listbox = 0;
   struct format **p = 0;
-  char text[NEWT_WIDTH+1] = {0};
+  char text[TEXT_MAX] = {0};
   newtComponent form = 0;
   struct newtExitStruct es = {0};
 
@@ -1240,7 +1240,7 @@ extern bool ui_window_format(struct format **targets)
   {
     struct format *target = *p;
 
-    snprintf(text,NEWT_WIDTH+1,"%-11s %-11s %-11s",target->devicepath,target->size,target->filesystem);
+    snprintf(text,TEXT_MAX,"%-11s %-11s %-11s",target->devicepath,target->size,target->filesystem);
 
     newtListboxAppendEntry(listbox,text,target);
   }
@@ -1265,7 +1265,7 @@ extern bool ui_window_format(struct format **targets)
 
       if(target->newfilesystem != 0 && target->options != 0 && target->mountpath != 0)
       {
-        snprintf(text,NEWT_WIDTH+1,"%-11s %-11s %-11s %-11s",target->devicepath,target->size,target->newfilesystem,(strcmp(target->newfilesystem,"swap") == 0) ? "active" : target->mountpath);
+        snprintf(text,TEXT_MAX,"%-11s %-11s %-11s %-11s",target->devicepath,target->size,target->newfilesystem,(strcmp(target->newfilesystem,"swap") == 0) ? "active" : target->mountpath);
 
         newtListboxInsertEntry(listbox,text,target,target);
 
