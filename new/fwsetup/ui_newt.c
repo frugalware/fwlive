@@ -1,9 +1,6 @@
 #include <newt.h>
 #include "local.h"
-
-#define NEWT_WIDTH 70
-#define NEWT_HEIGHT 21
-
+ 
 union partition_action
 {
   struct

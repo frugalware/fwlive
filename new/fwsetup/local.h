@@ -22,6 +22,11 @@
 #include <time.h>
 #include "text.h"
 
+#ifdef UI_NEWT
+#define NEWT_WIDTH 70
+#define NEWT_HEIGHT 21
+#endif
+
 #define LOGFILE "/var/log/fwsetup.log"
 #define INSTALL_ROOT "/mnt/install"
 #define TEXT_MAX 8192
