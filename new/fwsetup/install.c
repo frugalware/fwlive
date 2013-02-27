@@ -100,7 +100,7 @@ static int install_download_callback(PM_NETBUF *ctl,int dl_xfered0,void *arg)
 
   size_to_string(dl_size_text,20,dl_amount,true);
 
-  snprintf(dl_size_text+strlen(dl_size_text),20-strlen(dl_size_text),"/");
+  strfcat(dl_size_text,sizeof(dl_size_text),"/");
 
   size_to_string(dl_size_text+strlen(dl_size_text),20-strlen(dl_size_text),dl_total,false);
 
@@ -229,7 +229,7 @@ static void install_progress_callback(unsigned char event,char *pkg,int percent,
   strfcpy(text,sizeof(text),"(%*d/%d)",padding,remain,howmany);
 
   if(strlen(pkg) > 0)
-    snprintf(text+strlen(text),256-strlen(text)," - %s",pkg);
+    strfcat(text,sizeof(text)," - %s",pkg);
 
   switch(event)
   {
