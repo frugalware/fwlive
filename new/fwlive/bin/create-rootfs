@@ -49,7 +49,7 @@ Server = http://ftp.frugalware.org/pub/frugalware/frugalware$(test "$ROOTREPO" =
 EOF
 
 # Setup root directory with pacman-g2.
-pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base
+pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base newt valgrind
 
 # LiveCD customizations beyond here.
 
@@ -69,7 +69,7 @@ EOF
 # System vconsole.conf setup.
 cat > $ROOT/etc/vconsole.conf << EOF
 KEYMAP=us
-FONT=default8x16
+FONT=ter-v16b
 EOF
 
 # System fstab setup.
