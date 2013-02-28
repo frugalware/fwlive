@@ -98,11 +98,11 @@ static int install_download_callback(PM_NETBUF *ctl,int dl_xfered0,void *arg)
   else
     strfcpy(dl_rate_text,sizeof(dl_rate_text),"%6.1fKiB/s",dl_rate);
 
-  size_to_string(dl_size_text,20,dl_amount,true);
+  size_to_string(dl_size_text,sizeof(dl_size_text),dl_amount,true);
 
   strfcat(dl_size_text,sizeof(dl_size_text),"/");
 
-  size_to_string(dl_size_text+strlen(dl_size_text),20-strlen(dl_size_text),dl_total,false);
+  size_to_string(dl_size_text+strlen(dl_size_text),sizeof(dl_size_text)-strlen(dl_size_text),dl_total,false);
 
   if(dl_howmany < 10)
     dl_pkg_padding = 1;
