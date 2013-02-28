@@ -8,7 +8,6 @@ if libfdisk can replace our writing needs, then use that instead of running fdis
 implement greeting UI
 implement goodbye UI
 disable tty blanking
-finish alternate partitioner
 check that partitions are aligned mebibyte boundaries
 check if gpt has bios boot partition
 implement UI for asking language
