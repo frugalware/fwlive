@@ -623,7 +623,7 @@ extern int ui_main(int argc,char **argv)
   struct module *module = 0;
   size_t n = 0;
   char text[4096] = {0};
-  int code = EXIT_SUCCESS;
+  int code = EXIT_FAILURE;
 
   // This parameter is never used.
   argc = argc;
@@ -631,10 +631,28 @@ extern int ui_main(int argc,char **argv)
   // This parameter is never used.
   argv = argv;
 
+  if(!isatty(STDIN_FILENO))
+  {
+    eprintf("stdin is not a tty.\n");
+    return code;
+  }
+
+  if(!isatty(STDOUT_FILENO))
+  {
+    eprintf("stdout is not a tty.\n");
+    return code;
+  }
+
+  if(!isatty(STDERR_FILENO))
+  {
+    eprintf("stderr is not a tty.\n");
+    return code;
+  }
+
   if(newtInit() != 0)
   {
     eprintf("Could not initialize the NEWT user interface.\n");
-    return 1;
+    return code;
   }
 
   newtGetScreenSize(&w,&h);
@@ -643,7 +661,7 @@ extern int ui_main(int argc,char **argv)
   {
     eprintf("We require a terminal of 80x24 or greater to use the NEWT user interface.\n");
     newtFinished();
-    return 1;
+    return code;
   }
 
   newtCls();
@@ -659,7 +677,6 @@ extern int ui_main(int argc,char **argv)
     {
       errno = EINVAL;
       error(strerror(errno));
-      code = EXIT_FAILURE;
       break;
     }
 
@@ -673,7 +690,6 @@ extern int ui_main(int argc,char **argv)
       module->reset();
       strfcpy(text,sizeof(text),_("A fatal error has been reported by module '%s'.\n\nPlease read the logfile at '%s'.\nThank you.\n"),module->name,LOGFILE);
       ui_dialog_text(_("Module Fatal Error"),text);
-      code = EXIT_FAILURE;
       break;
     }
 
@@ -681,6 +697,9 @@ extern int ui_main(int argc,char **argv)
 
     ++n;
   }
+
+  if(module == 0)
+    code = EXIT_SUCCESS;
 
   newtFinished();
 
