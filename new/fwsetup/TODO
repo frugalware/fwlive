@@ -22,3 +22,4 @@ implement local source install
 implement keyboard map selection
 implement console font selection
 implement raid setup
+look into what can be done about sfdisk failing due to busy devices
