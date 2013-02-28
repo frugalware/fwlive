@@ -1107,6 +1107,14 @@ extern bool disk_flush(struct disk *disk)
           strfcat(command,sizeof(command),"0 0 0x00 -\\n");
     }
 
+    if(disk->size == 0)
+      strfcat(command,sizeof(command),
+        "0 0 0x00 -\\n"
+        "0 0 0x00 -\\n"
+        "0 0 0x00 -\\n"
+        "0 0 0x00 -\\n"
+      );
+
     strfcat(command,sizeof(command),"' | sfdisk --unit S --Linux --no-reread '%s';",
       disk->device->path
     );
