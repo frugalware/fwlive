@@ -629,14 +629,12 @@ extern long long disk_get_free_size(struct disk *disk)
   {
     struct partition *last = &disk->table[disk->size-1];
 
-    if(disk_has_extended_partition(disk) && last->dostype == DOS_EXTENDED)
-    {
+    if(disk->type == DISKTYPE_DOS && last->dostype == DOS_EXTENDED)
       size -= last->start + disk->device->alignment;
-    }
+    else if(disk->type == DISKTYPE_DOS && last->number > 4)
+      size -= last->end + 1 + disk->device->alignment;
     else
-    {
       size -= last->end + 1;
-    }
   }
   else
   {
