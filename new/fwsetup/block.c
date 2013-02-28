@@ -24,16 +24,16 @@
 
 #define DOS_DATA     0x83
 #define DOS_SWAP     0x82
-#define DOS_RAID     0xFD
-#define DOS_LVM      0x8E
-#define DOS_EFI      0xEF
+#define DOS_RAID     0xfd
+#define DOS_LVM      0x8e
+#define DOS_EFI      0xef
 #define DOS_EXTENDED 0x05
-#define GPT_DATA     "0FC63DAF-8483-4772-8E79-3D69D8477DE4"
-#define GPT_SWAP     "0657FD6D-A4AB-43C4-84E5-0933C84B4F4F"
-#define GPT_RAID     "A19D880F-05FC-4D3B-A006-743F0F84911E"
-#define GPT_LVM      "E6D6D379-F507-44C2-A23C-238F2A3DF928"
-#define GPT_EFI      "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
-#define GPT_BIOS     "21686148-6449-6E6F-744E-656564454649"
+#define GPT_DATA     "0fc63daf-8483-4772-8e79-3d69d8477de4"
+#define GPT_SWAP     "0657fd6d-a4ab-43c4-84e5-0933c84b4f4f"
+#define GPT_RAID     "a19d880f-05fc-4d3b-a006-743f0f84911e"
+#define GPT_LVM      "e6d6d379-f507-44c2-a23c-238f2a3df928"
+#define GPT_EFI      "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
+#define GPT_BIOS     "21686148-6449-6e6f-744e-656564454649"
 
 enum devicetype
 {
