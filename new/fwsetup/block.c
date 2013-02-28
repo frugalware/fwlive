@@ -1058,7 +1058,7 @@ extern bool disk_flush(struct disk *disk)
   char command[_POSIX_ARG_MAX] = {0};
   int i = 0;
   struct partition *part = 0;
-  size_t n = 0;
+  int j = 0;
 
   if(disk == 0 || (disk->type != DISKTYPE_DOS && disk->type != DISKTYPE_GPT))
   {
@@ -1072,38 +1072,25 @@ extern bool disk_flush(struct disk *disk)
 
   if(disk->type == DISKTYPE_DOS)
   {
-    snprintf(command,_POSIX_ARG_MAX,"set -e;echo -n -e 'o\\nx\\ni\\n0x%.8x\\nr\\n",
-      (disk->dosuuid == 0) ? (unsigned int) rand_r(&seed) : disk->dosuuid
-    );
-
-    n = strlen(command);
+    strfcpy(command,sizeof(command),"set -e;echo -n -e '");
 
     for( ; i < disk->size ; ++i )
     {
       part = &disk->table[i];
-
-      snprintf(command+n,_POSIX_ARG_MAX-n,"n\\n%c\\n%d\\n%lld\\n%lld\\nt\\n%d\\n%.2x\\n",
-        (part->dostype == DOS_EXTENDED) ? 'e' : (part->number > 4) ? 'l' : 'p',
-        part->number,
-        part->start,
-        part->end,
-        part->number,
-        part->dostype
-      );
-
-      n = strlen(command);
       
-      if(part->dosactive)
-      {
-        snprintf(command+n,_POSIX_ARG_MAX-n,"a\\n%d\\n",
-          part->number
-        );
-        
-        n = strlen(command);
-      }
+      strfcat(command,sizeof(command),"%lld %lld 0x%hhx %c\\n",
+        part->start,
+        part->size,
+        part->dostype,
+        (part->dosactive) ? '*' : '-'
+      );
+      
+      if(part->dostype == DOS_EXTENDED)
+        for( j = part->number ; j < 4 ; ++j )
+          strfcat(command,sizeof(command),"0 0 0x00 -\\n");
     }
 
-    snprintf(command+n,_POSIX_ARG_MAX-n,"w\\n' | fdisk -u=sectors '%s'",
+    strfcat(command,sizeof(command),"' | sfdisk --unit S --Linux --no-reread '%s';",
       disk->device->path
     );
   }
@@ -1141,6 +1128,9 @@ extern bool disk_flush(struct disk *disk)
     return false;
 
   if(!execute(command,"/",0))
+    return false;
+
+  if(disk->type == DISKTYPE_DOS && !putdosuuid(disk))
     return false;
 
   return true;
