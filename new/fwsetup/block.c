@@ -120,7 +120,7 @@ static bool putdosuuid(struct disk *disk)
   unsigned int n = (disk->dosuuid == 0) ? (unsigned int) rand_r(&seed) : disk->dosuuid;
   
   if(
-    (fd = open(disk->device->path,O_WRONLY) == -1) ||
+    (fd = open(disk->device->path,O_WRONLY)) == -1 ||
     lseek(fd,440,SEEK_SET) == (off_t) -1           ||
     write(fd,&n,sizeof(n)) != sizeof(n)            ||
     close(fd) == -1
