@@ -520,7 +520,7 @@ static bool ui_dialog_partition_new_partition(struct disk *disk)
 
   label = newtLabel(0,textbox_height+1,PARTITION_DIALOG_NEW_SIZE_TEXT);
 
-  size_to_string(text,TEXT_MAX,disk_get_free_size(disk),false);
+  size_to_string(text,sizeof(text),disk_get_free_size(disk),false);
 
   entry = newtEntry(label_width+1,textbox_height+1,text,entry_width,&result,0);
 
@@ -914,7 +914,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     union partition_action action = {{0}};
     long long freesize = 0;
 
-    size_to_string(size,10,device_get_size(device),false);
+    size_to_string(size,sizeof(size),device_get_size(device),false);
 
     strfcpy(text,sizeof(text),"Disk %s: %s label (%s)",device_get_path(device),(disk == 0) ? "nil" : disk_get_type(disk),size);
 
@@ -937,7 +937,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         action.partition_number = j;
 
-        size_to_string(size,10,disk_partition_get_size(disk,j),false);
+        size_to_string(size,sizeof(size),disk_partition_get_size(disk,j),false);
 
         strfcpy(text,sizeof(text),"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,j),disk_partition_get_purpose(disk,j),(disk_partition_get_active(disk,j)) ? "active" : "inactive",size);
 
@@ -952,7 +952,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
       {
         action.space = true;
 
-        size_to_string(size,10,freesize,false);
+        size_to_string(size,sizeof(size),freesize,false);
 
         strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
@@ -1037,7 +1037,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
           key.data = action.data;
 
-          size_to_string(size,10,device_get_size(device),false);
+          size_to_string(size,sizeof(size),device_get_size(device),false);
 
           strfcpy(text,sizeof(text),"Disk %s: %s label (%s)",device_get_path(device),disk_get_type(disk),size);
 
@@ -1049,7 +1049,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
           key.space = true;
 
-          size_to_string(size,10,disk_get_free_size(disk),false);
+          size_to_string(size,sizeof(size),disk_get_free_size(disk),false);
 
           strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
@@ -1064,7 +1064,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         if(ui_dialog_partition_modify_partition(disk,partition))
         {
-          size_to_string(size,10,disk_partition_get_size(disk,partition),false);
+          size_to_string(size,sizeof(size),disk_partition_get_size(disk,partition),false);
 
           strfcpy(text,sizeof(text),"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
 
@@ -1098,7 +1098,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
           if(disk_get_free_size(disk) > 0)
           {
-            size_to_string(size,10,disk_get_free_size(disk),false);
+            size_to_string(size,sizeof(size),disk_get_free_size(disk),false);
 
             strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
@@ -1113,7 +1113,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
             key.partition_number = partition;
 
-            size_to_string(size,10,disk_partition_get_size(disk,partition),false);
+            size_to_string(size,sizeof(size),disk_partition_get_size(disk,partition),false);
 
             strfcpy(text,sizeof(text),"%2cPartition %3d: %7s type %8s (%s)",' ',disk_partition_get_number(disk,partition),disk_partition_get_purpose(disk,partition),(disk_partition_get_active(disk,partition)) ? "active" : "inactive",size);
 
@@ -1158,7 +1158,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
 
         key.space = true;
 
-        size_to_string(size,10,disk_get_free_size(disk),false);
+        size_to_string(size,sizeof(size),disk_get_free_size(disk),false);
 
         strfcpy(text,sizeof(text),"%2cFree Space (%s)",' ',size);
 
