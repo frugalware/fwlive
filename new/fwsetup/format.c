@@ -108,7 +108,7 @@ static bool format_setup(void)
 
       target->devicepath = strdup(device_get_path(device));
 
-      size_to_string(buf,PATH_MAX,device_get_size(device),false);
+      size_to_string(buf,sizeof(buf),device_get_size(device),false);
 
       target->size = strdup(buf);
 
@@ -135,7 +135,7 @@ static bool format_setup(void)
 
         target->devicepath = strdup(buf);
 
-        size_to_string(buf,PATH_MAX,disk_partition_get_size(disk,i),false);
+        size_to_string(buf,sizeof(buf),disk_partition_get_size(disk,i),false);
 
         target->size = strdup(buf);
 
