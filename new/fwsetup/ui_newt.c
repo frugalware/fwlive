@@ -959,11 +959,10 @@ extern bool ui_window_locale(const char *var,char **locales,char **locale)
     
     if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
     {
+      *locale = newtListboxGetCurrent(listbox);
       break;
     }
   }
-  
-  *locale = newtListboxGetCurrent(listbox);
   
   newtFormDestroy(form);
 
