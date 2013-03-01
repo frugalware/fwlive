@@ -32,6 +32,8 @@
 #define PASSWORD_SHORT_TEXT _("Your password must be at least 6 characters long.\n")
 #define PASSWORD_MISMATCH_TITLE _("Passwords Do Not Match")
 #define PASSWORD_MISMATCH_TEXT _("The passwords you have entered do not match.\n")
+#define LOCALE_TITLE _("Locale Setup")
+#define LOCALE_TEXT _("Select a locale from the list below.\nIt will be used for the '%s' variable.\n")
 #define PARTITION_TITLE _("Partition Setup")
 #define PARTITION_TEXT _("Select a disk device to setup a new partition table.\nSelect a partition to modify its parameters.\nSelect a disk device's free space to setup a new partition.\nSelect a disk device's deletion entry to delete the last partition.\n")
 #define PARTITION_DIALOG_NEW_TABLE_TITLE _("New Partition Table")
