@@ -10,7 +10,6 @@ implement goodbye UI
 disable tty blanking
 check that partitions are aligned mebibyte boundaries
 check if gpt has bios boot partition
-implement UI for asking language
 implement bootloader setup
 implement vconsole setup
 implement fstab setup
@@ -22,3 +21,4 @@ implement keyboard map selection
 implement console font selection
 implement raid setup
 look into what can be done about sfdisk failing due to busy devices
+look into if locales are written correctly
