@@ -27,7 +27,7 @@ static bool locale_setup(void)
   size_t size = 512;
   char line[LINE_MAX] = {0};
   
-  strfcpy(command,sizeof(command),"locale --all-locales | grep '\\.utf8$' | sort --unique");
+  strfcpy(command,sizeof(command),"localectl list-locales | grep '\\.utf8$'");
 
   if((pipe = popen(command,"r")) == 0)
   {
