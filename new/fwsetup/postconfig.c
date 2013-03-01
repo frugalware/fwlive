@@ -28,12 +28,12 @@ static char **tz_data = 0;
 
 static bool write_locale_conf(void)
 {
-  const char *lang = 0;
+  const char *var = "LANG";
+  const char *locale = 0;
   FILE *file = 0;
-  int i = 0;
+  size_t i = 0;
   static const char *vars[] =
   {
-    "LANGUAGE",
     "LC_CTYPE",
     "LC_NUMERIC",
     "LC_TIME",
@@ -49,9 +49,9 @@ static bool write_locale_conf(void)
     0
   };
   
-  if((lang = getenv("LANG")) == 0)
+  if((locale = getenv(var)) == 0 || strlen(locale) == 0)
   {
-    eprintf("LANG is not defined.\n");
+    eprintf("%s is not defined.\n",var);
     return false;
   }
   
@@ -66,18 +66,24 @@ static bool write_locale_conf(void)
     "# The system wide locale(s) is defined below.\n"
     "# For a complete list of supported locales, run this shell command:\n"
     "# locale -a\n"
+    "#\n"
+    "# For more information on locales, read locale man page 7.\n" 
     "\n"
-    "LANG=%s%s\n"
-    "\n"
-    "# The settings below should only be used for advanced configurations.\n"
-    "# Please read the locale man page 7 for more information.\n"
-    "\n",
-    lang,
-    (strstr(lang,".utf8") == 0) ? "" : ".utf8"
+    "LANG=%s\n",
+    locale
   );
 
   for( ; vars[i] != 0 ; ++i )
-    fprintf(file,"#%s=\n",vars[i]);
+  {
+    var = vars[i];
+    
+    if((locale = getenv(var)) == 0 || strlen(locale) == 0)
+      fprintf(file,"#%s=\n",var);
+    else
+      fprintf(file,"%s=%s\n",var,locale);
+  }
+
+  fprintf(file,"#LANGUAGE=\n");
 
   fclose(file);
 
