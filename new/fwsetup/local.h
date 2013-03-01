@@ -176,6 +176,7 @@ extern FILE *logfile;
 extern int main(int argc,char **argv);
 
 extern struct global *g;
+extern struct module locale_module;
 extern struct module partition_module;
 extern struct module format_module;
 extern struct module install_module;
