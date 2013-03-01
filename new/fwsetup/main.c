@@ -32,13 +32,6 @@ extern int main(int argc,char **argv)
 
   seed = time(0);
 
-  if(setlocale(LC_ALL,"") == 0)
-  {
-    perror("main");
-
-    return EXIT_FAILURE;
-  }
-
   remove(LOGFILE);
 
   logfile = fopen(LOGFILE,"a");

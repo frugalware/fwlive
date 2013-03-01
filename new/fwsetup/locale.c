@@ -137,6 +137,12 @@ static bool locale_run(void)
   if(!locale_do_other_locales())
     return false;
 
+  if(setlocale(LC_ALL,"") == 0)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
   return true;
 }
 
