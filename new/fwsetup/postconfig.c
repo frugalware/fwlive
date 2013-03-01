@@ -26,7 +26,6 @@ static size_t tz_size = 0;
 static size_t tz_count = 0;
 static char **tz_data = 0;
 
-#if 0
 static bool write_locale_conf(void)
 {
   const char *var = "LANG";
@@ -88,54 +87,6 @@ static bool write_locale_conf(void)
 
   fclose(file);
 
-  return true;
-}
-#endif
-
-static bool locale_action(void)
-{
-  const char *var = "LANG";
-  const char *locale = 0;
-  char command[_POSIX_ARG_MAX] = {0};
-  size_t i = 0;
-  static const char *vars[] =
-  {
-    "LC_CTYPE",
-    "LC_NUMERIC",
-    "LC_TIME",
-    "LC_COLLATE",
-    "LC_MONETARY",
-    "LC_MESSAGES",
-    "LC_PAPER",
-    "LC_NAME",
-    "LC_ADDRESS",
-    "LC_TELEPHONE",
-    "LC_MEASUREMENT",
-    "LC_IDENTIFICATION",
-    0
-  };
-
-  if((locale = getenv(var)) == 0 || strlen(locale) == 0)
-  {
-    eprintf("%s is not defined.\n",var);
-    return false;
-  }
-  
-  strfcpy(command,sizeof(command),"localectl set-locale '%s=%s'",var,locale);
-
-  for( ; vars[i] != 0 ; ++i )
-  {
-    var = vars[i];
-    
-    if((locale = getenv(var)) == 0 || strlen(locale) == 0)
-      continue;
-    
-    strfcat(command,sizeof(command)," '%s=%s'",var,locale);
-  }
-
-  if(!execute(command,INSTALL_ROOT,0))
-    return false;
-  
   return true;
 }
 
@@ -369,7 +320,7 @@ static bool postconfig_run(void)
     return false;
   }
 
-  if(!locale_action())
+  if(!write_locale_conf())
     return false;
 
   if(!is_root_setup() && (!ui_window_root(&account) || !root_action(&account)))
