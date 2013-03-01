@@ -81,12 +81,60 @@ static bool locale_do_locale(void)
   return true;
 }
 
+static bool locale_do_other_locales(void)
+{
+  char text[TEXT_MAX] = {0};
+  const char *var = 0;
+  static const char *vars[] =
+  {
+    "LC_CTYPE",
+    "LC_NUMERIC",
+    "LC_TIME",
+    "LC_COLLATE",
+    "LC_MONETARY",
+    "LC_MESSAGES",
+    "LC_PAPER",
+    "LC_NAME",
+    "LC_ADDRESS",
+    "LC_TELEPHONE",
+    "LC_MEASUREMENT",
+    "LC_IDENTIFICATION",
+    0
+  };
+  size_t i = 0;
+  char *locale = 0;
+  
+  for( ; vars[i] != 0 ; ++i )
+  {
+    var = vars[i];
+    
+    strfcpy(text,sizeof(text),_("Do you wish to select a locale for '%s'?\n"),var);
+  
+    if(!ui_dialog_yesno(_("Other Locale Selections"),text,true))
+      continue;
+    
+    if(!ui_window_locale(var,locales,&locale))
+      return false;
+
+    if(setenv(var,locale,true) == -1)
+    {
+      error(strerror(errno));
+      return false;
+    }    
+  }
+  
+  return true;
+}
+
 static bool locale_run(void)
 {
   if(!locale_setup())
     return false;
 
   if(!locale_do_locale())
+    return false;
+
+  if(!locale_do_other_locales())
     return false;
 
   return true;
