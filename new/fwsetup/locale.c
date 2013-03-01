@@ -64,9 +64,29 @@ static bool locale_setup(void)
   return true;
 }
 
+static bool locale_do_locale(void)
+{
+  const char *var = "LANG";
+  char *locale = 0;
+  
+  if(!ui_window_locale(var,locales,&locale))
+    return false;
+
+  if(setenv(var,locale,true) == -1)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
+  return true;
+}
+
 static bool locale_run(void)
 {
   if(!locale_setup())
+    return false;
+
+  if(!locale_do_locale())
     return false;
 
   return true;
