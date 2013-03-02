@@ -126,6 +126,8 @@ static bool layout_setup(void)
   }
   while(i > 0);
 
+  fclose(file);
+
   return true;
 }
 
@@ -141,7 +143,7 @@ static bool layout_do_layout(void)
   for( ; layouts[i] != 0 ; ++i )
     ;
   
-  if((layout = bsearch(entry,layouts,i,sizeof(struct layout *),bsearch_compare)) == 0)
+  if((layout = *(struct layout **) bsearch(entry,layouts,i,sizeof(struct layout *),bsearch_compare)) == 0)
   {
     error("no matching layout");
     return false;
