@@ -11,7 +11,6 @@ disable tty blanking
 check that partitions are aligned mebibyte boundaries
 check if gpt has bios boot partition
 implement bootloader setup
-implement vconsole setup
 implement fstab setup
 implement network setup
 implement network install (mirror and connection)
