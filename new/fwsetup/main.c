@@ -54,10 +54,7 @@ extern int main(int argc,char **argv)
   return code;
 }
 
-static struct global local =
-{
-  .netinstall = true
-};
+static struct global local = {0};
 
 struct global *g = &local;
 

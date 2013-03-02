@@ -39,12 +39,25 @@ static inline void put_token(char *in,char **out)
   *out = (strcmp(in,"-") == 0) ? 0 : strdup(in);
 }
 
+static inline void put_layout(char *in,char **out)
+{
+  *out = (in == 0) ? 0 : strdup(in);
+}
+
 static int qsort_compare(const void *A,const void *B)
 {
-  struct layout *a = *(struct layout **) A;  
-  struct layout *b = *(struct layout **) B;
+  const struct layout *a = *(struct layout **) A;  
+  const struct layout *b = *(struct layout **) B;
   
   return strcmp(a->kbdlayout,b->kbdlayout);
+}
+
+static int bsearch_compare(const void *A,const void *B)
+{
+  const char *a = (char *) A;
+  const struct layout *b = *(struct layout **) B;
+
+  return strcmp(a,b->kbdlayout);
 }
 
 static bool layout_setup(void)
@@ -59,7 +72,6 @@ static bool layout_setup(void)
   char *xkbvariant = 0;
   char *xkboptions = 0;
   struct layout *layout = 0;
-  char *entry = 0;
   
   if((file = fopen("/usr/share/systemd/kbd-model-map","rb")) == 0)
   {
@@ -117,10 +129,44 @@ static bool layout_setup(void)
   return true;
 }
 
+static bool layout_do_layout(void)
+{
+  char *entry = 0;
+  size_t i = 0;
+  struct layout *layout = 0;
+
+  if(!ui_window_list(LAYOUT_TITLE,LAYOUT_TEXT,entries,&entry))
+    return false;
+  
+  for( ; layouts[i] != 0 ; ++i )
+    ;
+  
+  if((layout = bsearch(entry,layouts,i,sizeof(struct layout *),bsearch_compare)) == 0)
+  {
+    error("no matching layout");
+    return false;
+  }
+
+  put_layout(layout->kbdlayout,&g->kbdlayout);
+
+  put_layout(layout->xkblayout,&g->xkblayout);
+  
+  put_layout(layout->xkbmodel,&g->xkbmodel);
+  
+  put_layout(layout->xkbvariant,&g->xkbvariant);
+  
+  put_layout(layout->xkboptions,&g->xkboptions);
+
+  return true;
+}
+
 static bool layout_run(void)
 {
   if(!layout_setup())
-    return true;
+    return false;
+
+  if(!layout_do_layout())
+    return false;
 
   return true;
 }

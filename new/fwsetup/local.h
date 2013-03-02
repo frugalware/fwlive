@@ -56,7 +56,11 @@
 
 struct global
 {
-  bool netinstall;
+  char *kbdlayout;
+  char *xkblayout;
+  char *xkbmodel;
+  char *xkbvariant;
+  char *xkboptions;
 };
 
 struct device;
