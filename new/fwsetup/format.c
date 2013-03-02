@@ -319,6 +319,26 @@ static bool format_process_devices(void)
   return true;
 }
 
+static void format_prepare_fstab(void)
+{
+  size_t i = 0;
+  char text[TEXT_MAX] = {0};
+  
+  for( ; targets[i] != 0 ; ++i )
+    ;
+  
+  g->fstabdata = malloc0(sizeof(char *) * (i+1));
+
+  g->fstabdata[i] = 0;
+
+  do
+  {
+    --i;
+    strfcpy(text,sizeof(text),"%s:%s:%s",targets[i]->devicepath,targets[i]->mountpath,targets[i]->newfilesystem);
+    g->fstabdata[i] = strdup(text);
+  } while(i > 0);
+}
+
 static bool format_run(void)
 {
   if(!format_setup())
@@ -337,6 +357,8 @@ static bool format_run(void)
 
   if(!mount_special())
     return false;
+
+  format_prepare_fstab();
 
   return true;
 }

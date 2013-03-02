@@ -61,6 +61,7 @@ struct global
   char *xkbmodel;
   char *xkbvariant;
   char *xkboptions;
+  char **fstabdata;
 };
 
 struct device;
