@@ -19,6 +19,21 @@
 
 FILE *logfile = 0;
 
+static void global_cleanup(void)
+{
+  free(g->kbdlayout);
+  
+  free(g->xkblayout);
+  
+  free(g->xkbmodel);
+  
+  free(g->xkbvariant);
+  
+  free(g->xkboptions);
+  
+  memset(g,0,sizeof(struct global));
+}
+
 extern int main(int argc,char **argv)
 {
   int code = 0;
@@ -50,6 +65,8 @@ extern int main(int argc,char **argv)
   fclose(logfile);
 
   logfile = 0;
+
+  global_cleanup();
 
   return code;
 }
