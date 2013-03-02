@@ -20,5 +20,6 @@ implement local source install
 implement keyboard map selection
 implement console font selection
 implement raid setup
+replace gradual reallocs with one massive allocation then shrinking it
 look into what can be done about sfdisk failing due to busy devices
 look into if locales are written correctly
