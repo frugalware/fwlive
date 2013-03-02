@@ -33,7 +33,7 @@
 #define PASSWORD_MISMATCH_TITLE _("Passwords Do Not Match")
 #define PASSWORD_MISMATCH_TEXT _("The passwords you have entered do not match.\n")
 #define LOCALE_TITLE _("Locale Setup")
-#define LOCALE_TEXT _("Select a locale from the list below.\nIt will be used for the '%s' variable.\n")
+#define LOCALE_TEXT _("Select a locale from the list below.\nThe first part of the locale is the language code.\nThe second part of the locale is the country code.\nThe third part of the locale is the encoding.\nIt will be used for the '%s' variable.\n")
 #define LAYOUT_TITLE _("Keyboard Layout Setup")
 #define LAYOUT_TEXT _("Select a keyboard layout from the list below.\nThis also configures your X11 keyboard layout.\n")
 #define PARTITION_TITLE _("Partition Setup")
