@@ -17,7 +17,8 @@
 
 #include "local.h"
 
-static struct layout **layouts;
+static struct layout **layouts = 0;
+static char **entries = 0;
 
 static inline bool get_token(char *in,char **out)
 {
@@ -29,7 +30,7 @@ static inline void put_token(char *in,char **out)
   *out = (strcmp(in,"-") == 0) ? 0 : strdup(in);
 }
 
-static int sort_compare(const void *A,const void *B)
+static int qsort_compare(const void *A,const void *B)
 {
   struct layout *a = *(struct layout **) A;  
   struct layout *b = *(struct layout **) B;
@@ -49,6 +50,7 @@ static bool layout_setup(void)
   char *xkbvariant = 0;
   char *xkboptions = 0;
   struct layout *layout = 0;
+  char *entry = 0;
   
   if((file = fopen("/usr/share/systemd/kbd-model-map","rb")) == 0)
   {
@@ -90,7 +92,18 @@ static bool layout_setup(void)
   
   layouts = realloc(layouts,sizeof(struct layout *) * (i+1));
 
-  qsort(layouts,i,sizeof(struct layout *),sort_compare);
+  qsort(layouts,i,sizeof(struct layout *),qsort_compare);
+
+  entries = malloc0(sizeof(char *) * (i+1));
+
+  entries[i] = 0;
+  
+  do
+  {
+    --i;
+    entries[i] = layouts[i]->kbdlayout;
+  }
+  while(i > 0);
 
   return true;
 }
@@ -130,6 +143,10 @@ static void layout_reset(void)
     free(layouts);
     
     layouts = 0;
+    
+    free(entries);
+    
+    entries = 0;
   }
 }
 
