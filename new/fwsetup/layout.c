@@ -38,6 +38,14 @@ static inline void put_token(char *in,char **out)
   *out = (strcmp(in,"-") == 0) ? 0 : strdup(in);
 }
 
+static int sort_compare(const void *A,const void *B)
+{
+  struct layout *a = *(struct layout **) A;  
+  struct layout *b = *(struct layout **) B;
+  
+  return strcmp(a->kbdlayout,b->kbdlayout);
+}
+
 static bool layout_setup(void)
 {
   FILE *file = 0;
@@ -90,6 +98,8 @@ static bool layout_setup(void)
   layouts[i] = 0;
   
   layouts = realloc(layouts,sizeof(struct layout *) * (i+1));
+
+  qsort(layouts,i,sizeof(struct layout *),sort_compare);
 
   return true;
 }
