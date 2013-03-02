@@ -153,6 +153,32 @@ static bool write_keyboard_conf(void)
   return true;
 }
 
+static bool write_fstab(void)
+{
+  FILE *file = 0;
+  
+  if((file = fopen("etc/fstab","wb")) == 0)
+  {
+    error(strerror(errno));
+    return false;
+  }
+  
+  fprintf(file,
+    "none /dev devtmpfs defaults 0 0\n"
+    "none /proc proc defaults 0 0\n"
+    "none /sys sysfs defaults 0 0\n"
+    "none /tmp tmpfs defaults 0 0\n"
+    "none /var/tmp tmpfs defaults 0 0\n"
+    "none /dev/pts devpts gid=5,mode=620 0 0\n"
+    "none /proc/bus/usb usbfs devgid=23,devmode=664 0 0\n"
+    "none /dev/shm tmpfs defaults 0 0\n"
+  );
+
+  fclose(file);
+  
+  return true;
+}
+
 static bool is_root_setup(void)
 {
   FILE *file = 0;
@@ -390,6 +416,9 @@ static bool postconfig_run(void)
     return false;
 
   if(!write_keyboard_conf())
+    return false;
+
+  if(!write_fstab())
     return false;
 
   if(!is_root_setup() && (!ui_window_root(&account) || !root_action(&account)))
