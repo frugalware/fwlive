@@ -17,15 +17,6 @@
 
 #include "local.h"
 
-struct layout
-{
-  char *kbdlayout;
-  char *xkblayout;
-  char *xkbmodel;
-  char *xkbvariant;
-  char *xkboptions;
-};
-
 static struct layout **layouts;
 
 static inline bool get_token(char *in,char **out)

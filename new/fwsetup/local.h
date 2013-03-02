@@ -63,6 +63,15 @@ struct device;
 
 struct disk;
 
+struct layout
+{
+  char *kbdlayout;
+  char *xkblayout;
+  char *xkbmodel;
+  char *xkbvariant;
+  char *xkboptions;
+};
+
 struct format
 {
   char *devicepath;
