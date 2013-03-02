@@ -62,13 +62,6 @@ static bool write_locale_conf(void)
   }
   
   fprintf(file,
-    "# /etc/locale.conf\n"
-    "# The system wide locale(s) is defined below.\n"
-    "# For a complete list of supported locales, run this shell command:\n"
-    "# locale -a\n"
-    "#\n"
-    "# For more information on locales, read locale man page 7.\n" 
-    "\n"
     "LANG=%s\n",
     locale
   );
@@ -78,12 +71,10 @@ static bool write_locale_conf(void)
     var = vars[i];
     
     if((locale = getenv(var)) == 0 || strlen(locale) == 0)
-      fprintf(file,"#%s=\n",var);
-    else
-      fprintf(file,"%s=%s\n",var,locale);
+      continue;
+    
+    fprintf(file,"%s=%s\n",var,locale);
   }
-
-  fprintf(file,"#LANGUAGE=\n");
 
   fclose(file);
 
