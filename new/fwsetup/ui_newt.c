@@ -891,6 +891,82 @@ extern bool ui_dialog_progress(const char *title,const char *text,int percent)
   return true;
 }
 
+extern bool ui_window_list(const char *title,const char *text,char **entries,char **entry)
+{
+  int textbox_width = 0;
+  int textbox_height = 0;
+  int next_width = 0;
+  int next_height = 0;
+  int listbox_width = 0;
+  int listbox_height = 0;
+  newtComponent textbox = 0;
+  newtComponent next = 0;
+  newtComponent listbox = 0;
+  newtComponent form = 0;
+  struct newtExitStruct es = {0};
+  char **p = 0;
+
+  if(title == 0 || text == 0 || entries == 0 || entry == 0)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
+  if(!get_text_screen_size(text,&textbox_width,&textbox_height))
+    return false;
+  
+  if(!get_button_screen_size(NEXT_BUTTON_TEXT,&next_width,&next_height))
+    return false;
+  
+  listbox_width = NEWT_WIDTH;
+
+  listbox_height = NEWT_HEIGHT - textbox_height - next_height - 2;  
+
+  if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,title) != 0)
+  {
+    eprintf("Failed to open a NEWT window.\n");
+    return false;
+  }
+  
+  textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
+
+  newtTextboxSetText(textbox,text);
+
+  next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
+
+  listbox = newtListbox(0,textbox_height+1,listbox_height,NEWT_FLAG_SCROLL);
+
+  newtListboxSetWidth(listbox,listbox_width);
+
+  for( p = entries ; *p != 0 ; ++p )
+    newtListboxAppendEntry(listbox,*p,*p);
+
+  newtListboxSetCurrent(listbox,0);
+
+  form = newtForm(0,0,NEWT_FLAG_NOF12);
+
+  newtFormAddComponents(form,textbox,next,listbox,(void *) 0);
+
+  newtFormSetCurrent(form,listbox);
+
+  while(true)
+  {
+    newtFormRun(form,&es);
+    
+    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
+    {
+      *entry = newtListboxGetCurrent(listbox);
+      break;
+    }
+  }
+  
+  newtFormDestroy(form);
+
+  newtPopWindow();
+
+  return true;
+}
+
 extern bool ui_window_locale(const char *var,char **locales,char **locale)
 {
   char text[TEXT_MAX] = {0};
