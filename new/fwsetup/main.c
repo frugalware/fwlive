@@ -64,6 +64,7 @@ struct global *g = &local;
 struct module *modules[] =
 {
   &locale_module,
+  &layout_module,
   &partition_module,
   &format_module,
   &install_module,
