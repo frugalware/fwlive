@@ -16,7 +16,6 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <linux/major.h>
-#include <blkid.h>
 #include "local.h"
 
 #define EMPTY_PARTITION &(struct partition) {0}

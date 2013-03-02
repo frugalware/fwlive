@@ -37,6 +37,7 @@
 #include <regex.h>
 #include <locale.h>
 #include <time.h>
+#include <blkid.h>
 #include "text.h"
 
 #ifdef UI_NEWT
