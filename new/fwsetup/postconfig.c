@@ -26,6 +26,14 @@ static size_t tz_size = 0;
 static size_t tz_count = 0;
 static char **tz_data = 0;
 
+static inline void put_xkb_var(FILE *file,char *s1,char *s2)
+{
+  if(s1 == 0 || strlen(s1) == 0)
+    return;
+
+  fprintf(file,"%8cOption \"%s\" \"%s\"\n",' ',s2,s1);
+}
+
 static bool write_locale_conf(void)
 {
   const char *var = "LANG";
@@ -107,6 +115,41 @@ static bool write_vconsole_conf(void)
   
   fclose(file);
   
+  return true;
+}
+
+static bool write_keyboard_conf(void)
+{
+  FILE *file = 0;
+  
+  if((file = fopen("etc/X11/xorg.conf.d/00-keyboard.conf","wb")) == 0)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
+  fprintf(file,
+    "Section \"InputClass\"\n"
+    "%8cIdentifier \"system-keyboard\"\n"
+    "%8cMatchIsKeyboard \"on\"\n",
+    ' ',
+    ' '
+  );
+
+  put_xkb_var(file,g->xkblayout,"XkbLayout");
+
+  put_xkb_var(file,g->xkbmodel,"XkbModel");
+  
+  put_xkb_var(file,g->xkbvariant,"XkbVariant");
+  
+  put_xkb_var(file,g->xkboptions,"XkbOptions");
+
+  fprintf(file,
+    "EndSection\n"
+  );
+
+  fclose(file);
+
   return true;
 }
 
@@ -344,6 +387,9 @@ static bool postconfig_run(void)
     return false;
 
   if(!write_vconsole_conf())
+    return false;
+
+  if(!write_keyboard_conf())
     return false;
 
   if(!is_root_setup() && (!ui_window_root(&account) || !root_action(&account)))
