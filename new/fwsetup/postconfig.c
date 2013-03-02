@@ -90,6 +90,35 @@ static bool write_locale_conf(void)
   return true;
 }
 
+static bool write_vconsole_conf(void)
+{
+  FILE *file = 0;
+  
+  if(g->kbdlayout == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+  
+  if((file = fopen("etc/vconsole.conf","wb")) == 0)
+  {
+    error(strerror(errno));
+    return false;
+  }
+  
+  fprintf(file,
+    "KEYMAP=%s\n"
+    "FONT=%s\n",
+    g->kbdlayout,
+    "ter-v16b"
+  );
+  
+  fclose(file);
+  
+  return true;
+}
+
 static bool is_root_setup(void)
 {
   FILE *file = 0;
@@ -321,6 +350,9 @@ static bool postconfig_run(void)
   }
 
   if(!write_locale_conf())
+    return false;
+
+  if(!write_vconsole_conf())
     return false;
 
   if(!is_root_setup() && (!ui_window_root(&account) || !root_action(&account)))
