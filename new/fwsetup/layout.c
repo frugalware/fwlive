@@ -17,6 +17,15 @@
 
 #include "local.h"
 
+struct layout
+{
+  char *kbdlayout;
+  char *xkblayout;
+  char *xkbmodel;
+  char *xkbvariant;
+  char *xkboptions;
+};
+
 static struct layout **layouts = 0;
 static char **entries = 0;
 

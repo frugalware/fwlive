@@ -63,15 +63,6 @@ struct device;
 
 struct disk;
 
-struct layout
-{
-  char *kbdlayout;
-  char *xkblayout;
-  char *xkbmodel;
-  char *xkbvariant;
-  char *xkboptions;
-};
-
 struct format
 {
   char *devicepath;
@@ -176,7 +167,6 @@ extern void ui_dialog_text(const char *title,const char *text);
 extern bool ui_dialog_yesno(const char *title,const char *text,bool defaultno);
 extern bool ui_dialog_progress(const char *title,const char *text,int percent);
 extern bool ui_window_list(const char *title,const char *text,char **entries,char **entry);
-extern bool ui_window_layout(struct layout **layouts,struct layout **layout);
 extern bool ui_window_partition(struct device **devices,struct disk **disks);
 extern bool ui_window_format(struct format **targets);
 extern bool ui_window_root(struct account *data);
