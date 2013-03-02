@@ -63,10 +63,13 @@ static bool locale_setup(void)
 
 static bool locale_do_locale(void)
 {
+  char text[TEXT_MAX] = {0};
   const char *var = "LANG";
   char *locale = 0;
   
-  if(!ui_window_locale(var,locales,&locale))
+  strfcpy(text,sizeof(text),LOCALE_TEXT,var);
+  
+  if(!ui_window_list(LOCALE_TITLE,text,locales,&locale))
     return false;
 
   if(setenv(var,locale,true) == -1)
@@ -110,7 +113,9 @@ static bool locale_do_other_locales(void)
     if(!ui_dialog_yesno(_("Other Locale Selections"),text,true))
       continue;
     
-    if(!ui_window_locale(var,locales,&locale))
+    strfcpy(text,sizeof(text),LOCALE_TEXT,var);
+    
+    if(!ui_window_list(LOCALE_TITLE,text,locales,&locale))
       return false;
 
     if(setenv(var,locale,true) == -1)
