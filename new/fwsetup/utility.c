@@ -100,6 +100,75 @@ extern bool mount_special(void)
   return true;
 }
 
+extern bool umount_all(void)
+{
+  FILE *file = 0;
+  size_t i = 0;
+  size_t size = 4096;
+  char **paths = 0;
+  char line[LINE_MAX] = {0};
+  char *path = 0;
+  bool result = true;
+
+  if((file = fopen("/proc/mounts","rb")) == 0)
+  {
+    error(strerror(errno));
+    return false;    
+  }
+
+  paths = malloc0(sizeof(char *) * size);
+
+  while(fgets(line,sizeof(line),file) != 0)
+  {
+    if(
+      i == size - 1                                          ||
+      strtok(line,SPACE_CHARS) == 0                          ||
+      (path = strtok(0,SPACE_CHARS)) == 0                    ||
+      strncmp(path,INSTALL_ROOT,sizeof(INSTALL_ROOT)-1) != 0 ||
+      strcmp(path,INSTALL_ROOT) == 0
+    )
+      continue;
+    
+    paths[i++] = strdup(path);
+  }
+  
+  paths[i] = 0;
+  
+  for( i = 0 ; paths[i] != 0 ; ++i )
+  {
+    path = paths[i];
+  
+    if(umount2(path,UMOUNT_NOFOLLOW) == -1)
+    {
+      error(strerror(errno));
+      result = false;
+      goto bail;
+    }
+  }
+
+  if(umount2(INSTALL_ROOT,UMOUNT_NOFOLLOW) == -1)
+  {
+    error(strerror(errno));
+    result = false;
+    goto bail;
+  }
+
+bail:
+
+  if(file != 0)
+    fclose(file);
+  
+  if(paths != 0)
+  {
+    for( i = 0 ; paths[i] != 0 ; ++i )
+      free(paths[i]);
+    
+    free(paths);
+  }
+
+  return result;
+}
+
 extern bool isrootpath(const char *path)
 {
   regex_t re = {0};
