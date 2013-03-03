@@ -10,7 +10,6 @@ disable tty blanking
 check that partitions are aligned mebibyte boundaries
 check if gpt has bios boot partition
 implement bootloader setup
-implement fstab setup
 implement network setup
 implement network install (mirror and connection)
 implement method to control default groups selected
@@ -21,7 +20,9 @@ look into what can be done about sfdisk failing due to busy devices
 look into if locales are written correctly
 look into if layouts are written correctly
 look into if x11 layouts are written correctly
+look into if fstab is written correctly
 look into loading the layouts after they have been chosen
+look into revising how we use blkid
 replace timezone and other simple UIs with list UI
 
 future improvements:
