@@ -21,6 +21,8 @@ FILE *logfile = 0;
 
 static void global_cleanup(void)
 {
+  char **p = 0;
+
   free(g->kbdlayout);
   
   free(g->xkblayout);
@@ -30,6 +32,14 @@ static void global_cleanup(void)
   free(g->xkbvariant);
   
   free(g->xkboptions);
+  
+  if(g->fstabdata != 0)
+  {
+    for( p = g->fstabdata ; *p != 0 ; ++p )
+      free(*p);
+  
+    free(g->fstabdata);
+  }
   
   memset(g,0,sizeof(struct global));
 }
