@@ -8,13 +8,14 @@ implement goodbye UI
 disable tty blanking
 check that partitions are aligned mebibyte boundaries
 check if gpt has bios boot partition
-implement bootloader setup
 implement network setup
 implement network install (mirror and connection)
 implement method to control default groups selected
 implement local source install
 implement raid setup
 replace gradual reallocs with one massive allocation then shrinking it
+add raid to block device detection
+add raid to grub2 detection
 look into what can be done about sfdisk failing due to busy devices
 look into if locales are written correctly
 look into if layouts are written correctly
