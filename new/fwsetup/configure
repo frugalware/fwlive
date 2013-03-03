@@ -43,7 +43,7 @@ if test "$RELEASE" = "stable"; then
   CFLAGS="$CFLAGS -DNDEBUG -DRELEASE_STABLE"
   LDFLAGS="$LDFLAGS -s"
 elif test "$RELEASE" = "current"; then
-  CFLAGS="$CFLAGS -ggdb3 -Wall -Wextra -DRELEASE_CURRENT"
+  CFLAGS="$CFLAGS -ggdb3 -Wall -Wextra -Wno-unused-parameter -DRELEASE_CURRENT"
 fi
 
 ! pkg_config_exists "pacman" && error "pacman was not found."
