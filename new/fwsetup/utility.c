@@ -17,6 +17,29 @@
 
 #include "local.h"
 
+extern void file2str(const char *path,char *s,size_t n)
+{
+  FILE *file = 0;
+
+  if(path == 0 || s == 0 || n == 0)
+  {
+    error(strerror(errno));
+    return;
+  }
+  
+  *s = 0;
+  
+  if((file = fopen(path,"rb")) == 0)
+  {
+    error(strerror(errno));
+    return;
+  }
+  
+  fgets(s,n,file);
+  
+  fclose(file);
+}
+
 extern void strfcpy(char *s,size_t n,const char *fmt,...)
 {
   va_list args;
