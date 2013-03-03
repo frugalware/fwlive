@@ -97,6 +97,18 @@ extern bool mount_special(void)
     return false;
   }
 
+  if(mount("none",INSTALL_ROOT "/tmp","tmpfs",0,0) == -1)
+  {
+    error(strerror(errno));
+    return false;
+  }
+  
+  if(mount("none",INSTALL_ROOT "/var/tmp","tmpfs",0,0) == -1)
+  {
+    error(strerror(errno));
+    return false;
+  }
+
   return true;
 }
 
