@@ -79,11 +79,11 @@ bail:
   return (uuid == 0) ? 0 : strdup(uuid);
 }
 
-static inline char **get_real_targets(void)
+static inline char **get_real_devices(void)
 {
   const char *root = 0;
   regex_t disk = {0};
-  char **targets = 0;
+  char **devices = 0;
 
   if(rootdevice == 0)
   {
@@ -102,16 +102,16 @@ static inline char **get_real_targets(void)
 
   if(regexec(&disk,root,0,0,0) == 0)
   {
-    targets = malloc0(sizeof(char *) * 2);
-    targets[0] = strndup(root,8);
-    targets[1] = 0;
+    devices = malloc0(sizeof(char *) * 2);
+    devices[0] = strndup(root,8);
+    devices[1] = 0;
   }
 
 bail:
 
   regfree(&disk);
   
-  return targets;
+  return devices;
 }
 
 static bool write_locale_conf(void)
@@ -509,6 +509,37 @@ static bool time_action(char *zone,bool utc)
     return false;
 
   return true;
+}
+
+static bool grub_action(void)
+{
+  char **devices = 0;
+  char **p = 0;
+  char command[_POSIX_ARG_MAX] = {0};
+  bool result = true;
+  
+  if((devices = get_real_devices()) == 0)
+    return false;
+
+  for( p = devices ; *p != 0 ; ++p )
+  {
+    strfcpy(command,sizeof(command),"grub-install --recheck --no-floppy --boot-directory=/boot '%s'",*p);
+    
+    if(!execute(command,INSTALL_ROOT,0))
+    {
+      result = false;
+      goto bail;
+    }
+  }
+
+bail:
+
+  for( p = devices ; *p != 0 ; ++p )
+    free(*p);
+  
+  free(devices);
+
+  return result;
 }
 
 static bool postconfig_run(void)

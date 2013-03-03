@@ -22,6 +22,7 @@ look into if x11 layouts are written correctly
 look into if fstab is written correctly
 look into loading the layouts after they have been chosen
 look into revising how we use blkid
+look into how systemd handles locale, vc layout, x11 layout, time, and hostname
 replace timezone and other simple UIs with list UI
 
 future improvements:
