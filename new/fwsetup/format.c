@@ -318,6 +318,34 @@ static bool format_process_devices(void)
   return true;
 }
 
+static bool format_create_paths(void)
+{
+  size_t i = 0;
+  static const char *paths[] =
+  {
+    "/sys",
+    "/proc",
+    "/dev",
+    "/tmp",
+    "/var/tmp",
+    "/var/cache/pacman-g2",
+    "/var/log",
+    "/etc/X11/xorg.conf.d",
+    0
+  };  
+  char path[PATH_MAX] = {0};
+
+  for( ; paths[i] != 0 ; ++i )
+  {
+    strfcpy(path,sizeof(path),INSTALL_ROOT "%s",paths[i]);
+    
+    if(!mkdir_recurse(path))
+      return false;
+  }
+
+  return true;
+}
+
 static void format_prepare_fstab(void)
 {
   size_t i = 0;
@@ -352,6 +380,9 @@ static bool format_run(void)
     return false;
 
   if(!format_process_devices())
+    return false;
+
+  if(!format_create_paths())
     return false;
 
   if(!mount_special())
