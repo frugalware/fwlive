@@ -71,12 +71,14 @@ static inline char *probe_uuid(const char *path)
     goto bail;
   }
 
+  uuid = strdup(uuid);
+
 bail:
 
   if(probe != 0)
     blkid_free_probe(probe);
   
-  return (uuid == 0) ? 0 : strdup(uuid);
+  return (char *) uuid;
 }
 
 static inline char **get_real_devices(void)
