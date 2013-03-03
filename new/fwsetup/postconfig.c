@@ -25,6 +25,7 @@
 static size_t tz_size = 0;
 static size_t tz_count = 0;
 static char **tz_data = 0;
+static char *rootdevice = 0;
 
 static inline void put_xkb_var(FILE *file,char *s1,char *s2)
 {
@@ -76,6 +77,41 @@ bail:
     blkid_free_probe(probe);
   
   return (uuid == 0) ? 0 : strdup(uuid);
+}
+
+static inline char **get_real_targets(void)
+{
+  const char *root = 0;
+  regex_t disk = {0};
+  char **targets = 0;
+
+  if(rootdevice == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return 0;
+  }
+
+  root = rootdevice;
+
+  if(regcomp(&disk,"^/dev/[hsv]d[a-z]",REG_EXTENDED|REG_NOSUB) != 0)
+  {
+    error("invalid regular expression");
+    goto bail;
+  }
+
+  if(regexec(&disk,root,0,0,0) == 0)
+  {
+    targets = malloc0(sizeof(char *) * 2);
+    targets[0] = strndup(root,8);
+    targets[1] = 0;
+  }
+
+bail:
+
+  regfree(&disk);
+  
+  return targets;
 }
 
 static bool write_locale_conf(void)
@@ -237,6 +273,9 @@ static bool write_fstab(void)
       fclose(file);
       return false;
     }
+
+    if(strcmp(path,"/") == 0)
+      rootdevice = device;
     
     fprintf(file,
       "UUID=%s %s %s defaults %s\n",
