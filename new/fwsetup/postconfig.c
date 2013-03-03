@@ -293,6 +293,23 @@ static bool write_fstab(void)
   return true;
 }
 
+static bool write_hostname(const char *hostname)
+{
+  FILE *file = 0;
+  
+  if((file = fopen("etc/hostname","wb")) == 0)
+  {
+    error(strerror(errno));
+    return false;
+  }
+  
+  fprintf(file,"%s\n",hostname);
+  
+  fclose(file);
+  
+  return true;
+}
+
 static bool is_root_setup(void)
 {
   FILE *file = 0;
@@ -570,6 +587,9 @@ static bool postconfig_run(void)
     return false;
 
   if(!write_fstab())
+    return false;
+
+  if(!write_hostname("testbed"))
     return false;
 
   if(!is_root_setup() && (!ui_window_root(&account) || !root_action(&account)))
