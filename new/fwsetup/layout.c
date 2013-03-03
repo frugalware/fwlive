@@ -31,7 +31,7 @@ static char **entries = 0;
 
 static inline bool get_token(char *in,char **out)
 {
-  return (*out = strtok(in," \t")) != 0;
+  return (*out = strtok(in,SPACE_CHARS)) != 0;
 }
 
 static inline void put_token(char *in,char **out)

@@ -26,6 +26,7 @@ static bool locale_setup(void)
   size_t i = 0;
   size_t size = 4096;
   char line[LINE_MAX] = {0};
+  char *locale = 0;
   
   strfcpy(command,sizeof(command),"locale --all-locales | grep '\\.utf8$' | sort --unique");
 
@@ -40,12 +41,12 @@ static bool locale_setup(void)
   while(fgets(line,sizeof(line),pipe) != 0)
   {
     if(
-      i == size - 1     || 
-      strlen(line) == 0
+      i == size - 1                            ||
+      (locale = strtok(line,SPACE_CHARS)) == 0
     )
       continue;
   
-    locales[i++] = strdup(line);
+    locales[i++] = strdup(locale);
   }
 
   locales[i] = 0;

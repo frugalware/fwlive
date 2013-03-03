@@ -47,6 +47,7 @@
 
 #define LOGFILE "/var/log/fwsetup.log"
 #define INSTALL_ROOT "/mnt/install"
+#define SPACE_CHARS " \t\r\n\v\f"
 #define TEXT_MAX 8192
 #define KIBIBYTE (1LL << 10LL)
 #define MEBIBYTE (1LL << 20LL)

@@ -262,9 +262,9 @@ static bool write_fstab(void)
   for( p = g->fstabdata ; *p != 0 ; ++p )
   {
     if(
-      (device = strtok(*p,":")) == 0    ||
-      (path = strtok(0,":")) == 0       ||
-      (filesystem = strtok(0,":")) == 0 ||
+      (device = strtok(*p,":\n")) == 0    ||
+      (path = strtok(0,":\n")) == 0       ||
+      (filesystem = strtok(0,":\n")) == 0 ||
       (uuid = probe_uuid(device)) == 0
     )
     {
@@ -331,10 +331,10 @@ static bool is_root_setup(void)
   {
     tmp = line;
 
-    if((user = strsep(&tmp,":")) == 0)
+    if((user = strsep(&tmp,":\n")) == 0)
       continue;
 
-    if((pwd = strsep(&tmp,":")) == 0)
+    if((pwd = strsep(&tmp,":\n")) == 0)
       continue;
 
     if(strcmp(user,"root") == 0)
@@ -369,16 +369,16 @@ static bool is_user_setup(void)
   {
     tmp = line;
 
-    if(strsep(&tmp,":") == 0)
+    if(strsep(&tmp,":\n") == 0)
       continue;
 
-    if(strsep(&tmp,":") == 0)
+    if(strsep(&tmp,":\n") == 0)
       continue;
 
-    if(strsep(&tmp,":") == 0)
+    if(strsep(&tmp,":\n") == 0)
       continue;
 
-    if((gid = strsep(&tmp,":")) == 0)
+    if((gid = strsep(&tmp,":\n")) == 0)
       continue;
 
     if(strcmp(gid,"100") == 0)
