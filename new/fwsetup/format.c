@@ -159,6 +159,8 @@ static bool format_setup(void)
       }
     }
 
+    disk_close(disk);
+
     device_close(device);
   }
 
