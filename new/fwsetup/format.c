@@ -52,7 +52,7 @@ static inline void add_target(struct format *p,int *n,int *size)
 static inline void probe_filesystem(struct format *target)
 {
   blkid_probe probe = 0;
-  static char *filesystems[] =
+  static const char *filesystems[] =
   {
     "ext2",
     "ext3",

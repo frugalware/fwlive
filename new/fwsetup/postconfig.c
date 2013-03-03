@@ -34,6 +34,50 @@ static inline void put_xkb_var(FILE *file,char *s1,char *s2)
   fprintf(file,"%8cOption \"%s\" \"%s\"\n",' ',s2,s1);
 }
 
+static inline char *probe_uuid(const char *path)
+{
+  blkid_probe probe = 0;
+  const char *uuid = 0;
+  
+  if((probe = blkid_new_probe_from_filename(path)) == 0)
+  {
+    error(strerror(errno));
+    goto bail;
+  }
+  
+  if(blkid_probe_enable_superblocks(probe,true) == -1)
+  {
+    error("failed to configure probe");
+    goto bail;
+  }
+  
+  if(blkid_probe_set_superblocks_flags(probe,BLKID_SUBLKS_UUID) == -1)
+  {
+    error("failed to configure probe");
+    goto bail;
+  }
+  
+  if(blkid_do_probe(probe) == -1)
+  {
+    error("failed to probe");
+    goto bail;
+  }
+  
+  if(blkid_probe_lookup_value(probe,"UUID",&uuid,0) == -1)
+  {
+    uuid = 0;
+    error("no uuid");
+    goto bail;
+  }
+
+bail:
+
+  if(probe != 0)
+    blkid_free_probe(probe);
+  
+  return (uuid == 0) ? 0 : strdup(uuid);
+}
+
 static bool write_locale_conf(void)
 {
   const char *var = "LANG";
