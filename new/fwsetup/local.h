@@ -109,7 +109,7 @@ extern void file2str(const char *path,char *s,size_t n);
 extern void strfcpy(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
 extern void strfcat(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
 extern bool mount_special(void);
-extern bool umount_all(void);
+extern void umount_all(void);
 extern bool isrootpath(const char *path);
 extern bool isasciistring(const char *s);
 extern bool mkdir_recurse(const char *path);

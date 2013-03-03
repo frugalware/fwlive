@@ -100,7 +100,7 @@ extern bool mount_special(void)
   return true;
 }
 
-extern bool umount_all(void)
+extern void umount_all(void)
 {
   FILE *file = 0;
   size_t i = 0;
@@ -108,12 +108,11 @@ extern bool umount_all(void)
   char **paths = 0;
   char line[LINE_MAX] = {0};
   char *path = 0;
-  bool result = true;
 
   if((file = fopen("/proc/mounts","rb")) == 0)
   {
     error(strerror(errno));
-    return false;    
+    return;    
   }
 
   paths = malloc0(sizeof(char *) * size);
@@ -141,15 +140,13 @@ extern bool umount_all(void)
     if(umount2(path,UMOUNT_NOFOLLOW) == -1)
     {
       error(strerror(errno));
-      result = false;
       goto bail;
     }
   }
 
-  if(umount2(INSTALL_ROOT,UMOUNT_NOFOLLOW) == -1)
+  if(umount2(INSTALL_ROOT,UMOUNT_NOFOLLOW) == -1 && errno != ENOENT)
   {
     error(strerror(errno));
-    result = false;
     goto bail;
   }
 
@@ -165,8 +162,6 @@ bail:
     
     free(paths);
   }
-
-  return result;
 }
 
 extern bool isrootpath(const char *path)

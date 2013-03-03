@@ -72,11 +72,13 @@ extern int main(int argc,char **argv)
 
   code = ui_main(argc,argv);
 
+  umount_all();
+
+  global_cleanup();
+
   fclose(logfile);
 
   logfile = 0;
-
-  global_cleanup();
 
   return code;
 }
