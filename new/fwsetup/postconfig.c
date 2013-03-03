@@ -591,6 +591,9 @@ static bool postconfig_run(void)
   if(!get_timezone_data() || !ui_window_time(tz_data,&zone,&utc) || !time_action(zone,utc))
     return false;
 
+  if(ui_dialog_yesno(GRUB_TITLE,GRUB_TEXT,false) && !grub_action())
+    return false;
+
   return true;
 }
 
@@ -609,6 +612,8 @@ static void postconfig_reset(void)
 
     tz_data = 0;
   }
+
+  rootdevice = 0;
 }
 
 struct module postconfig_module =

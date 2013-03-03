@@ -78,4 +78,5 @@
 #define UTC_TEXT _("Universal Time Clock")
 #define NO_USER_TITLE _("No User Name")
 #define NO_USER_TEXT _("You must specify a user name.\n")
-
+#define GRUB_TITLE _("GRUB Setup")
+#define GRUB_TEXT _("Do you wish to install GRUB as your bootloader?\nYou need a bootloader to boot after install is complete.\n")
