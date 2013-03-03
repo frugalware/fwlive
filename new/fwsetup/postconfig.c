@@ -200,6 +200,11 @@ static bool write_keyboard_conf(void)
 static bool write_fstab(void)
 {
   FILE *file = 0;
+  char **p = 0;
+  char *device = 0;
+  char *path = 0;
+  char *filesystem = 0;
+  char *uuid = 0;
   
   if((file = fopen("etc/fstab","wb")) == 0)
   {
@@ -217,6 +222,32 @@ static bool write_fstab(void)
     "none /proc/bus/usb usbfs devgid=23,devmode=664 0 0\n"
     "none /dev/shm tmpfs defaults 0 0\n"
   );
+
+  for( p = g->fstabdata ; *p != 0 ; ++p )
+  {
+    if(
+      (device = strtok(*p,":")) == 0    ||
+      (path = strtok(0,":")) == 0       ||
+      (filesystem = strtok(0,":")) == 0 ||
+      (uuid = probe_uuid(device)) == 0
+    )
+    {
+      errno = EINVAL;
+      error(strerror(errno));
+      fclose(file);
+      return false;
+    }
+    
+    fprintf(file,
+      "UUID=%s %s %s defaults %s\n",
+      uuid,
+      (strcmp(filesystem,"swap") == 0) ? "swap" : path,
+      filesystem,
+      (strcmp(filesystem,"swap") == 0) ? "0 0" : "1 1"
+    );
+    
+    free(uuid);
+  }
 
   fclose(file);
   
