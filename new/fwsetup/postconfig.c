@@ -532,6 +532,12 @@ static bool grub_action(void)
     }
   }
 
+  if(!execute("grub-mkconfig -o /boot/grub/grub.cfg",INSTALL_ROOT,0))
+  {
+    result = false;
+    goto bail;
+  }
+
 bail:
 
   for( p = devices ; *p != 0 ; ++p )
