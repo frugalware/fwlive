@@ -105,6 +105,7 @@ struct module
   const char *name;
 };
 
+extern bool areweinvc(void);
 extern void file2str(const char *path,char *s,size_t n);
 extern void strfcpy(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
 extern void strfcat(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
@@ -151,7 +152,7 @@ static inline bool areweinfwlive(void)
   
   return (env != 0 && strcmp(env,"fwlive") == 0);
 }
-static inline bool areweingui(void)
+static inline bool areweinx11(void)
 {
   const char *env = getenv("DISPLAY");
   
