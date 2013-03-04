@@ -622,7 +622,7 @@ extern int ui_main(int argc,char **argv)
   int h = 0;
   struct module *module = 0;
   size_t n = 0;
-  char text[4096] = {0};
+  char text[TEXT_MAX] = {0};
   int code = EXIT_FAILURE;
 
   // This parameter is never used.
@@ -688,7 +688,7 @@ extern int ui_main(int argc,char **argv)
     {
       eprintf("A fatal error has been reported by module '%s'.\n",module->name);
       module->reset();
-      strfcpy(text,sizeof(text),_("A fatal error has been reported by module '%s'.\n\nPlease read the logfile at '%s'.\nThank you.\n"),module->name,LOGFILE);
+      strfcpy(text,sizeof(text),_("A fatal error has been reported by module '%s'.\nPlease read the logfile at '%s'.\nThank you.\n"),module->name,LOGFILE);
       ui_dialog_text(_("Module Fatal Error"),text);
       break;
     }
