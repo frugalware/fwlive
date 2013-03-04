@@ -17,6 +17,26 @@
 
 #include "local.h"
 
+static inline bool umount_retry(const char *path)
+{
+  size_t i = 0;
+  
+  for( ; i < 5 ; ++i )
+    if(umount2(path,UMOUNT_NOFOLLOW) == -1 && errno != ENOENT)
+      sleep(1);
+    else
+      return true;
+  
+  return false;  
+}
+
+extern bool arewelive(void)
+{
+  const char *env = getenv("HOSTNAME");
+  
+  return (env != 0 && strcmp(env,"fwlive") == 0);
+}
+
 extern void file2str(const char *path,char *s,size_t n)
 {
   FILE *file = 0;
@@ -149,14 +169,14 @@ extern void umount_all(void)
   {
     path = paths[i];
   
-    if(umount2(path,UMOUNT_NOFOLLOW) == -1)
+    if(!umount_retry(path))
     {
       error(strerror(errno));
       goto bail;
     }
   }
 
-  if(umount2(INSTALL_ROOT,UMOUNT_NOFOLLOW) == -1 && errno != ENOENT)
+  if(!umount_retry(INSTALL_ROOT))
   {
     error(strerror(errno));
     goto bail;
