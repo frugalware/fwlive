@@ -208,5 +208,6 @@ extern struct module partition_module;
 extern struct module format_module;
 extern struct module install_module;
 extern struct module postconfig_module;
+extern struct module finale_module;
 extern struct module *modules[];
 extern unsigned int seed;

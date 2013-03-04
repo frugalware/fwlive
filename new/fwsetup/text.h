@@ -83,3 +83,5 @@
 #define MODE_TEXT _("Select a boot mode from the list below.\nThis decides whether you boot to a text console or display manager.\nThe display manager mode requires one to be installed.\n")
 #define GRUB_TITLE _("GRUB Setup")
 #define GRUB_TEXT _("Do you wish to install GRUB as your bootloader?\nYou need a bootloader to boot after install is complete.\n")
+#define FINALE_TITLE _("Grand Finale")
+#define FINALE_TEXT _("Frugalware Linux has been successfully installed.\nSelect 'Next' to exit the installer.\n")

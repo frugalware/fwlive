@@ -96,6 +96,7 @@ struct module *modules[] =
   &format_module,
   &install_module,
   &postconfig_module,
+  &finale_module,
   0
 };
 
