@@ -1,7 +1,5 @@
 before 1.9:
 
-disable tty blanking
-check that partitions are aligned mebibyte boundaries
 check if gpt has bios boot partition
 implement network setup
 implement network install (mirror and connection)
@@ -26,3 +24,4 @@ test 4096 byte sector disk drive handling code in block.c
 implement lvm setup
 implement gui frontend
 try to make the installer able to launch the configuration tools individually to replace frugalwareutils
+disable tty blanking
