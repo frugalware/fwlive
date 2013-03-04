@@ -69,6 +69,9 @@ extern void file2str(const char *path,char *s,size_t n)
   fgets(s,n,file);
   
   fclose(file);
+  
+  if((s = strchr(s,'\n')) != 0)
+    *s = 0;
 }
 
 extern void strfcpy(char *s,size_t n,const char *fmt,...)

@@ -91,6 +91,7 @@ struct module *modules[] =
 {
   &locale_module,
   &layout_module,
+  &greeter_module,
   &partition_module,
   &format_module,
   &install_module,

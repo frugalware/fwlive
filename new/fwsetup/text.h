@@ -36,6 +36,7 @@
 #define LOCALE_TEXT _("Select a locale from the list below.\nThe first part of the locale is the language code.\nThe second part of the locale is the country code.\nThe third part of the locale is the encoding.\nIt will be used for the '%s' variable.\n")
 #define LAYOUT_TITLE _("Keyboard Layout Setup")
 #define LAYOUT_TEXT _("Select a keyboard layout from the list below.\nThis also configures your X11 keyboard layout.\n")
+#define GREETER_TEXT _("Welcome to the Frugalware Linux installer.\nWe have worked hard to provide this distribution to the public.\nWe hope to provide you with an enjoyable experience.\n")
 #define PARTITION_TITLE _("Partition Setup")
 #define PARTITION_TEXT _("Select a disk device to setup a new partition table.\nSelect a partition to modify its parameters.\nSelect a disk device's free space to setup a new partition.\nSelect a disk device's deletion entry to delete the last partition.\n")
 #define PARTITION_DIALOG_NEW_TABLE_TITLE _("New Partition Table")
