@@ -1,7 +1,5 @@
 before 1.9:
 
-implement greeting UI
-implement goodbye UI
 disable tty blanking
 check that partitions are aligned mebibyte boundaries
 check if gpt has bios boot partition
