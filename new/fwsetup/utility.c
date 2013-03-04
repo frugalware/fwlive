@@ -30,20 +30,6 @@ static inline bool umount_retry(const char *path)
   return false;  
 }
 
-extern bool arewelive(void)
-{
-  const char *env = getenv("HOSTNAME");
-  
-  return (env != 0 && strcmp(env,"fwlive") == 0);
-}
-
-extern bool areweingui(void)
-{
-  const char *env = getenv("DISPLAY");
-  
-  return (env != 0 && strlen(env) > 0);
-}
-
 extern void file2str(const char *path,char *s,size_t n)
 {
   FILE *file = 0;

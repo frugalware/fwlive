@@ -105,8 +105,6 @@ struct module
   const char *name;
 };
 
-extern bool arewelive(void);
-extern bool areweingui(void);
 extern void file2str(const char *path,char *s,size_t n);
 extern void strfcpy(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
 extern void strfcat(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
@@ -147,6 +145,18 @@ static inline long maxv(long *v,size_t size)
   return i;
 }
 static inline const char *strng(const char *s) { return (s == 0) ? "" : s; }
+static inline bool areweinfwlive(void)
+{
+  const char *env = getenv("HOSTNAME");
+  
+  return (env != 0 && strcmp(env,"fwlive") == 0);
+}
+static inline bool areweingui(void)
+{
+  const char *env = getenv("DISPLAY");
+  
+  return (env != 0 && strlen(env) > 0);
+}
 extern struct device **device_probe_all(bool disk);
 extern struct device *device_open(const char *path);
 extern const char *device_get_path(struct device *device);
