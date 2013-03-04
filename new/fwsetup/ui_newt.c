@@ -147,7 +147,7 @@ static bool ui_dialog_format(struct format **targets,struct format *target)
 
   label2 = newtLabel(0,textbox_height+label1_height+2,FORMAT_PARAMETERS_ENTRY_TEXT);
 
-  entry2 = newtEntry(entry_left,textbox_height+label1_height+2,(target->options != 0) ? target->options : "",entry2_width,&parameters,0);
+  entry2 = newtEntry(entry_left,textbox_height+label1_height+2,strng(target->options),entry2_width,&parameters,0);
 
   listbox = newtListbox(0,textbox_height+label1_height+label2_height+3,listbox_height,NEWT_FLAG_SCROLL);
 

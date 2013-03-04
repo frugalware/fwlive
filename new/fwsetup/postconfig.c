@@ -422,7 +422,7 @@ static bool user_action(struct account *account)
     return false;
   }
 
-  strfcpy(command,sizeof(command),"useradd -m -c '%s' -g '%s' -G '%s' -d '%s' -s '%s' '%s'",(account->name != 0) ? account->name : "",account->group,account->groups,account->home,account->shell,account->user);
+  strfcpy(command,sizeof(command),"useradd -m -c '%s' -g '%s' -G '%s' -d '%s' -s '%s' '%s'",strng(account->name),account->group,account->groups,account->home,account->shell,account->user);
 
   if(!execute(command,INSTALL_ROOT,0))
     return false;
