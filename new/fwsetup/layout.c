@@ -172,16 +172,16 @@ static bool layout_set_layout(void)
     return true;
   }
 
-  if(areweinx11())
+  if(areweinvc())
+    strfcpy(command,sizeof(command),"loadkeys '%s'",
+      strng(g->kbdlayout)
+    );
+  else if(areweinx11())
     strfcpy(command,sizeof(command),"setxkbmap -layout '%s' -model '%s' -variant '%s' -option '%s'",
       strng(g->xkblayout),
       strng(g->xkbmodel),
       strng(g->xkbvariant),
       strng(g->xkboptions)
-    );
-  else if(areweinvc())
-    strfcpy(command,sizeof(command),"loadkeys '%s'",
-      strng(g->kbdlayout)
     );
   else
   {
