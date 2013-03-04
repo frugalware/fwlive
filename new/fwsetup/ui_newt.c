@@ -967,6 +967,61 @@ extern bool ui_window_list(const char *title,const char *text,char **entries,cha
   return true;
 }
 
+extern void ui_window_text(const char *title,const char *text)
+{
+  int textbox_width = 0;
+  int textbox_height = 0;
+  int next_width = 0;
+  int next_height = 0;
+  newtComponent textbox = 0;
+  newtComponent next = 0;
+  newtComponent form = 0;
+  struct newtExitStruct es = {0};
+
+  if(title == 0 || text == 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return;
+  }
+
+  if(!get_text_screen_size(text,&textbox_width,&textbox_height))
+    return;
+
+  if(!get_button_screen_size(NEXT_BUTTON_TEXT,&next_width,&next_height))
+    return;
+
+  if(newtCenteredWindow(NEWT_WIDTH,NEWT_HEIGHT,title) != 0)
+  {
+    eprintf("Failed to open a NEWT window.\n");
+    return;
+  }
+
+  textbox = newtTextbox(0,0,textbox_width,textbox_height,0);
+
+  newtTextboxSetText(textbox,text);
+
+  next = newtButton(NEWT_WIDTH-next_width,NEWT_HEIGHT-next_height,NEXT_BUTTON_TEXT);
+
+  form = newtForm(0,0,NEWT_FLAG_NOF12);
+
+  newtFormAddComponents(form,textbox,next,(void *) 0);
+
+  newtFormSetCurrent(form,next);
+
+  while(true)
+  {
+    newtFormRun(form,&es);
+
+    if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
+      break;
+  }
+
+  newtFormDestroy(form);
+
+  newtPopWindow();
+}
+
 extern bool ui_window_partition(struct device **devices,struct disk **disks)
 {
   int textbox_width = 0;

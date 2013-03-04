@@ -190,6 +190,7 @@ extern void ui_dialog_text(const char *title,const char *text);
 extern bool ui_dialog_yesno(const char *title,const char *text,bool defaultno);
 extern bool ui_dialog_progress(const char *title,const char *text,int percent);
 extern bool ui_window_list(const char *title,const char *text,char **entries,char **entry);
+extern void ui_window_text(const char *title,const char *text);
 extern bool ui_window_partition(struct device **devices,struct disk **disks);
 extern bool ui_window_format(struct format **targets);
 extern bool ui_window_root(struct account *data);
