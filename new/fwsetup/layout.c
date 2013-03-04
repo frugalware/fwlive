@@ -167,19 +167,27 @@ static bool layout_set_layout(void)
   char command[_POSIX_ARG_MAX] = {0};
 
   if(!areweinfwlive())
+  {
+    error("we are not in fwlive, so skip setting the keyboard layout\n");
     return true;
-  
-  if(areweingui())
+  }
+
+  if(areweinx11())
     strfcpy(command,sizeof(command),"setxkbmap -layout '%s' -model '%s' -variant '%s' -option '%s'",
       strng(g->xkblayout),
       strng(g->xkbmodel),
       strng(g->xkbvariant),
       strng(g->xkboptions)
     );
-  else
+  else if(areweinvc())
     strfcpy(command,sizeof(command),"loadkeys '%s'",
       strng(g->kbdlayout)
     );
+  else
+  {
+    error("unknown environment, so skip setting the keyboard layout\n");
+    return true;
+  }
 
   return execute(command,"/",0);
 }
