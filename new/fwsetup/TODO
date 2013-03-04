@@ -1,6 +1,5 @@
 before 1.9:
 
-test 4096 byte sector disk drive handling code in block.c
 implement greeting UI
 implement goodbye UI
 disable tty blanking
@@ -25,3 +24,7 @@ replace my method of retrieving disk unique identifier with libblkid's API, shou
 if libfdisk can replace our writing needs, then use that instead of running fdisk/gdisk.
 see if unicode handling of GPT partition names can be fixed
 add detailed error handling for when a pacman transaction fails
+test 4096 byte sector disk drive handling code in block.c
+implement lvm setup
+implement gui frontend
+try to make the installer able to launch the configuration tools individually to replace frugalwareutils
