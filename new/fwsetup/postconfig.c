@@ -530,6 +530,37 @@ static bool time_action(char *zone,bool utc)
   return true;
 }
 
+static bool mode_action(const char *mode)
+{
+  const char *old = 0;
+  const char *new = "etc/systemd/system/default.target";
+
+  if(strcmp(mode,"Text Console") == 0)
+    old = "/lib/systemd/system/multi-user.target";
+  else if(strcmp(mode,"Display Manager") == 0)
+    old = "/lib/systemd/system/graphical.target";
+  else
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+
+  if(unlink(new) == -1 && errno != ENOENT)
+  {
+    error(strerror(errno));
+    return false;
+  }
+  
+  if(symlink(old,new) == -1)
+  {
+    error(strerror(errno));
+    return false;
+  }
+  
+  return true;
+}
+
 static bool grub_action(void)
 {
   char **devices = 0;
@@ -572,6 +603,13 @@ static bool postconfig_run(void)
   struct account account = {0};
   char *zone = 0;
   bool utc = true;
+  static char *modes[] =
+  {
+    "Text Console",
+    "Display Manager",
+    0
+  };
+  char *mode = 0;
 
   if(chdir(INSTALL_ROOT) == -1)
   {
@@ -611,6 +649,9 @@ static bool postconfig_run(void)
   account_free(&account);
 
   if(!get_timezone_data() || !ui_window_time(tz_data,&zone,&utc) || !time_action(zone,utc))
+    return false;
+
+  if(!ui_window_list(MODE_TITLE,MODE_TEXT,modes,&mode) || !mode_action(mode))
     return false;
 
   if(ui_dialog_yesno(GRUB_TITLE,GRUB_TEXT,false) && !grub_action())
