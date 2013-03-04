@@ -1,6 +1,5 @@
 before 1.9:
 
-add selection for default systemd boot target
 test 4096 byte sector disk drive handling code in block.c
 implement greeting UI
 implement goodbye UI
