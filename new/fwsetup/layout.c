@@ -162,12 +162,37 @@ static bool layout_do_layout(void)
   return true;
 }
 
+static bool layout_set_layout(void)
+{
+  char command[_POSIX_ARG_MAX] = {0};
+
+  if(!areweinfwlive())
+    return true;
+  
+  if(areweingui())
+    strfcpy(command,sizeof(command),"setxkbmap -layout '%s' -model '%s' -variant '%s' -option '%s'",
+      strng(g->xkblayout),
+      strng(g->xkbmodel),
+      strng(g->xkbvariant),
+      strng(g->xkboptions)
+    );
+  else
+    strfcpy(command,sizeof(command),"loadkeys '%s'",
+      strng(g->kbdlayout)
+    );
+
+  return execute(command,"/",0);
+}
+
 static bool layout_run(void)
 {
   if(!layout_setup())
     return false;
 
   if(!layout_do_layout())
+    return false;
+
+  if(!layout_set_layout())
     return false;
 
   return true;
