@@ -289,14 +289,11 @@ extern struct device **device_probe_all(bool disk,bool raid)
     return 0;
   }
 
-  if(disk)
+  if(disk && !doglob("/dev/[hsv]d[a-z]",&flags,&ge))
   {
-    if(!doglob("/dev/[hsv]d[a-z]",&flags,&ge))
-    {
-      globfree(&ge);
-      error(strerror(errno));
-      return 0;
-    }
+    globfree(&ge);
+    error(strerror(errno));
+    return 0;
   }
 
   if(raid && (!doglob("/dev/md[0-9]",&flags,&ge) || !doglob("/dev/md[0-9][0-9]",&flags,&ge) || !doglob("/dev/md[0-9][0-9][0-9]",&flags,&ge)))

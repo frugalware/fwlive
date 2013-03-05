@@ -158,7 +158,7 @@ static inline bool areweinx11(void)
   
   return (env != 0 && strlen(env) > 0);
 }
-extern struct device **device_probe_all(bool disk);
+extern struct device **device_probe_all(bool disk,bool raid);
 extern struct device *device_open(const char *path);
 extern const char *device_get_path(struct device *device);
 extern long long device_get_size(struct device *device);

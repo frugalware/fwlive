@@ -44,12 +44,14 @@ mount -o bind /var/cache/pacman-g2 $ROOT/var/cache/pacman-g2
 cat > pacman-g2.conf << EOF
 [options]
 LogFile = /var/log/pacman-g2.log
+[ryuotesting10]
+Server = http://ftp.frugalware.org/pub/other/people/ryuo/ryuotesting10/frugalware-x86_64
 [frugalware$(test "$ROOTREPO" = "current" -o "$ROOTREPO" = "testing" && echo -n "-$ROOTREPO")]
 Server = http://ftp.frugalware.org/pub/frugalware/frugalware$(test "$ROOTREPO" = "current" -o "$ROOTREPO" = "testing" && echo -n "-$ROOTREPO")/frugalware-x86_64
 EOF
 
 # Setup root directory with pacman-g2.
-pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base newt valgrind
+pacman-g2 --root $ROOT --noprogressbar --noconfirm --config pacman-g2.conf -Sy base newt valgrind openssh
 
 # LiveCD customizations beyond here.
 
@@ -59,6 +61,7 @@ if test -x ../fwsetup/fwsetup; then
   install -m 0755 ../fwsetup/fwsetup $ROOT/usr/bin
   install -m 0755 ../fwsetup/fwsetup-valgrind $ROOT/usr/bin
   install -m 0644 ../fwsetup/fwsetup.supp $ROOT/usr/lib/valgrind
+  install -m 0644 ../fwsetup/colors $ROOT/root/colors
 fi
 
 # System locale.conf setup.
