@@ -104,7 +104,7 @@ static bool format_setup(void)
   int i = 0;
   int j = 0;
 
-  if((devices = device_probe_all(true)) == 0)
+  if((devices = device_probe_all(true,true)) == 0)
     return false;
 
   targets = malloc0(size * sizeof(struct format *));

@@ -263,7 +263,7 @@ static bool newpartition(struct disk *disk,long long size,struct partition *part
   return true;
 }
 
-extern struct device **device_probe_all(bool disk)
+extern struct device **device_probe_all(bool disk,bool raid)
 {
   glob_t ge = {0};
   int flags = 0;

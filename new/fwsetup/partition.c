@@ -24,7 +24,7 @@ static bool partition_setup(void)
 {
   int i = 0;
 
-  if((devices = device_probe_all(true)) == 0)
+  if((devices = device_probe_all(true,false)) == 0)
     return false;
 
   for( ; devices[i] != 0 ; ++i )
