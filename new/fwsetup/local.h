@@ -18,7 +18,7 @@
 #pragma once
 
 #define _GNU_SOURCE
-#define _FILE_OFFSET_BITS=64
+#define _FILE_OFFSET_BITS 64
 
 #include <stdbool.h>
 #include <stdlib.h>
