@@ -299,6 +299,13 @@ extern struct device **device_probe_all(bool disk,bool raid)
     }
   }
 
+  if(raid && (!doglob("/dev/md[0-9]",&flags,&ge) || !doglob("/dev/md[0-9][0-9]",&flags,&ge) || !doglob("/dev/md[0-9][0-9][0-9]",&flags,&ge)))
+  {
+    globfree(&ge);
+    error(strerror(errno));
+    return 0;
+  }
+
   devices = malloc0(ge.gl_pathc * sizeof(struct device *));
 
   for( ; i < ge.gl_pathc ; ++i )
