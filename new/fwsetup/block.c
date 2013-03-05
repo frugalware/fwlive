@@ -478,7 +478,7 @@ extern struct disk *disk_open(struct device *device)
   blkid_partition partition = 0;
   struct disk *result = 0;
 
-  if(device == 0)
+  if(device == 0 || device->type != DEVICETYPE_DISK)
   {
     errno = EINVAL;
     error(strerror(errno));
