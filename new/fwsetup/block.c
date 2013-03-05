@@ -130,9 +130,19 @@ static inline bool isdisk(const struct stat *st)
   }
 }
 
-static bool israid(const struct stat *st)
+static inline bool israid(const struct stat *st)
 {
   return (major(st->st_rdev) == MD_MAJOR);
+}
+
+static inline bool doglob(const char *pattern,int *flags,glob_t *ge)
+{
+  int rv = glob(pattern,*flags,0,ge);
+  
+  if(rv == 0)
+    *flags |= GLOB_APPEND;
+
+  return (rv == 0 || rv == GLOB_NOMATCH);
 }
 
 // TODO: replace this function with something better. only works on little endian cpus.
@@ -281,14 +291,12 @@ extern struct device **device_probe_all(bool disk,bool raid)
 
   if(disk)
   {
-    if(glob("/dev/[hsv]d[a-z]",flags,0,&ge) != 0)
+    if(!doglob("/dev/[hsv]d[a-z]",&flags,&ge))
     {
       globfree(&ge);
       error(strerror(errno));
       return 0;
     }
-
-    flags |= GLOB_APPEND;
   }
 
   devices = malloc0(ge.gl_pathc * sizeof(struct device *));
