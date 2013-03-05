@@ -18,11 +18,8 @@
 #include <pacman.h>
 #include "local.h"
 
-#ifndef NDEBUG
-#define LOGMASK (PM_LOG_DEBUG | PM_LOG_ERROR | PM_LOG_WARNING | PM_LOG_FLOW1 | PM_LOG_FLOW2 | PM_LOG_FUNCTION)
-#else
+//#define LOGMASK (PM_LOG_DEBUG | PM_LOG_ERROR | PM_LOG_WARNING | PM_LOG_FLOW1 | PM_LOG_FLOW2 | PM_LOG_FUNCTION)
 #define LOGMASK (PM_LOG_ERROR | PM_LOG_WARNING)
-#endif
 
 static PM_DB *dl_database = 0;
 static char dl_filename[PM_DLFNM_LEN+1] = {0};
