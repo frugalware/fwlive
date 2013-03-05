@@ -1340,6 +1340,31 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     }
     else if(es.reason == NEWT_EXIT_COMPONENT && es.u.co == next)
     {
+      bool empty = true;
+      bool bios = true;
+      
+      for( i = 0 ; devices[i] != 0 ; ++i )
+      {
+        struct disk *disk = disks[i];
+        
+        if(disk == 0 || (k = disk_partition_get_count(disk)) == 0)
+          continue;
+        
+        empty = false;
+        
+        if(bios)
+          bios = disk_can_store_bios_grub(disk);
+      }
+    
+      if(empty)
+      {
+        ui_dialog_text(NO_TABLE_TITLE,NO_TABLE_TEXT);
+        continue;
+      }
+    
+      if(!bios && !ui_dialog_yesno(NO_GRUB_BIOS_TITLE,NO_GRUB_BIOS_TEXT,true))
+        continue;
+    
       break;
     }
   }
