@@ -85,6 +85,7 @@ static inline char **get_real_devices(void)
 {
   const char *root = 0;
   regex_t disk = {0};
+  regex_t raid = {0};
   char **devices = 0;
 
   if(rootdevice == 0)
@@ -102,16 +103,27 @@ static inline char **get_real_devices(void)
     goto bail;
   }
 
+  if(regcomp(&raid,"^/dev/md[0-9]+$",REG_EXTENDED|REG_NOSUB) != 0)
+  {
+    error("invalid regular expression");
+    goto bail;
+  }
+
   if(regexec(&disk,root,0,0,0) == 0)
   {
     devices = malloc0(sizeof(char *) * 2);
     devices[0] = strndup(root,8);
     devices[1] = 0;
   }
+  else if(regexec(&raid,root,0,0,0) == 0)
+  {
+  }
 
 bail:
 
   regfree(&disk);
+  
+  regfree(&raid);
   
   return devices;
 }
