@@ -704,6 +704,47 @@ extern bool disk_has_extended_partition(struct disk *disk)
   return false;
 }
 
+extern bool disk_can_store_bios_grub(struct disk *disk)
+{
+  long long size = 0;
+  int i = 0;
+  struct partition *part = 0;
+
+  if(disk == 0 || disk->size < 0)
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+
+  if(disk->size == 0)
+    return false;
+
+  if(disk->type == DISKTYPE_DOS)
+    size = disk->table[0].start;
+  else if(disk->type == DISKTYPE_GPT)
+    for( ; i < disk->size ; ++i )
+    {
+      part = &disk->table[i];
+      
+      if(strcmp(part->gpttype,GPT_BIOS) == 0)
+      {
+        size = part->size;
+        break;
+      }
+    }
+  else
+  {
+    errno = EINVAL;
+    error(strerror(errno));
+    return false;
+  }
+
+  size *= disk->device->sectorsize;
+  
+  return (size >= MEBIBYTE);
+}
+
 extern int disk_create_partition(struct disk *disk,long long size)
 {
   struct partition part = {0};
