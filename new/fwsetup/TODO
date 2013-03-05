@@ -12,6 +12,7 @@ look into what can be done about sfdisk failing due to busy devices
 look into revising how we use blkid
 look into how systemd handles locale, vc layout, x11 layout, time, and hostname
 replace timezone and other simple UIs with list UI
+fix umounting
 
 future improvements:
 
@@ -21,6 +22,8 @@ see if unicode handling of GPT partition names can be fixed
 add detailed error handling for when a pacman transaction fails
 test 4096 byte sector disk drive handling code in block.c
 implement lvm setup
+implement encrypted root setup
+implement extlinux bootloader support
 implement gui frontend
 try to make the installer able to launch the configuration tools individually to replace frugalwareutils
 disable tty blanking
