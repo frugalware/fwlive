@@ -38,6 +38,7 @@ enum devicetype
 {
   DEVICETYPE_FILE,
   DEVICETYPE_DISK,
+  DEVICETYPE_RAID,
   DEVICETYPE_UNKNOWN
 };
 
@@ -127,6 +128,11 @@ static inline bool isdisk(const struct stat *st)
     default:
       return false;
   }
+}
+
+static bool israid(const struct stat *st)
+{
+  return (major(st->st_rdev) == MD_MAJOR);
 }
 
 // TODO: replace this function with something better. only works on little endian cpus.
@@ -365,6 +371,8 @@ extern struct device *device_open(const char *path)
     type = DEVICETYPE_FILE;
   else if(isdisk(&st))
     type = DEVICETYPE_DISK;
+  else if(israid(&st))
+    type = DEVICETYPE_RAID;
   else
     type = DEVICETYPE_UNKNOWN;
 
@@ -427,6 +435,8 @@ extern const char *device_get_type(struct device *device)
     return "file";
   else if(device->type == DEVICETYPE_DISK)
     return "disk";
+  else if(device->type == DEVICETYPE_RAID)
+    return "raid";
   else if(device->type == DEVICETYPE_UNKNOWN)
     return "unknown";
   else
