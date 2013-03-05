@@ -37,7 +37,7 @@ test -z "$UI" && error "No ui is defined."
 
 test -z "$CFLAGS" && CFLAGS="-O2"
 
-CFLAGS="$CFLAGS -std=gnu99 -D_GNU_SOURCE"
+CFLAGS="$CFLAGS -std=gnu99"
 
 if test "$RELEASE" = "stable"; then
   CFLAGS="$CFLAGS -DNDEBUG -DRELEASE_STABLE"
