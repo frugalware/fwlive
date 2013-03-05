@@ -116,21 +116,7 @@ static bool format_setup(void)
     struct format *target = 0;
     char buf[PATH_MAX] = {0};
 
-    if(disk == 0)
-    {
-      target = malloc0(sizeof(struct format));
-
-      add_target(target,&n,&size);
-
-      target->devicepath = strdup(device_get_path(device));
-
-      size_to_string(buf,sizeof(buf),device_get_size(device),false);
-
-      target->size = strdup(buf);
-
-      probe_filesystem(target);
-    }
-    else
+    if(disk != 0)
     {
       for( i = 0, j = disk_partition_get_count(disk) ; i < j ; ++i )
       {
@@ -170,7 +156,7 @@ static bool format_setup(void)
 
   targets = realloc(targets,n * sizeof(struct format *));
 
-  return true;
+  return (targets[0] != 0);
 }
 
 static void format_filter_devices(void)
