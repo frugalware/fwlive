@@ -1,6 +1,5 @@
 before 1.9:
 
-check if gpt has bios boot partition
 implement network setup
 implement network install (mirror and connection)
 implement method to control default groups selected
