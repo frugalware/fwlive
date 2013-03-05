@@ -1358,7 +1358,7 @@ extern bool ui_window_partition(struct device **devices,struct disk **disks)
     
       if(empty)
       {
-        ui_dialog_text(NO_TABLE_TITLE,NO_TABLE_TEXT);
+        ui_dialog_text(NO_PARTITION_TITLE,NO_PARTITION_TEXT);
         continue;
       }
     
