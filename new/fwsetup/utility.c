@@ -30,6 +30,37 @@ static inline bool umount_retry(const char *path)
   return false;  
 }
 
+extern void fetch_real_devices(const char *base,char *s,size_t n)
+{
+  char buf[PATH_MAX] = {0};
+  glob_t ge = {0};
+  size_t i = 0;
+
+  if(base == 0 || s == 0 || n == 0)
+    return;
+
+  strfcpy(buf,sizeof(buf),"%s/slaves/*",base);
+  
+  if(glob(buf,0,0,&ge) != 0)
+  {
+    strfcpy(buf,sizeof(buf),"%s",base);
+
+    if(*s == 0)
+      strfcpy(s,n,"/dev/%s",basename(buf));
+    else
+      strfcat(s,n,":/dev/%s",basename(buf));
+
+    globfree(&ge);
+    
+    return;
+  }
+
+  for( ; i < ge.gl_pathc ; ++i )
+    fetch_real_devices(ge.gl_pathv[i],s,n);
+  
+  globfree(&ge);
+}
+
 extern bool areweinvc(void)
 {
   char tty[TEXT_MAX] = {0};

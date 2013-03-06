@@ -40,6 +40,7 @@
 #include <regex.h>
 #include <locale.h>
 #include <time.h>
+#include <libgen.h>
 #include <blkid.h>
 #include "text.h"
 
@@ -108,6 +109,7 @@ struct module
   const char *name;
 };
 
+extern void fetch_real_devices(const char *base,char *s,size_t n);
 extern bool areweinvc(void);
 extern void file2str(const char *path,char *s,size_t n);
 extern void strfcpy(char *s,size_t n,const char *fmt,...) __attribute__((format(printf,3,4)));
