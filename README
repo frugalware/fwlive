@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is the source of the Frugalware LiveCD, FWLive.
 
 
@@ -44,3 +45,27 @@ Customizing
 
 Have a look at the file named 'config', you can set several configuration
 options there.
+=======
+				Fwife : Frugalware Installer Frontend Readme
+
+-> Fwife 0.9.5
+
+-> Compiling and testing :
+
+You have to create the configure file. Run './autogen.sh'.
+Next run './configure OPTIONS'. Use './configure --help' for more details about OPTIONS.
+
+For debugging you can use following options:
+--enable-debug : Compile without NDEBUG preprocessor define
+--enable-werror : compile with -Werror flag
+--enable-strict : add a lot of flags and a lot of warnings ;)
+
+Run 'make' and 'make install'. Now you can test fwife, just run fwife as root :)
+To clean the directory, use 'autoclean.sh'
+
+-> The End
+
+Any suggestions or patchs are welcome ;)
+
+Elentir <elentir AT frugalware.org>
+>>>>>>> 8d0b9b4db762e10a1ec84bd19478186c7c372c01

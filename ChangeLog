@@ -1,0 +1,69 @@
+VERSION         DESCRIPTION
+-----------------------------------------------------------------------------
+0.9.5		- Switch to grub2
+		- Set UTC time as default
+		- Fix selection of plymouth pkg in basic mode
+		- Set maxtries by default
+0.9.4		- Update desktop screenshot
+		- Add fwife-kde.desktop
+0.9.3		- New icon and .desktop
+0.9.2		- add icon and .desktop
+0.9.1		- fix a bug when moving backward
+		- remove deprecated XkbLayout and XkbVariant for xorg
+		- some graphical improvements
+		- some others bugfixes
+0.9		- change xfce package selection in basic mode
+		- fix window size on small resolutions
+		- a small fix to work with the new pacman-g2
+0.8		- more coherent set of packages in basic mode
+		- remove e17 choice in basic mode
+		- can add an user to /etc/sudoers if sudo available
+		- ext4 is now the default when formatting a partition
+		- some others small fixes
+0.7		- package selection plugin now have 3 modes (basic, intermediate, expert)
+		- support of installation from frugalware cds/dvds
+		- add a button to set mountpoint when partitionning disks instead of editable cells
+		- some minors fixes
+0.6.4		- add user to common user groups when creating a new user
+		- fix some locale package selection in basic mode
+0.6.3		- fix lxdm path in sysconfig/desktop file generation
+		- fix a bug with tr_TR locales
+0.6.2		- remove xorg.conf configuration (useless in new xorg)
+		- add turkish support
+		- fix some i18n bugs
+0.6.1		- desktop manager : fix kdm detection, add lxdm support
+		- reduce log level (so package db loading is a bit faster)
+		- locales and gnome are selected properly in basic package selection
+		- others bug fixes (memleaks, crash, ...)
+0.6		- scanning wifi access points for wifi devices in network configuration
+		- detection of active network connection
+		- add status of mirrors (up or down atm)
+		- read of packages database improved
+		- automatic switch between stable and current branch (according to repos enabled in pacman-g2.conf)
+		- fixed a major bug when reinstalling on a previous install without formatting
+		- rewrite large parts of code
+		- some minors fixes (bugs, memleaks, typo)
+0.5		- dhcp research on networks
+		- improved network configuration plugin
+		- fix unexpected reverse dependencies due to locale packages
+		- minor bug fixes (ext4 formatting, ...)
+0.4		- new interface for network configuration
+		- add informations during package downloading (remain total size, speed)
+		- fix conflicts with E17 installation in basic mode
+		- add Entrance for possible login managers
+		- some minor graphical changes and bug fixes
+0.3.1		- experimental support of ext4
+		- pootle support for translations
+		- adding e17 desktop to basic package selection
+		- new automake build system
+		- some bugs fixes
+0.3		- new basic selection of packages and improve expert mode
+		- optimization of package selection plugin
+		- new layout plugin with preconfigured keyboards
+		- new postconf plugin to bring together all configuration dialogboxes
+0.2.1		- support x86_64
+0.2		- fixed lot of bugs
+		- new plugin rootconf (separated from usersconf)
+		- new icons
+		- improve layout gtk widget
+0.1		- initial release

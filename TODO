@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 - make a symlink of /usr/share/applications/fwife.desktop in /home/fwlive/Desktop/
 - enable autologin for lxde and kde
 - for gnome : enable some extensions for gnome-shell
@@ -12,3 +13,15 @@ IDEAS
 - For gnome : Change color of text on desktop ( See Devil505)
 - Bouleetbil can write a systemd script to ask the language, once the user put his language, le system continue to
 boot with the correct locale and keymap
+=======
+TODO list for Fwife
+--------------------
+
+ * partdisk.c: add raid support
+
+ * userconf.c: add support of user's groups
+
+ * add support for NFS filesystem (new plugin)
+
+
+>>>>>>> 8d0b9b4db762e10a1ec84bd19478186c7c372c01

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Csécsy, László (boobaa) <boobaa@ajrg.hu>
 	* author of the Makefile-based build system
 Habermehl, Marcus (BMH1980) <bmh1980de@yahoo.de>
@@ -10,3 +11,14 @@ Vasas, Krisztián (IroNiQ) <iron@frugalware.org>
 	* maintainer from March 2006 till April 2006
 Vincent, Sébastien (Baste) <baste@frugalware.org>
 	* maintainer of the dracut-based code
+=======
+Developers
+==========
+* Elentir <elentir@frugalware.org>
+
+Others (Thanks to)
+==================
+* crazy
+* Russell Dickenson (AKA phayz)
+* Devil505
+>>>>>>> 8d0b9b4db762e10a1ec84bd19478186c7c372c01
